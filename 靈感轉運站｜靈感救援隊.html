@@ -1483,7 +1483,7 @@ function render(){
     2. 開新的 <b>Claude.ai</b> 對話，貼上送出<br>
     3. 把 Claude 給你的文案貼回下方欄位，再繼續 →
    </div>
-   <button type="button" id="copyPrompt" style="background:linear-gradient(135deg,#9b7db5,#b89fd0);color:#fff;border:none;border-radius:14px;padding:16px 28px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(155,125,181,.3);width:100%;letter-spacing:.5px">📋 複製文字稿指令</button>
+   <button type="button" id="copyPrompt" class="copy-prompt-btn" style="padding:16px 28px;font-size:16px;box-shadow:0 4px 16px rgba(155,125,181,.3);letter-spacing:.5px;margin:0">📋 複製文字稿指令</button>
    <div style="display:flex;gap:8px;margin-top:10px">
     <button type="button" id="copyCaptionPrompt" style="flex:1;background:#EDE8F5;color:#7D64A3;border:none;border-radius:10px;padding:10px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer">🔗 複製 IG Caption 指令</button>
     <a href="https://claude.ai" target="_blank" rel="noopener" style="flex:none;background:#EDE8F5;color:#7D64A3;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">📡 打開 Claude ↗</a>
@@ -2192,7 +2192,7 @@ document.getElementById('back').onclick=()=>{
  if(S.i>0){S.i--;render()}
 };
 async function copy(text,plain,btn){
- try{await navigator.clipboard.writeText(text);if(plain){toast('已複製 LINE ID')}else if(btn){btn.textContent='✓ 已複製！';btn.classList.add('done');clearTimeout(btn._rt);btn._rt=setTimeout(()=>{btn.textContent='📋 複製這份指令';btn.classList.remove('done')},1800)}else{toast('已複製指令，到 Claude 貼上吧')}}
+ try{await navigator.clipboard.writeText(text);if(plain){toast('已複製 LINE ID')}else if(btn){const orig=btn._origText||(btn._origText=btn.textContent);btn.textContent='✓ 已複製！';btn.classList.add('done');clearTimeout(btn._rt);btn._rt=setTimeout(()=>{btn.textContent=orig;btn.classList.remove('done')},1800)}else{toast('已複製指令，到 Claude 貼上吧')}}
  catch(e){if(plain){toast('請長按 ID 複製');return}const el=document.getElementById('out');if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('已選取，請長按複製');}else{toast('複製失敗，請長按文字複製');}}
 }
 app.addEventListener('click',e=>{const s=e.target.closest('#startBtn');if(s){S.started=true;if(s.dataset.back!=='1'){S.planned=false;S.plan=null;}render();window.scrollTo(0,0);return}if(e.target.closest('#restartBtn')){['what','turn','take'].forEach(k=>delete A[k]);S.i=0;S.started=true;S.planned=false;S.plan=null;render();window.scrollTo(0,0)}if(e.target.closest('#scanBtn')){const si=Q.findIndex(q=>q.styles);if(si>-1){S.i=si;S.started=true;render();window.scrollTo(0,0);}return}});
