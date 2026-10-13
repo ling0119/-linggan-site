@@ -1,0 +1,11 @@
+{
+  "name": "linggan-site",
+  "version": "1.0.0",
+  "description": "靈感轉運站 - IG 輪播貼文產生器",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
