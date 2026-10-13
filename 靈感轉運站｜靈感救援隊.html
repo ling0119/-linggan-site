@@ -296,7 +296,7 @@ pre{background:var(--code);color:var(--code-ink);border:1.5px solid #7A5AB0;bord
 .guide-tip button{flex-shrink:0;background:transparent;color:#9b7fc0;border:1px solid rgba(155,127,192,.35);border-radius:7px;padding:3px 9px;font-size:12px;cursor:pointer;white-space:nowrap}.guide-tip button:active{opacity:.6}
 .tip-card{background:#1E1530;border-radius:14px;padding:14px 14px 14px 16px;margin:6px 0;display:flex;align-items:flex-start;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.25);border:1.5px solid #7A5AB0;color:#E8DEFF}
 .tip-card .tc-body{flex:1;min-width:0}.tip-card .tc-text{font-size:14px;line-height:1.65;color:#3a2d50;margin:0}
-.tip-card .tc-copy{flex-shrink:0;background:#7A5AB0;color:#fff;border:none;border-radius:8px;padding:5px 11px;font-size:12px;cursor:pointer;align-self:center;white-space:nowrap}.tip-card .tc-copy:active{opacity:.7}
+.tip-card .tc-copy{flex-shrink:0;background:#7A5AB0;color:#fff;border:none;border-radius:8px;padding:5px 11px;font-size:12px;cursor:pointer;align-self:center;white-space:nowrap;transition:background .2s,color .2s}.tip-card .tc-copy:active{opacity:.7}.tip-card .tc-copy.done{background:#4A7C59;color:#fff}
 .tip-dot{display:inline-block;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;line-height:24px;text-align:center;flex-shrink:0;margin-top:2px}
 @keyframes shimmer{0%,100%{box-shadow:0 6px 20px rgba(124,108,144,.32)}50%{box-shadow:0 6px 36px rgba(124,108,144,.7),0 0 0 4px rgba(124,108,144,.22)}}@keyframes chip-glow{0%,100%{outline:2px solid rgba(124,108,144,.4);outline-offset:1px}50%{outline:2px solid var(--accent);outline-offset:3px;box-shadow:0 0 10px rgba(124,108,144,.45)}}
 .magic-btn{animation:shimmer 1.8s ease-in-out infinite}
@@ -1424,10 +1424,10 @@ function runPlanning(){
   if(btn){
     btn.onclick=function(){
       copy(prompt,false,btn);
-      btn.textContent='✅ 已複製！開新對話貼上 →';
+      btn.style.background='#4A7C59';
       const pasteArea=document.getElementById('planPasteArea');
       if(pasteArea){pasteArea.style.display='block';setTimeout(()=>pasteArea.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
-      setTimeout(()=>{btn.textContent='📋 複製指令，去 Claude.ai 貼上';},3000);
+      setTimeout(()=>{btn.textContent='📋 複製指令，去 Claude.ai 貼上';btn.style.background='';btn.classList.remove('done')},3000);
       // 顯示 footer next（文字提示），不覆蓋 onclick（全域 handler 負責）
       const nb=document.getElementById('next');
       if(nb){nb.textContent='套用，繼續填問卷 →';nb.hidden=false;}
@@ -1819,15 +1819,15 @@ app.addEventListener('click',e=>{
   return;
  }
 
- if(t.classList.contains('tc-copy')&&t.dataset.copy){copy(t.dataset.copy,false);return}
+ if(t.classList.contains('tc-copy')&&t.dataset.copy){const orig=t.textContent;copy(t.dataset.copy,false,t);t._rt&&clearTimeout(t._rt);t._rt=setTimeout(()=>{t.textContent=orig;t.classList.remove('done')},1800);return}
  if(t.id==='remixCopy'){
   const rawTA=document.getElementById('rawMaterial');
   const raw=rawTA?rawTA.value.trim():'';
   if(!raw){rawTA&&(rawTA.style.borderColor='#e53e3e');setTimeout(()=>{rawTA&&(rawTA.style.borderColor='');},1500);return;}
   const prompt=buildRemixPrompt(raw);
-  copy(prompt,false);
-  t.textContent='✅ 已複製！開新對話貼上 →';
-  setTimeout(()=>{t.textContent='📋 複製改編指令';},3000);
+  copy(prompt,false,t);
+  t.style.background='#4A7C59';t.style.borderColor='#4A7C59';t.style.color='#fff';
+  setTimeout(()=>{t.textContent='📋 複製改編指令';t.style.background='';t.style.borderColor='';t.style.color='';t.classList.remove('done')},3000);
   return;
  }
  {const mb=t.closest('.mic-btn');if(mb){
