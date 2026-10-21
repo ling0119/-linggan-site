@@ -136,6 +136,11 @@ input:focus,textarea:focus{outline:none;border-style:solid;border-color:var(--ac
 .lb-go .arr{width:36px;height:36px;border-radius:50%;background:var(--surface);color:var(--accent);display:grid;place-items:center;font-size:18px;transition:transform .2s}
 .lb-go:hover .arr{transform:translateX(3px)}
 @keyframes arr-float{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.lb-shot-btn{font:inherit;font-size:12px;border:1.5px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface);color:var(--muted);cursor:pointer;white-space:nowrap}
+.lb-shot-btn.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.lb-p.shotmode .lb-n,.lb-p.shotmode .lb-go,.lb-p.shotmode .lcar figcaption{display:none}
+.lb-p.shotmode .lb-h{justify-content:flex-end;padding-bottom:0}
+.lb-p.shotmode .lb-h b,.lb-p.shotmode .lb-h .lb-x{display:none}
 .arr{animation:arr-float 1.8s ease-in-out infinite}
 .start .arr{animation:arr-float 1.8s ease-in-out infinite}
 .lb button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -2095,12 +2100,13 @@ function openPrevLB(k){
  lbKey=k;const t=STYLES[k],acct=esc(A.acct&&A.acct.trim()?A.acct.trim():'@yourname');
  const res=buildStyleHTML(k,acct,3,DEMO_DATA,DEMO_PHOTOS,true);
  const labels=['封面','內頁','結尾頁'];
- lb.innerHTML=`<div class="lb-s" data-lbx></div><div class="lb-p"><div class="lb-h"><b>${t.nm}</b><button type="button" class="lb-x" data-lbx aria-label="關閉">×</button></div>
+ lb.innerHTML=`<div class="lb-s" data-lbx></div><div class="lb-p"><div class="lb-h"><b>${t.nm}</b><button type="button" class="lb-shot-btn" id="lbShotBtn">📷 截圖模式</button><button type="button" class="lb-x" data-lbx aria-label="關閉">×</button></div>
   <div class="lcar" id="lcar">${labels.map((_,i)=>`<figure><div class="lcar-slide"><iframe id="lf${i}" style="width:1080px;height:1350px;border:none;display:block" scrolling="no"></iframe></div><figcaption>${labels[i]}</figcaption></figure>`).join('')}</div>
   <div class="lb-n"><button type="button" class="lb-a" data-lstep="-1" aria-label="上一頁">‹</button><div class="cdots">${[0,1,2].map(i=>`<button type="button" data-lgo="${i}" aria-label="第 ${i+1} 頁" aria-current="${i===0}"></button>`).join('')}</div><button type="button" class="lb-a" data-lstep="1" aria-label="下一頁">›</button></div>
   <button type="button" class="lb-go" data-prevpick="${k}"><span>選這個風格</span><span class="arr" aria-hidden="true">➜</span></button></div>`;
  lb.hidden=false;try{document.body.style.overflow='hidden'}catch(_){}
  const c=document.getElementById('lcar');c.addEventListener('scroll',()=>syncDots(c,lb));
+ document.getElementById('lbShotBtn').addEventListener('click',function(){const p=lb.querySelector('.lb-p');p.classList.toggle('shotmode');this.textContent=p.classList.contains('shotmode')?'✕ 結束截圖':'📷 截圖模式';this.classList.toggle('active')});
  requestAnimationFrame(()=>{
   const lp=lb.querySelector('.lb-p');if(lp){const scW=(lp.clientWidth-28)/1080;const scH=(window.innerHeight-220)/1350;const sc=Math.min(scW,scH).toFixed(4);lb.style.setProperty('--lcar-sc',sc);}
   if(res){const{slides,fontUrl}=res;slides.slice(0,3).forEach((s,i)=>{const f=document.getElementById('lf'+i);if(f)f.srcdoc=slideDoc(s,fontUrl);});}
@@ -2111,7 +2117,7 @@ function openLB(k){
  lbKey=k;const t=STYLES[k],acct=esc(A.acct&&A.acct.trim()?A.acct.trim():'@yourname');
  const res=buildStyleHTML(k,acct,3,DEMO_DATA,DEMO_PHOTOS,true);
  const labels=['封面','內頁','結尾頁'];
- lb.innerHTML=`<div class="lb-s" data-lbx></div><div class="lb-p"><div class="lb-h"><b>${t.nm}</b><button type="button" class="lb-x" data-lbx aria-label="關閉">×</button></div>
+ lb.innerHTML=`<div class="lb-s" data-lbx></div><div class="lb-p"><div class="lb-h"><b>${t.nm}</b><button type="button" class="lb-shot-btn" id="lbShotBtn">📷 截圖模式</button><button type="button" class="lb-x" data-lbx aria-label="關閉">×</button></div>
   <div class="lcar" id="lcar">${labels.map((_,i)=>`<figure><div class="lcar-slide"><iframe id="lf${i}" style="width:1080px;height:1350px;border:none;display:block" scrolling="no"></iframe></div><figcaption>${labels[i]}</figcaption></figure>`).join('')}</div>
   <div class="lb-n"><button type="button" class="lb-a" data-lstep="-1" aria-label="上一頁">‹</button><div class="cdots">${[0,1,2].map(i=>`<button type="button" data-lgo="${i}" aria-label="第 ${i+1} 頁" aria-current="${i===0}"></button>`).join('')}</div><button type="button" class="lb-a" data-lstep="1" aria-label="下一頁">›</button></div>
   <div class="lbf">${(()=>{const tabs=[];if(ACC[k])tabs.push(['acc',ACC[k].label,lbAccRow(k)]);tabs.push(['ft',k==='diary'?'字體':'標題字體',lbFontRow('ft','標題字體',FT_OPTS,k)]);
@@ -2123,6 +2129,7 @@ function openLB(k){
   <button type="button" class="lb-go" data-lpick><span>確認！</span><span class="arr" aria-hidden="true">➜</span></button></div>`;
  lb.hidden=false;try{document.body.style.overflow='hidden'}catch(_){}
  const c=document.getElementById('lcar');c.addEventListener('scroll',()=>syncDots(c,lb));
+ document.getElementById('lbShotBtn').addEventListener('click',function(){const p=lb.querySelector('.lb-p');p.classList.toggle('shotmode');this.textContent=p.classList.contains('shotmode')?'✕ 結束截圖':'📷 截圖模式';this.classList.toggle('active')});
  requestAnimationFrame(()=>{
   const lp=lb.querySelector('.lb-p');if(lp){const scW=(lp.clientWidth-28)/1080;const scH=(window.innerHeight-220)/1350;const sc=Math.min(scW,scH).toFixed(4);lb.style.setProperty('--lcar-sc',sc);}
   if(res){const{slides,fontUrl}=res;slides.slice(0,3).forEach((s,i)=>{const f=document.getElementById('lf'+i);if(f)f.srcdoc=slideDoc(s,fontUrl);});}
