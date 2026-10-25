@@ -1490,7 +1490,7 @@ function runPlanning(){
       setTimeout(()=>{btn.textContent='📋 複製指令，去 Claude.ai 貼上';btn.style.background='';btn.classList.remove('done')},3000);
       // 顯示 footer next（文字提示），不覆蓋 onclick（全域 handler 負責）
       const nb=document.getElementById('next');
-      if(nb){nb.textContent='套用，繼續填問卷 →';nb.hidden=false;}
+      if(nb){nb.textContent='就這個！繼續 →';nb.hidden=false;}
     };
   }
   if(box)box.scrollIntoView({behavior:'smooth',block:'nearest'});
