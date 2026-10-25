@@ -1097,52 +1097,105 @@ ${v('take','請從故事裡幫我提煉一句，要讓人有共鳴、想截圖�
 function buildScreenshotStylePrompt(){
  const v=(k,f)=>A[k]&&A[k].trim()?A[k].trim():f;
  const n=A.n||5;
- const what=v('what','（填入你的主題）');
- const turn=v('turn','');
- const take=v('take','');
- const role=v('role','身心靈工作者');
- const aud=v('aud','對自己感到迷惘、想被理解的人');
- // 組合故事素材成「我的文字內容」
- let storyContent=`【關於我】\n身份：${role}\n讀者：${aud}\n\n【故事素材】\n發生了什麼：\n${what}`;
- if(turn) storyContent+=`\n\n關鍵的那一瞬間：\n${turn}`;
- if(take) storyContent+=`\n\n想讓讀者帶走的一句話：\n${take}`;
- else storyContent+=`\n\n想讓讀者帶走的一句話：\n（請從故事裡提煉一句有共鳴、讓人想截圖留存的話）`;
- // 動態生成內頁
- let innerSlides='';
- for(let i=2;i<=n-1;i++){
-  innerSlides+=`\n【第 ${i} 張】\n標題：（段落主題）\n內文：（2-4行情緒文字，每行10-20字）`;
- }
  const acct=v('acct','@帳號');
- return `你是一位 IG 輪播圖設計師，擅長分析 IG 截圖並完全複製其排版風格。
+ const paste=(A._paste&&A._paste.trim())?A._paste.trim():'<在此貼上 Claude 給你的文字稿>';
+ // 動態產生內頁模板（第2張到第n-1張）
+ let innerTmpl='';
+ for(let i=2;i<=n-1;i++){
+  innerTmpl+=`
+<div class="box"><div class="slide inner">
+ <div class="num">0${i}</div>
+ <div class="txt" style="top:460px">
+  <p>[第${i}張內文，2–3行，每行10–18字]</p>
+ </div>
+ <div class="acc" style="top:1235px;color:#8a8478">${acct}</div>
+</div></div>
+`;
+ }
+ const tmpl=`<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${acct} 輪播圖</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--page:#e9e6e0;--note:#555}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#1c1b1f;--note:#aaa}}
+:root[data-theme="dark"]{--page:#1c1b1f;--note:#aaa}
+html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:24px;padding:20px 12px;font-family:sans-serif}
+.note{color:var(--note);font-size:13px;margin:0}
+.box{width:100%;max-width:540px;position:relative;overflow:hidden}
+.slide{position:absolute;left:0;top:0;width:1080px;height:1350px;transform-origin:0 0;overflow:hidden;font-family:'Noto Serif TC',serif;color:#4a4a4a}
+.inner{background:#F0EBE1}
+.cover{background:#3b3631}
+.photo{position:absolute;left:0;top:0;width:1080px;height:1350px;display:flex;align-items:center;justify-content:center;color:#cfc6b8;font-size:56px;letter-spacing:12px;padding-bottom:300px;box-sizing:border-box}
+.shade{position:absolute;left:0;top:0;width:1080px;height:1350px;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 30%,rgba(20,15,12,.45) 62%,rgba(20,15,12,.82) 100%)}
+.tag{position:absolute;top:110px;left:0;width:1080px;text-align:center;color:#f3eee6;font-size:34px;letter-spacing:14px}
+.tag i{display:inline-block;width:2px;height:34px;background:#f3eee6;vertical-align:middle;margin:0 28px;opacity:.8}
+.h1{position:absolute;left:0;top:830px;width:1080px;text-align:center;color:#fff;font-size:68px;font-weight:700;line-height:1.5;letter-spacing:6px}
+.sub{position:absolute;left:0;top:1050px;width:1080px;text-align:center;color:#e6dfd3;font-size:36px;letter-spacing:5px;line-height:1.6}
+.div{position:absolute;left:0;top:1170px;width:1080px;display:flex;align-items:center;justify-content:center;gap:24px;color:#e6dfd3;font-size:30px}
+.div b{display:block;width:230px;height:2px;background:rgba(230,223,211,.6)}
+.acc{position:absolute;left:0;width:1080px;text-align:center;font-family:'Cormorant Garamond','Noto Serif TC',serif;font-size:40px;letter-spacing:6px}
+.num{position:absolute;right:70px;top:90px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:190px;line-height:1;color:transparent;-webkit-text-stroke:3px #c9c4ba;letter-spacing:2px}
+.txt{position:absolute;left:90px;width:900px;top:430px;text-align:center;font-size:38px;line-height:1.85;letter-spacing:4px;font-weight:500}
+.txt p{margin:0 0 46px}
+.hl{color:#7d6b9a;font-weight:700}
+.pill{position:absolute;left:0;width:1080px;display:flex;justify-content:center}
+.pill span{background:#F8F5EE;border-radius:70px;padding:32px 56px;font-size:38px;letter-spacing:3px;box-shadow:0 6px 24px rgba(120,100,80,.12)}
+.btn span{background:#9B8DB0;color:#fff;box-shadow:0 10px 30px rgba(120,100,150,.3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="note">共 ${n} 張・1080×1350｜封面照片請替換 [照片] 區塊</p>
 
-【分析截圖，然後做出一模一樣排版的輪播圖】
+<div class="box"><div class="slide cover">
+ <div class="photo">[照片]</div><div class="shade"></div>
+ <div class="tag"><i></i>[封面標籤，例：塔羅覺察]<i></i></div>
+ <div class="h1">[封面主標題，<br>8–14字，可換行]</div>
+ <div class="sub">[封面副標題，<br>10–18字]</div>
+ <div class="div"><b></b>✦<b></b></div>
+ <div class="acc" style="top:1245px;color:#e6dfd3">${acct}</div>
+</div></div>
+${innerTmpl}
+<div class="box"><div class="slide inner">
+ <div class="num">0${n}</div>
+ <div class="txt" style="top:380px">
+  <p>[結尾內文，2–3行，把故事拉回讀者身上]</p>
+ </div>
+ <div class="pill btn" style="top:920px"><span>[結尾 CTA，例：留言說說你的…]</span></div>
+ <div class="acc" style="top:1235px;color:#8a8478">${acct}</div>
+</div></div>
+</div>
+<script>
+function fit(){document.querySelectorAll('.box').forEach(function(b){var s=b.clientWidth/1080;b.style.height=(1350*s)+'px';b.firstElementChild.style.transform='scale('+s+')'})}
+window.addEventListener('resize',fit);fit();
+</script>
+</body>
+</html>`;
+ return `你是擅長身心靈領域的 IG 輪播圖設計師。
 
-步驟一：仔細分析截圖的版面
-- 背景色 / 底色漸層（請抓出 hex 色碼）
-- 字體風格（粗細、大小、間距、中文/英文字型）
-- 文字位置（置左/置中/置右，距邊幾 px）
-- 有沒有照片、如何排版（全圖、半圖、邊框）
-- 裝飾元素（線條、圓圈、小圖示、幾何圖形）
-- 帳號位置（左上/右上/左下/右下）
+請把下面的文字稿填入 HTML 模板，輸出完整 HTML。
 
-步驟二：用我的內容，照截圖排版做出 ${n} 張 HTML
-
-【我的故事素材】
-${(A._paste&&A._paste.trim())?A._paste.trim():'<在此貼上 Claude 給你的文字稿>'}
-
-IG 帳號：${acct}
+【我的文字稿】
+${paste}
 
 ---
 
-⚠️ 輸出規則（請嚴格遵守）：
-1. 每張獨立一個 \`<div>\`，尺寸 1080×1350px，用 \`position:absolute\` 定位所有元素
-2. 背景、字體、顏色、裝飾元素要和截圖一致，不要自行發揮
-3. 字體從 Google Fonts 載入（在 \`<head>\` 加一行 \`<link>\`）
-4. 如果截圖有照片位置，用 \`[照片]\` 佔位，我自己換
-5. 每張文字 50 字以內，語氣有溫度
-6. 輸出完整 HTML，用 artifact 呈現，讓我可以直接看效果
+⚠️ 填入規則（請嚴格遵守）：
+1. 只替換 [方括號] 內的文字，其他所有 HTML、style、class 完全不要動
+2. 封面的 <br> 換行請保留
+3. [照片] 佔位符保留不動，我自己換
+4. 數字編號（class="num"）不要改
+5. 輸出完整 HTML，用 artifact 呈現
 
-張數：共 ${n} 張（第 1 張封面、第 2–${n-1} 張內頁、第 ${n} 張結尾）`;
+【HTML 模板】
+\`\`\`html
+${tmpl}
+\`\`\``;
 }
 function buildScanPrompt(){
  const acct=A.acct&&A.acct.trim()?A.acct.trim():'@帳號';
