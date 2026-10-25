@@ -1693,12 +1693,29 @@ function render(){
    <div class="guide-footer">🪐 有問題歡迎到 IG 傳訊息給 <a href="https://www.instagram.com/veritytarot/" target="_blank" rel="noopener" style="color:#9b7fc0">@veritytarot</a>，我很樂意聽你回饋！</div></div>`;
  }
  if(s.end){
-  h+=`<div style="background:#faf6f0;border:1px solid #e8e0d4;border-radius:24px;padding:36px 24px 28px;text-align:center;margin-bottom:16px">
-   <div style="display:inline-block;background:#9B8DB0;color:#fff;font-family:'Noto Serif TC',serif;font-size:11px;letter-spacing:3px;padding:5px 18px;border-radius:20px;margin-bottom:20px">✦ 完成 ✦</div>
-   <div style="font-size:20px;font-weight:700;letter-spacing:2px;line-height:1.6;color:#3a3530;margin-bottom:8px">你今天做了<br>第一張輪播圖！</div>
-   <div style="font-size:13px;color:#8a8478;line-height:1.8;margin-bottom:10px">把這個工具推薦給也在經營 IG 的朋友吧</div>
-   <div style="font-size:18px;letter-spacing:6px;margin-bottom:22px">♡ ♡ ♡</div>
-   <a href="YOUR_REELS_URL" target="_blank" rel="noopener" id="shareReelsBtn" style="display:block;padding:14px;border-radius:12px;background:#9B8DB0;color:#fff;font-size:14px;letter-spacing:2px;text-decoration:none;font-family:'Noto Serif TC',serif">▶ 分享這支影片給朋友</a>
+  h+=`<style>
+   @keyframes _twinkle{from{opacity:.15}to{opacity:.4}}
+   @keyframes _float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+   .achv-star{position:absolute;color:#9B7DB5;pointer-events:none;
+     animation:_twinkle var(--d) ease-in-out infinite alternate,_float calc(var(--d)*1.4) ease-in-out infinite;}
+  </style>
+  <div style="background:#fff;border:1.5px solid #DDD6EC;border-radius:20px;padding:36px 24px 28px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden">
+   <div style="content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(155,125,181,.18),transparent 65%);pointer-events:none"></div>
+   <span class="achv-star" style="--d:2.3s;font-size:10px;top:14%;left:8%">☆</span>
+   <span class="achv-star" style="--d:3.1s;font-size:8px;top:22%;right:10%">☆</span>
+   <span class="achv-star" style="--d:2.7s;font-size:12px;bottom:30%;left:12%">☆</span>
+   <span class="achv-star" style="--d:3.5s;font-size:7px;bottom:18%;right:8%">☆</span>
+   <span class="achv-star" style="--d:2.9s;font-size:9px;top:10%;right:22%">☆</span>
+   <span class="achv-star" style="--d:4.0s;font-size:6px;bottom:12%;left:28%">☆</span>
+   <span class="achv-star" style="--d:2.5s;font-size:11px;top:42%;left:5%">☆</span>
+   <span class="achv-star" style="--d:3.3s;font-size:7px;top:60%;right:6%">☆</span>
+   <div style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;letter-spacing:4px;font-size:22px;color:#9B7DB5;margin-bottom:16px;position:relative">YOU DID IT 🎉</div>
+   <div style="font-family:'LXGW WenKai TC',serif;font-size:15px;font-weight:400;letter-spacing:0;line-height:2;color:#2E2540;margin-bottom:18px;position:relative">第一次永遠是最難的<br>你今天跨過去了<br>接下來只會越來越順哦 !!!</div>
+   <div style="font-size:13px;line-height:1.8;margin-bottom:22px;position:relative">
+    覺得這套工具好用嗎？<br>
+    <span style="background:linear-gradient(transparent 40%,rgba(197,180,216,.55) 40%);font-weight:700">把這支影片分享給也在經營 IG 的朋友吧！</span>
+   </div>
+   <a href="YOUR_REELS_URL" target="_blank" rel="noopener" id="shareReelsBtn" style="display:block;padding:14px;border-radius:12px;background:#9B7DB5;color:#fff;font-size:13px;letter-spacing:2px;text-decoration:none;font-family:'Noto Serif TC',serif;position:relative">▶ 分享這支影片給朋友</a>
   </div>
   <div id="fbSection" style="margin:0 0 20px;background:linear-gradient(135deg,rgba(138,108,196,.08),rgba(176,148,224,.06));border:1.5px solid var(--line);border-radius:20px;padding:22px 20px">
    <div id="fbDone" style="display:none;text-align:center;padding:24px 16px">
