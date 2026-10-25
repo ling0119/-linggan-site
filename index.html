@@ -1387,6 +1387,8 @@ function renderPlanning(){
   </section></div>`;
 
   if(!hasResult){
+    const nb=document.getElementById('next');
+    if(nb)nb.hidden=true;
     const runBtn=document.getElementById('planRun');
     const skipBtn=document.getElementById('planSkip');
     const pasteApply=document.getElementById('planPasteApply');
@@ -1746,7 +1748,6 @@ function render(){
 
  const nb=document.getElementById('next'),bb=document.getElementById('back');
  bb.hidden=false; bb.textContent=s.end?'← 上一頁':s.styles?'← 上一步':s.txt?'← 上一步':(S.i===0?'回首頁':'← 上一步');
- nb.hidden=S.i===0;
  nb.textContent=s.end?'還有靈感嗎？again 🚀':s.adj?'完成！帶走你的靈感 🎉':s.styles?'下一步：微調指令包 →':s.txt?'下一步：截圖風格指令 →':(S.i===1?'下一步：生成貼文草稿 →':'下一步');
  nb.classList.toggle('magic-btn',!!s.end);
  save();
