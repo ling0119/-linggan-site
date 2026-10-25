@@ -1693,7 +1693,14 @@ function render(){
    <div class="guide-footer">🪐 有問題歡迎到 IG 傳訊息給 <a href="https://www.instagram.com/veritytarot/" target="_blank" rel="noopener" style="color:#9b7fc0">@veritytarot</a>，我很樂意聽你回饋！</div></div>`;
  }
  if(s.end){
-  h+=`<div id="fbSection" style="margin:0 0 20px;background:linear-gradient(135deg,rgba(138,108,196,.08),rgba(176,148,224,.06));border:1.5px solid var(--line);border-radius:20px;padding:22px 20px">
+  h+=`<div style="background:#faf6f0;border:1px solid #e8e0d4;border-radius:24px;padding:36px 24px 28px;text-align:center;margin-bottom:16px">
+   <div style="display:inline-block;background:#9B8DB0;color:#fff;font-family:'Noto Serif TC',serif;font-size:11px;letter-spacing:3px;padding:5px 18px;border-radius:20px;margin-bottom:20px">✦ 完成 ✦</div>
+   <div style="font-size:20px;font-weight:700;letter-spacing:2px;line-height:1.6;color:#3a3530;margin-bottom:8px">你今天做了<br>第一張輪播圖！</div>
+   <div style="font-size:13px;color:#8a8478;line-height:1.8;margin-bottom:10px">把這個工具推薦給也在經營 IG 的朋友吧</div>
+   <div style="font-size:18px;letter-spacing:6px;margin-bottom:22px">♡ ♡ ♡</div>
+   <a href="YOUR_REELS_URL" target="_blank" rel="noopener" id="shareReelsBtn" style="display:block;padding:14px;border-radius:12px;background:#9B8DB0;color:#fff;font-size:14px;letter-spacing:2px;text-decoration:none;font-family:'Noto Serif TC',serif">▶ 分享這支影片給朋友</a>
+  </div>
+  <div id="fbSection" style="margin:0 0 20px;background:linear-gradient(135deg,rgba(138,108,196,.08),rgba(176,148,224,.06));border:1.5px solid var(--line);border-radius:20px;padding:22px 20px">
    <div id="fbDone" style="display:none;text-align:center;padding:24px 16px">
     <span style="font-size:40px;display:block;margin-bottom:10px">🌙</span>
     <div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:4px">謝謝你的反饋！</div>
@@ -1711,13 +1718,6 @@ function render(){
      </div>
     </a>
    </div>
-  </div>
-  <div style="background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:28px 24px 24px;text-align:center;margin-bottom:16px">
-   <div style="font-family:'Cormorant Garamond','Noto Serif TC',serif;font-size:12px;letter-spacing:4px;color:var(--muted);margin-bottom:16px">✦ 完成 ✦</div>
-   <div style="font-size:36px;letter-spacing:8px;margin-bottom:14px">✦ ✦ ✦</div>
-   <div style="font-size:18px;font-weight:700;letter-spacing:2px;line-height:1.6;margin-bottom:8px">你今天做了<br>第一張輪播圖！</div>
-   <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:22px">把這個工具推薦給<br>也在經營 IG 的朋友吧 💜</div>
-   <a href="YOUR_REELS_URL" target="_blank" rel="noopener" id="shareReelsBtn" style="display:block;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-size:14px;letter-spacing:2px;text-decoration:none;font-family:'Noto Serif TC',serif">▶ 分享這支影片給朋友</a>
   </div>
   <div class="cta"><b>🔔 工具持續更新中！</b><p>加入官方 LINE，第一個知道新功能上線、新模板釋出。</p>
    <div class="row"><span class="id">${BRAND.line}</span><button type="button" id="copyLine">複製 ID</button><a href="https://line.me/R/ti/p/${BRAND.line}" target="_blank" rel="noopener">加入 LINE</a></div></div>
