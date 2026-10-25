@@ -3,9 +3,9 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/"
-  to = "/靈感轉運站｜靈感救援隊.html"
-  status = 302
+  from = "/靈感轉運站｜靈感救援隊.html"
+  to = "/index.html"
+  status = 301
 
 [[redirects]]
   from = "/api/feedback"
