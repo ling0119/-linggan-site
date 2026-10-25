@@ -2,10 +2,6 @@
   publish = "."
   functions = "netlify/functions"
 
-[[redirects]]
-  from = "/靈感轉運站｜靈感救援隊.html"
-  to = "/index.html"
-  status = 301
 
 [[redirects]]
   from = "/api/feedback"
