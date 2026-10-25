@@ -1532,7 +1532,7 @@ function render(){
  if(s.ex)h+=`<div class="exh">參考例子</div><div class="exbox">${s.ex.map((x,i)=>`<p class="exi"><b>例 ${i+1}</b>${esc(x)}</p>`).join('')}</div>`;
  if(s.txt){
   let _txtBuilt='';try{_txtBuilt=buildTextDraftPrompt();}catch(e){_txtBuilt='[指令生成時出現錯誤]\n'+e;}
-  h+=`<div class="cnt"><div class="cnt-l">選好張數</div><div class="ncard-row">${[[5,'標準版'],[7,'完整版'],[9,'豐富版']].map(([n,d])=>`<button type="button" class="ncard" data-setn="${n}" aria-pressed="${(A.n||5)===n}"><span class="nc-n">${n}</span><span class="nc-d">${d}</span></button>`).join('')}</div></div>
+  h+=`<div class="cnt"><div class="cnt-l">選好張數</div><div class="ncard-row">${[[4,'快讀版'],[5,'一般版'],[7,'細讀版'],[8,'深讀版']].map(([n,d])=>`<button type="button" class="ncard" data-setn="${n}" aria-pressed="${(A.n||5)===n}"><span class="nc-n">${n}</span><span class="nc-d">${d}</span></button>`).join('')}</div></div>
 
   <div style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:16px 0 4px;line-height:1.8">
    <div style="font-weight:700;font-size:15px;margin-bottom:6px;color:var(--ink)">💡 怎麼用這份指令？</div>
