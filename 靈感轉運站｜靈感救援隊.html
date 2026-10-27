@@ -1125,6 +1125,34 @@ function wrapCanvasText(ctx,text,x,y,maxW,lineH){
  }
  return cy;
 }
+// 計算 wrapCanvasText 需要幾行（不繪製）
+function measureWrapLines(ctx,text,maxW){
+ let count=0;
+ for(const line of text.split('\n')){
+  if(!line){count++;continue;}
+  const chars=line.split('');let cur='';
+  for(let i=0;i<chars.length;i++){
+   const test=cur+chars[i];
+   if(ctx.measureText(test).width>maxW&&cur){count++;cur=chars[i];}
+   else cur=test;
+  }
+  count++;
+ }
+ return count;
+}
+// 自動縮小字體讓內文在可用高度內
+// minSize: 最小字號, maxSize: 最大字號, startY: 文字起點Y, maxY: 底部限制Y
+// 回傳 {fontSize, lineH} 供 drawCanvasPage 使用
+function autoFitFontSize(ctx,text,maxW,startY,maxY,fontStyle,maxSize,minSize){
+ for(let sz=maxSize;sz>=minSize;sz-=2){
+  const lineH=Math.round(sz*1.55);
+  ctx.font=fontStyle.replace(/\d+px/,sz+'px');
+  const lines=measureWrapLines(ctx,text,maxW);
+  const needed=startY+lines*lineH;
+  if(needed<=maxY)return{fontSize:sz,lineH};
+ }
+ return{fontSize:minSize,lineH:Math.round(minSize*1.55)};
+}
 
 // ── 共用：頂部欄目列（像 pumozo.mag / _1mlinda） ──
 function drawTopBar(ctx,W,acct,seriesLabel,txtColor,lineColor,pageNum,pageTotal){
@@ -1499,10 +1527,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   const titleEndY_drama=wrapCanvasText(ctx,title||'',px,260,W-px*2,96);
   ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,titleEndY_drama+14);ctx.lineTo(px+Math.min(W-px*2,400),titleEndY_drama+14);ctx.stroke();
-  // 正文
-  ctx.font='400 46px "Noto Serif TC","PingFang TC",serif';
+  // 正文（自動調字體）
+  const bodyY_drama=Math.max(372,titleEndY_drama+40);
+  const {fontSize:bfs_d,lineH:blh_d}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_drama,H-140,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
+  ctx.font='400 '+bfs_d+'px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.body;
-  wrapCanvasText(ctx,body||'',px,372,W-px*2,72);
+  wrapCanvasText(ctx,body||'',px,bodyY_drama,W-px*2,blh_d);
   // 底欄
   ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
@@ -1530,11 +1560,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   // 短橫線
   ctx.strokeStyle='rgba(26,26,24,0.15)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(cx-80,titleEndY_ink+14);ctx.lineTo(cx+80,titleEndY_ink+14);ctx.stroke();
-  // 正文
-  ctx.font='400 42px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;
-  const blines=(body||'').split('\n');let by=400;
-  for(const l of blines){if(!l){by+=24;continue;}ctx.fillText(l,cx,by);by+=64;}
+  // 正文（自動調字體）
+  const bodyY_ink=Math.max(400,titleEndY_ink+40);
+  const {fontSize:bfs_i,lineH:blh_i}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_ink,H-140,'400 42px "Noto Serif TC","PingFang TC",serif',42,26);
+  ctx.font='400 '+bfs_i+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.body;ctx.textAlign='center';
+  wrapCanvasText(ctx,body||'',cx,bodyY_ink,W-px*2,blh_i);
   ctx.textAlign='left';
   // 底欄
   ctx.strokeStyle='rgba(26,26,24,0.1)';ctx.lineWidth=1;
@@ -1562,11 +1593,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   const titleEndY_film=wrapCanvasText(ctx,title||'',cx,272,W-px*2,94);
   ctx.strokeStyle='rgba(255,232,190,0.55)';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-160,titleEndY_film+14);ctx.lineTo(cx+160,titleEndY_film+14);ctx.stroke();
-  // 正文
-  ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.85)';
-  const blines=(body||'').split('\n');let by=388;
-  for(const l of blines){if(!l){by+=22;continue;}ctx.fillText(l,cx,by);by+=68;}
+  // 正文（自動調字體）
+  const bodyY_film=Math.max(388,titleEndY_film+40);
+  const {fontSize:bfs_f,lineH:blh_f}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_film,H-170,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+  ctx.font='400 '+bfs_f+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle='rgba(255,255,255,0.85)';ctx.textAlign='center';
+  wrapCanvasText(ctx,body||'',cx,bodyY_film,W-px*2,blh_f);
   ctx.textAlign='left';
   // 底部品牌
   ctx.strokeStyle='rgba(255,232,190,0.3)';ctx.lineWidth=1;
@@ -1601,11 +1633,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   const titleEndY_neon=wrapCanvasText(ctx,title||'',cx,280,W-px*2,94);
   ctx.strokeStyle='rgba(26,26,24,0.14)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(cx-80,titleEndY_neon+14);ctx.lineTo(cx+80,titleEndY_neon+14);ctx.stroke();
-  // 正文
-  ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;
-  const blines=(body||'').split('\n');let by=390;
-  for(const l of blines){if(!l){by+=22;continue;}ctx.fillText(l,cx,by);by+=66;}
+  // 正文（自動調字體）
+  const bodyY_neon=Math.max(390,titleEndY_neon+40);
+  const {fontSize:bfs_n,lineH:blh_n}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_neon,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+  ctx.font='400 '+bfs_n+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.body;ctx.textAlign='center';
+  wrapCanvasText(ctx,body||'',cx,bodyY_neon,W-px*2,blh_n);
   ctx.textAlign='left';
   // 底部
   ctx.strokeStyle='rgba(26,26,24,0.08)';ctx.lineWidth=1;
@@ -1629,10 +1662,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   const titleEndY_earth=wrapCanvasText(ctx,title||'',px,284,W-px*2,92);
   ctx.strokeStyle='rgba(245,200,122,0.5)';ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(px,titleEndY_earth+14);ctx.lineTo(px+220,titleEndY_earth+14);ctx.stroke();
-  // 正文
-  ctx.font='400 46px "Noto Serif TC","PingFang TC",serif';
+  // 正文（自動調字體）
+  const bodyY_earth=Math.max(394,titleEndY_earth+40);
+  const {fontSize:bfs_e,lineH:blh_e}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_earth,H-140,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
+  ctx.font='400 '+bfs_e+'px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='rgba(255,255,255,0.84)';
-  wrapCanvasText(ctx,body||'',px,394,W-px*2,72);
+  wrapCanvasText(ctx,body||'',px,bodyY_earth,W-px*2,blh_e);
   drawBottomBar(ctx,W,H,acct,'往右滑 →',th.bar,th.foot,th.footSub);
   return;
  }
@@ -1657,10 +1692,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   const titleEndY_stone=wrapCanvasText(ctx,title||'',px,280,W-px*2,92);
   ctx.strokeStyle='rgba(26,58,92,0.35)';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(px,titleEndY_stone+14);ctx.lineTo(px+220,titleEndY_stone+14);ctx.stroke();
-  // 正文
-  ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
+  // 正文（自動調字體）
+  const bodyY_stone=Math.max(390,titleEndY_stone+40);
+  const {fontSize:bfs_s,lineH:blh_s}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_stone,H-160,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+  ctx.font='400 '+bfs_s+'px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.body;
-  wrapCanvasText(ctx,body||'',px,390,W-px*2,70);
+  wrapCanvasText(ctx,body||'',px,bodyY_stone,W-px*2,blh_s);
   // 底部品牌
   ctx.strokeStyle='rgba(26,58,92,0.16)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(margin+50,H-148);ctx.lineTo(W-margin-50,H-148);ctx.stroke();
@@ -2438,9 +2475,16 @@ function render(){
    </div>
   </details>
 
+  <!-- ── 快速貼入整份文案 ── -->
+  <div style="margin:12px 0 8px">
+   <p style="font-size:13px;color:var(--muted);margin:0 0 6px">💬 有整份文案？一次貼進來自動分張：</p>
+   <textarea id="pasteArea" rows="4" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="把文案貼在這裡，系統自動分到每張欄位…">${esc(A._paste||'')}</textarea>
+   <button type="button" id="parsePasteBtn" style="margin-top:6px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px;font:inherit;font-size:14px;font-weight:700;cursor:pointer">⚡ 自動分張填入</button>
+  </div>
+
   <!-- ── 每張獨立輸入欄位 ── -->
   <div style="margin:16px 0 4px" id="slideFieldsWrap">
-   <p style="font-size:13px;font-weight:700;color:var(--muted);margin:0 0 10px">✍️ 直接填每張內容：</p>
+   <p style="font-size:13px;font-weight:700;color:var(--muted);margin:0 0 10px">✍️ 或直接填每張內容：</p>
    <div id="slideFields" style="display:flex;flex-direction:column;gap:14px">${(()=>{
     const n=A.n||5;const slides=A._slides||[];let out='';
     for(let i=0;i<n;i++){
@@ -2815,6 +2859,34 @@ app.addEventListener('click',e=>{
   return;
  }
  // Canvas 出圖
+ if(t.id==='parsePasteBtn'){
+  const ta=document.getElementById('pasteArea');
+  const raw=(ta&&ta.value)||A._paste||'';
+  if(!raw.trim()){return;}
+  A._paste=raw;
+  // 智能切張：先試 \n\n 分段，不夠則試單換行
+  const n=A.n||5;
+  let blocks=raw.trim().split(/\n{2,}/);
+  if(blocks.length<n){blocks=raw.trim().split('\n').filter(l=>l.trim());}
+  if(!A._slides)A._slides=[];
+  for(let i=0;i<n;i++){
+   if(!A._slides[i])A._slides[i]={};
+   const blk=(blocks[i]||'').trim();
+   if(!blk)continue;
+   const lines=blk.split('\n').filter(l=>l.trim());
+   const rawTitle=lines[0]||'';
+   const title=rawTitle.replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').replace(/^#+\s*/,'').trim();
+   const bodyLines=lines.slice(1);
+   // 如果第二行很短（≤20字）視為副標
+   let sub='',body='';
+   if(bodyLines.length>1&&bodyLines[0].length<=20){sub=bodyLines[0].replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').trim();body=bodyLines.slice(1).join('\n');}
+   else{body=bodyLines.join('\n');}
+   A._slides[i].title=title;
+   A._slides[i].sub=sub;
+   A._slides[i].body=body;
+  }
+  save();render();return;
+ }
  if(t.id==='canvasGenBtn'){
   t.disabled=true;t.textContent='⏳ 生成中…';
   try{
