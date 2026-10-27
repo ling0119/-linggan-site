@@ -3015,6 +3015,11 @@ function render(){
  // 如果是風格選擇步驟，自動畫封面預覽
  if(Q[S.i]&&Q[S.i].canvas){
   requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
+  // bind bgImg inputs after render
+  requestAnimationFrame(()=>{
+   const inp=document.getElementById('bgImgAllInput');
+   if(inp&&!inp._bound){inp._bound=true;inp.onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],-1);};}
+  });
  }
 
  const nb=document.getElementById('next'),bb=document.getElementById('back');
