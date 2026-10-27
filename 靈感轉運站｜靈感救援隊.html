@@ -1676,7 +1676,11 @@ function buildPagesFromPaste(pasteText,n){
  }
  const blocks=pasteText.trim().split(/\n{2,}/);
  for(let i=0;i<n;i++){
-  const blk=blocks[i]||blocks[blocks.length-1]||'';
+  const blk=blocks[i]||'';
+  if(!blk){
+   pages.push({title:'（第 '+(i+1)+' 張）',body:'在「文字稿」步驟的文案中\n補充更多段落即可'});
+   continue;
+  }
   const lines=blk.split('\n').filter(l=>l.trim());
   const title=lines[0]||('第 '+(i+1)+' 頁');
   const body=lines.slice(1).join('\n')||blk;
@@ -2435,7 +2439,7 @@ function render(){
       {k:'drama',label:'暗夜戲劇',desc:'純黑・金字壓底'},
       {k:'ink',label:'白紙墨跡',desc:'純白・極簡留白'},
       {k:'film',label:'菲林舊照',desc:'米黃・復古框線'},
-      {k:'neon',label:'霓虹夜市',desc:'深紫・粉光・賽博龐克'},
+      {k:'neon',label:'知識白板',desc:'米白・極簡・思維補丁感'},
       {k:'earth',label:'大地詩集',desc:'磚橘・奶白・溫暖土地'},
       {k:'stone',label:'水墨石板',desc:'深灰・白字・硃砂紅點'},
      ].map(({k,label,desc})=>{
