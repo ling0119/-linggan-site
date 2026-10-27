@@ -1549,6 +1549,31 @@ function buildPagesFromPaste(pasteText,n){
  }
  return pages;
 }
+// ── 即時風格預覽（封面縮圖）──
+function drawStylePreview(styleKey){
+ const canvas=document.getElementById('stylePreviewCanvas');
+ if(!canvas)return;
+ const th=CANVAS_THEMES[styleKey||'drama']||CANVAS_THEMES.drama;
+ const W=1080,H=1350;
+ const ctx=canvas.getContext('2d');
+ const acct=A.acct||'@帳號';
+ // 示範文字（用已有文案，或預設）
+ const pasteText=A._paste||'';
+ const pages=buildPagesFromPaste(pasteText,1);
+ const p0=pages[0];
+ const lines=(p0.body||'').split('\n');
+ const sub=lines[0]||'探索靈感的方式';
+ const body=lines.slice(1).join('\n')||'往右滑，看看怎麼開始 →';
+ document.fonts.ready.then(()=>{
+  drawCanvasCover(ctx,W,H,th,acct,p0.title||'你的標題',sub,body);
+  // 加點擊放大
+  canvas.onclick=()=>{
+   const a=document.createElement('a');
+   a.href=canvas.toDataURL('image/png');
+   a.download='preview.png';a.click();
+  };
+ });
+}
 function drawCarouselCanvas(){
  const style=A._canvasStyle||'drama';
  const th=CANVAS_THEMES[style]||CANVAS_THEMES.dark;
@@ -2233,52 +2258,47 @@ function render(){
    <div style="font-size:13px;color:var(--muted);line-height:1.8">填好文字稿後，選一個風格，點「出圖」就能直接下載 PNG。</div>
   </div>
 
-  <!-- ── 風格選擇 ── -->
+  <!-- ── 風格選擇 + 即時預覽 ── -->
   <div style="margin-bottom:14px">
-   <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--muted)">選擇風格</div>
-   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'drama')==='drama'?'canvas-style-on':''}" data-cstyle="drama" style="border:2px solid ${(A._canvasStyle||'drama')==='drama'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
-     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(160deg,#1c1408 0%,#0a0806 100%);margin-bottom:6px;display:flex;align-items:flex-end;padding:6px 8px;box-sizing:border-box"><span style="color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:.1em">電影海報感</span></div>
-     <div style="font-weight:700;font-size:13px">暗夜戲劇</div>
-     <div style="font-size:11px;color:var(--muted)">純黑底・金字壓底</div>
-    </button>
-    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'drama')==='ink'?'canvas-style-on':''}" data-cstyle="ink" style="border:2px solid ${(A._canvasStyle||'drama')==='ink'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
-     <div style="width:100%;height:50px;border-radius:6px;background:#fafaf8;margin-bottom:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative"><div style="position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(transparent,transparent 11px,rgba(26,26,24,0.08) 11px,rgba(26,26,24,0.08) 12px)"></div><span style="color:#1a1a18;font-size:14px;font-weight:900;letter-spacing:.05em;position:relative">墨</span></div>
-     <div style="font-weight:700;font-size:13px">白紙墨跡</div>
-     <div style="font-size:11px;color:var(--muted)">純白底・極簡留白</div>
-    </button>
-    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'drama')==='film'?'canvas-style-on':''}" data-cstyle="film" style="border:2px solid ${(A._canvasStyle||'drama')==='film'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
-     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#f2e8d5,#e6d5b8);margin-bottom:6px;box-shadow:inset 0 0 0 3px rgba(107,76,42,0.3);display:flex;align-items:center;justify-content:center"><span style="color:#6b4c2a;font-size:11px;letter-spacing:.15em">1984 ✦</span></div>
-     <div style="font-weight:700;font-size:13px">菲林舊照</div>
-     <div style="font-size:11px;color:var(--muted)">米黃底・復古框線</div>
-    </button>
-    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'drama')==='bar'?'canvas-style-on':''}" data-cstyle="bar" style="border:2px solid ${(A._canvasStyle||'drama')==='bar'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
-     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#2d1020,#1a0a12);margin-bottom:6px;display:flex;align-items:flex-end;padding:6px 8px;box-sizing:border-box"><span style="color:#e8b4a0;font-size:10px;letter-spacing:.1em">— 深夜</span></div>
-     <div style="font-weight:700;font-size:13px">深夜小酒館</div>
-     <div style="font-size:11px;color:var(--muted)">深酒紅・裸粉文字</div>
-    </button>
-    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'drama')==='forest'?'canvas-style-on':''}" data-cstyle="forest" style="border:2px solid ${(A._canvasStyle||'drama')==='forest'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
-     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#1a3028,#0e1f18);margin-bottom:6px;display:flex;align-items:center;padding:0 10px;box-sizing:border-box"><div style="width:3px;height:32px;background:#a8c8a0;border-radius:2px;margin-right:8px"></div><span style="color:#e8f0e4;font-size:10px;line-height:1.4">森林<br>手記</span></div>
-     <div style="font-weight:700;font-size:13px">森林手記</div>
-     <div style="font-size:11px;color:var(--muted)">深墨綠・細線框架</div>
-    </button>
-    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'drama')==='letter'?'canvas-style-on':''}" data-cstyle="letter" style="border:2px solid ${(A._canvasStyle||'drama')==='letter'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
-     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#1e2a3e,#141c28);margin-bottom:6px;overflow:hidden;position:relative"><div style="position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(transparent,transparent 11px,rgba(192,204,224,0.1) 11px,rgba(192,204,224,0.1) 12px)"></div><div style="position:absolute;bottom:6px;right:10px;color:#c0cce0;font-size:10px;letter-spacing:.1em">銀月光</div></div>
-     <div style="font-weight:700;font-size:13px">月光信紙</div>
-     <div style="font-size:11px;color:var(--muted)">深藍灰・橫線信紙感</div>
-    </button>
+   <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--muted)">選擇風格 <span style="font-weight:400;opacity:.7">（右側即時預覽）</span></div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
+    <!-- 左欄：風格按鈕清單 -->
+    <div style="display:flex;flex-direction:column;gap:6px">
+     ${[
+      {k:'drama',label:'暗夜戲劇',desc:'純黑・金字壓底'},
+      {k:'ink',label:'白紙墨跡',desc:'純白・極簡留白'},
+      {k:'film',label:'菲林舊照',desc:'米黃・復古框線'},
+      {k:'bar',label:'深夜小酒館',desc:'酒紅・裸粉文字'},
+      {k:'forest',label:'森林手記',desc:'墨綠・豎線框架'},
+      {k:'letter',label:'月光信紙',desc:'深藍・橫線信紙'},
+     ].map(({k,label,desc})=>{
+      const on=(A._canvasStyle||'drama')===k;
+      return `<button type="button" class="canvas-style-btn" data-cstyle="${k}" style="border:2px solid ${on?'var(--accent)':'var(--line)'};border-radius:10px;padding:9px 12px;background:${on?'rgba(var(--acc3-rgb,155,125,181),0.08)':'var(--surface)'};cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;width:100%">
+       <div style="width:14px;height:14px;border-radius:50%;border:2px solid ${on?'var(--accent)':'var(--line)'};flex:none;background:${on?'var(--accent)':'transparent'}"></div>
+       <div>
+        <div style="font-weight:700;font-size:13px;line-height:1.3">${label}</div>
+        <div style="font-size:11px;color:var(--muted)">${desc}</div>
+       </div>
+      </button>`;
+     }).join('')}
+    </div>
+    <!-- 右欄：即時 canvas 預覽 -->
+    <div style="position:sticky;top:20px">
+     <canvas id="stylePreviewCanvas" width="1080" height="1350" style="width:100%;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.18)"></canvas>
+     <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">封面預覽（點擊可放大）</div>
+    </div>
    </div>
   </div>
 
   <!-- ── 出圖按鈕 ── -->
   <button type="button" id="canvasGenBtn" style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px">
-   ✨ 生成輪播圖
+   ✨ 生成全部輪播圖
   </button>
   ${hasPaste?'':'<p style="font-size:12px;color:#c0956a;margin:0 0 8px;text-align:center">⚠️ 建議先完成上方「文字稿」步驟，有文案出圖效果更好</p>'}
 
   <!-- ── 預覽區 ── -->
   <div id="canvasPreview" style="display:none;margin-top:12px">
-   <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--muted)">預覽（點圖可下載）</div>
+   <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--muted)">全部輪播圖（點圖下載）</div>
    <div id="canvasSlides" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>`;
  }
@@ -2431,6 +2451,11 @@ function render(){
  h+='</div>';
  app.innerHTML=h;
 
+ // 如果是風格選擇步驟，自動畫封面預覽
+ if(Q[S.i]&&Q[S.i].styles){
+  requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'drama'));
+ }
+
  const nb=document.getElementById('next'),bb=document.getElementById('back');
  bb.hidden=false; bb.textContent=s.end?'← 上一頁':s.styles?'← 上一步':s.txt?'← 上一步':(S.i===0?'回首頁':'← 上一步');
  nb.textContent=s.end?'還有靈感嗎？again 🚀':s.adj?'完成！帶走你的靈感 🎉':s.styles?'下一步：微調指令包 →':s.txt?'下一步：截圖風格指令 →':(S.i===1?'生成貼文草稿 →':'NEXT →');
@@ -2563,7 +2588,10 @@ app.addEventListener('click',e=>{
   copy(capPrompt,false,t);return}
  // Canvas 風格選擇
  if(t.classList.contains('canvas-style-btn')){
-  A._canvasStyle=t.dataset.cstyle;save();render();return;
+  A._canvasStyle=t.dataset.cstyle;save();render();
+  // render() 會重建 DOM，之後補畫預覽
+  requestAnimationFrame(()=>drawStylePreview(A._canvasStyle));
+  return;
  }
  // Canvas 出圖
  if(t.id==='canvasGenBtn'){
