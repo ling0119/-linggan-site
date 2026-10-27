@@ -1795,14 +1795,8 @@ function buildPagesFromSlides(n){
   const title=(sl.title||'').trim()||(isEnd?'謝謝你滑到最後 ✨':('第 '+(i+1)+' 張'));
   const sub=(sl.sub||'').trim();
   const body=(sl.body||'').trim()||(i===0?'往右滑，看看怎麼開始 →':(isEnd?'留言告訴我你的感受 💛':'在上方填入這張的內容'));
-  if(isEnd){
-   // 結尾頁：body 直接用，不合併 sub
-   pages.push({title,body,isEnd:true});
-  } else {
-   // 封面/內頁：sub 接在 body 前作為第一行
-   const fullBody=sub?(sub+'\n'+body):body;
-   pages.push({title,sub,body:fullBody});
-  }
+  // 每種頁型都把 sub 和 body 分開傳，由各 draw 函式自己決定怎麼用
+  pages.push({title,sub,body,isEnd:isEnd});
  }
  return pages;
 }
@@ -1845,10 +1839,7 @@ function drawStylePreview(styleKey){
  // 建立全部張的 draw 描述
  const slides=pages.map((p,i)=>{
   if(i===0){
-   const coverLines=(p.body||'').split('\n');
-   const coverSub=coverLines[0]||'探索靈感的方式';
-   const coverBody=coverLines.slice(1).join('\n')||'往右滑，看看怎麼開始 →';
-   return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',coverSub,coverBody)};
+   return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',p.sub||'探索靈感的方式',p.body||'往右滑，看看怎麼開始 →')};
   }
   if(p.isEnd||i===n-1){
    return {label:'結尾頁',draw:(ctx)=>drawCanvasEndPage(ctx,W,H,th,acct,p.title,p.body)};
@@ -1921,9 +1912,7 @@ function drawCarouselCanvas(){
  // 封面
  const p0=pages[0];
  slidesDiv.appendChild(makeSlide('封面',(ctx,W,H,th,acct)=>{
-  const lines=p0.body.split('\n');
-  const sub=lines[0]||'';const body=lines.slice(1).join('\n')||p0.body;
-  drawCanvasCover(ctx,W,H,th,acct,p0.title,sub,body);
+  drawCanvasCover(ctx,W,H,th,acct,p0.title,p0.sub||'',p0.body||'');
  }));
  // 內頁 + 結尾頁
  for(let i=1;i<n;i++){
