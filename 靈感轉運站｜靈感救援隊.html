@@ -2561,8 +2561,14 @@ function render(){
   <!-- ── 快速貼入整份文案（自動分張）── -->
   <div style="margin:12px 0 8px">
    <p style="font-size:13px;color:var(--muted);margin:0 0 6px">💬 把整份文案貼進來，自動分張 + 即時預覽：</p>
+   <div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:12px;color:var(--muted);line-height:1.8">
+    📐 <strong style="color:var(--ink)">貼文格式說明</strong>（每張之間空一行）<br>
+    <code style="background:var(--bg);border-radius:6px;padding:2px 6px;font-size:11px">[標題] 你的焦慮不是病</code><br>
+    <code style="background:var(--bg);border-radius:6px;padding:2px 6px;font-size:11px">[副標] 塔羅怎麼說</code>（可省略）<br>
+    <code style="background:var(--bg);border-radius:6px;padding:2px 6px;font-size:11px">[內文] 每次抽牌前我都很緊張…</code>
+   </div>
    <div style="position:relative">
-    <textarea id="pasteArea" rows="5" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="把文案貼在這裡，系統自動分到每張欄位 + 即時更新預覽…">${esc(A._paste||'')}</textarea>
+    <textarea id="pasteArea" rows="6" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="[標題] 封面標題&#10;[副標] 副標（可省略）&#10;[內文] 封面引言…&#10;&#10;[標題] 第二張標題&#10;[內文] 第二張內文…">${esc(A._paste||'')}</textarea>
     <div id="pasteParsingIndicator" style="display:none;position:absolute;right:12px;bottom:12px;font-size:12px;color:var(--accent);font-weight:600;pointer-events:none">⚡ 分張中…</div>
    </div>
   </div>
@@ -2839,21 +2845,39 @@ app.addEventListener('input',e=>{
     const raw=A._paste||'';
     if(!raw.trim()){return;}
     const n=A.n||5;
-    let blocks=raw.trim().split(/\n{2,}/);
-    if(blocks.length<n){blocks=raw.trim().split('\n').filter(l=>l.trim());}
+    // Tag-based parser: [標題] [副標] [內文], blocks separated by blank lines
+    function parseBlock(blk){
+     const out={title:'',sub:'',body:''};
+     const lines=blk.split('\n');
+     let bodyLines=[];let inBody=false;
+     for(const ln of lines){
+      const tMatch=ln.match(/^\[標題\]\s*(.*)/);
+      const sMatch=ln.match(/^\[副標\]\s*(.*)/);
+      const bMatch=ln.match(/^\[內文\]\s*(.*)/);
+      if(tMatch){out.title=tMatch[1].trim();inBody=false;}
+      else if(sMatch){out.sub=sMatch[1].trim();inBody=false;}
+      else if(bMatch){bodyLines=[bMatch[1]];inBody=true;}
+      else if(inBody){bodyLines.push(ln);}
+     }
+     out.body=bodyLines.join('\n').trim();
+     // fallback: no tags found → treat line1=title, short line2=sub, rest=body
+     if(!out.title&&!out.body){
+      const fl=lines.filter(l=>l.trim());
+      out.title=(fl[0]||'').replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').replace(/^#+\s*/,'').trim();
+      const rest=fl.slice(1);
+      if(rest.length>1&&rest[0].length<=20){out.sub=rest[0].trim();out.body=rest.slice(1).join('\n');}
+      else{out.body=rest.join('\n');}
+     }
+     return out;
+    }
+    const blocks=raw.trim().split(/\n{2,}/);
     if(!A._slides)A._slides=[];
     for(let i=0;i<n;i++){
      if(!A._slides[i])A._slides[i]={};
      const blk=(blocks[i]||'').trim();
      if(!blk)continue;
-     const lines=blk.split('\n').filter(l=>l.trim());
-     const rawTitle=lines[0]||'';
-     const title=rawTitle.replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').replace(/^#+\s*/,'').trim();
-     const bodyLines=lines.slice(1);
-     let sub='',body='';
-     if(bodyLines.length>1&&bodyLines[0].length<=20){sub=bodyLines[0].replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').trim();body=bodyLines.slice(1).join('\n');}
-     else{body=bodyLines.join('\n');}
-     A._slides[i].title=title;A._slides[i].sub=sub;A._slides[i].body=body;
+     const parsed=parseBlock(blk);
+     A._slides[i].title=parsed.title;A._slides[i].sub=parsed.sub;A._slides[i].body=parsed.body;
     }
     save();
     // patch DOM slide fields without full render (preserves focus/scroll)
