@@ -1117,34 +1117,89 @@ function buildScreenshotStylePrompt(){
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${acct} 輪播圖</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<link id="gfont" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--page:#e9e6e0;--note:#555}
+/* ═══════════════════════════════════════════════════════
+   🎨 風格變數區 — 請全部照截圖填入，不要保留預設值
+   ═══════════════════════════════════════════════════════ */
+:root{
+  /* ── 字體（填 Google Fonts 名稱，例：'Noto Serif TC',serif） ── */
+  --font-body:;        /* 內文主字體 */
+  --font-accent:;      /* 帳號、數字裝飾字體 */
+
+  /* ── 顏色：封面 ── */
+  --cover-bg:;         /* 封面背景色 */
+  --cover-title:;      /* 主標題文字色 */
+  --cover-sub:;        /* 副標題文字色 */
+  --cover-tag:;        /* 標籤＋分隔線色 */
+  --cover-acc:;        /* 封面帳號文字色 */
+  --cover-deco:;       /* 封面裝飾線顏色 */
+
+  /* ── 顏色：內頁 ── */
+  --inner-bg:;         /* 內頁背景色 */
+  --inner-text:;       /* 內頁文字色 */
+  --inner-acc:;        /* 內頁帳號色 */
+  --inner-num:;        /* 頁碼描邊色 */
+
+  /* ── 顏色：強調／按鈕 ── */
+  --hl:;               /* 強調文字色（.hl） */
+  --pill-bg:;          /* 膠囊背景色 */
+  --btn-bg:;           /* CTA 按鈕背景色 */
+  --btn-text:;         /* CTA 按鈕文字色 */
+
+  /* ── 排版：封面標題 ── */
+  --h1-size:68px;      /* 主標題字級 */
+  --h1-weight:700;     /* 主標題字重 */
+  --h1-line:1.5;       /* 主標題行距 */
+  --h1-ls:6px;         /* 主標題字距 */
+
+  /* ── 排版：封面副標題 ── */
+  --sub-size:36px;     /* 副標題字級 */
+  --sub-line:1.6;      /* 副標題行距 */
+  --sub-ls:5px;        /* 副標題字距 */
+
+  /* ── 排版：內頁內文 ── */
+  --txt-size:38px;     /* 內文字級 */
+  --txt-line:1.85;     /* 內文行距 */
+  --txt-ls:4px;        /* 內文字距 */
+  --txt-align:center;  /* 內文對齊（center／left） */
+
+  /* ── 排版：其他 ── */
+  --tag-size:34px;     /* 封面標籤字級 */
+  --tag-ls:14px;       /* 封面標籤字距 */
+  --acc-size:40px;     /* 帳號字級 */
+  --acc-ls:6px;        /* 帳號字距 */
+  --pill-size:38px;    /* 膠囊按鈕字級 */
+
+  /* 頁面底色（預覽用，不用改） */
+  --page:#e9e6e0;--note:#555;
+}
+/* ═══════════════════════════════════════════════════════ */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#1c1b1f;--note:#aaa}}
 :root[data-theme="dark"]{--page:#1c1b1f;--note:#aaa}
 html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box}
 .wrap{display:flex;flex-direction:column;align-items:center;gap:24px;padding:20px 12px;font-family:sans-serif}
 .note{color:var(--note);font-size:13px;margin:0}
 .box{width:100%;max-width:540px;position:relative;overflow:hidden}
-.slide{position:absolute;left:0;top:0;width:1080px;height:1350px;transform-origin:0 0;overflow:hidden;font-family:'Noto Serif TC',serif;color:#4a4a4a}
-.inner{background:#F0EBE1}
-.cover{background:#3b3631}
-.photo{position:absolute;left:0;top:0;width:1080px;height:1350px;display:flex;align-items:center;justify-content:center;color:#cfc6b8;font-size:56px;letter-spacing:12px;padding-bottom:300px;box-sizing:border-box}
+.slide{position:absolute;left:0;top:0;width:1080px;height:1350px;transform-origin:0 0;overflow:hidden;font-family:var(--font-body);color:var(--inner-text)}
+.inner{background:var(--inner-bg)}
+.cover{background:var(--cover-bg)}
+.photo{position:absolute;left:0;top:0;width:1080px;height:1350px;display:flex;align-items:center;justify-content:center;color:var(--cover-tag);font-size:56px;letter-spacing:12px;padding-bottom:300px;box-sizing:border-box}
 .shade{position:absolute;left:0;top:0;width:1080px;height:1350px;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 30%,rgba(20,15,12,.45) 62%,rgba(20,15,12,.82) 100%)}
-.tag{position:absolute;top:110px;left:0;width:1080px;text-align:center;color:#f3eee6;font-size:34px;letter-spacing:14px}
-.tag i{display:inline-block;width:2px;height:34px;background:#f3eee6;vertical-align:middle;margin:0 28px;opacity:.8}
-.h1{position:absolute;left:0;top:830px;width:1080px;text-align:center;color:#fff;font-size:68px;font-weight:700;line-height:1.5;letter-spacing:6px}
-.sub{position:absolute;left:0;top:1050px;width:1080px;text-align:center;color:#e6dfd3;font-size:36px;letter-spacing:5px;line-height:1.6}
-.div{position:absolute;left:0;top:1170px;width:1080px;display:flex;align-items:center;justify-content:center;gap:24px;color:#e6dfd3;font-size:30px}
-.div b{display:block;width:230px;height:2px;background:rgba(230,223,211,.6)}
-.acc{position:absolute;left:0;width:1080px;text-align:center;font-family:'Cormorant Garamond','Noto Serif TC',serif;font-size:40px;letter-spacing:6px}
-.num{position:absolute;right:70px;top:90px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:190px;line-height:1;color:transparent;-webkit-text-stroke:3px #c9c4ba;letter-spacing:2px}
-.txt{position:absolute;left:90px;width:900px;top:430px;text-align:center;font-size:38px;line-height:1.85;letter-spacing:4px;font-weight:500}
+.tag{position:absolute;top:110px;left:0;width:1080px;text-align:center;color:var(--cover-tag);font-size:var(--tag-size);letter-spacing:var(--tag-ls)}
+.tag i{display:inline-block;width:2px;height:34px;background:var(--cover-tag);vertical-align:middle;margin:0 28px;opacity:.8}
+.h1{position:absolute;left:0;top:830px;width:1080px;text-align:center;color:var(--cover-title);font-size:var(--h1-size);font-weight:var(--h1-weight);line-height:var(--h1-line);letter-spacing:var(--h1-ls)}
+.sub{position:absolute;left:0;top:1050px;width:1080px;text-align:center;color:var(--cover-sub);font-size:var(--sub-size);letter-spacing:var(--sub-ls);line-height:var(--sub-line)}
+.div{position:absolute;left:0;top:1170px;width:1080px;display:flex;align-items:center;justify-content:center;gap:24px;color:var(--cover-sub);font-size:30px}
+.div b{display:block;width:230px;height:2px;background:var(--cover-deco)}
+.acc{position:absolute;left:0;width:1080px;text-align:center;font-family:var(--font-accent);font-size:var(--acc-size);letter-spacing:var(--acc-ls)}
+.num{position:absolute;right:70px;top:90px;font-family:var(--font-accent);font-weight:500;font-size:190px;line-height:1;color:transparent;-webkit-text-stroke:3px var(--inner-num);letter-spacing:2px}
+.txt{position:absolute;left:90px;width:900px;top:430px;text-align:var(--txt-align);font-size:var(--txt-size);line-height:var(--txt-line);letter-spacing:var(--txt-ls);font-weight:500}
 .txt p{margin:0 0 46px}
-.hl{color:#7d6b9a;font-weight:700}
+.hl{color:var(--hl);font-weight:700}
 .pill{position:absolute;left:0;width:1080px;display:flex;justify-content:center}
-.pill span{background:#F8F5EE;border-radius:70px;padding:32px 56px;font-size:38px;letter-spacing:3px;box-shadow:0 6px 24px rgba(120,100,80,.12)}
-.btn span{background:#9B8DB0;color:#fff;box-shadow:0 10px 30px rgba(120,100,150,.3)}
+.pill span{background:var(--pill-bg);border-radius:70px;padding:32px 56px;font-size:var(--pill-size);letter-spacing:3px;box-shadow:0 6px 24px rgba(120,100,80,.12)}
+.btn span{background:var(--btn-bg);color:var(--btn-text);box-shadow:0 10px 30px rgba(120,100,150,.3)}
 </style>
 </head>
 <body>
@@ -1177,13 +1232,24 @@ window.addEventListener('resize',fit);fit();
 <\/html>`;
  return `你是擅長身心靈領域的 IG 輪播圖設計師。
 
-⚠️ 開始前請先做這件事：
-仔細看我上傳的截圖，用一段話描述它的設計風格（背景色、字體、配色、裝飾元素），然後說「我會照這個風格調整 CSS」，再開始動手。
+⚠️ 步驟一：先看截圖，再動手
+仔細看我上傳的截圖，用 3–5 句描述它的設計風格：
+- 封面背景色、內頁背景色
+- 文字顏色、字體風格（明體／圓體／黑體／手寫）
+- 標題字級大小感、行距緊密或寬鬆、字距
+- 文字對齊方式（置中／靠左）
+- 強調色、裝飾元素（線條、光暈、紋理、幾何…）
 
-我上傳了一張截圖，請照截圖的風格（背景色、字體、配色、裝飾元素、整體氛圍）修改下方 HTML 模板，還原度 90% 以上。
+描述完後說「我會照這個風格填入 :root 變數」，再開始動手。
 
-修改範圍：CSS 的顏色、字體、背景、裝飾。
-不要動：版面結構、class 名稱、[方括號] 佔位符、照片位置。
+⚠️ 如果你沒有先描述截圖、沒有修改 :root 變數就直接輸出，這份指令作廢，請重做。
+
+步驟二：只修改 HTML 模板裡「🎨 風格變數區」的 :root
+- 顏色、字體：全部照截圖填入，不要保留空值
+- 排版變數（--h1-size、--txt-line、--txt-align 等）：照截圖的視覺感判斷填入
+- 字體請用 Google Fonts，並在 <link id="gfont"> 那行換成對應的 Google Fonts 連結
+- 不要動變數區以外的任何 CSS
+- 不要改版面結構、class 名稱、[方括號] 佔位符、照片位置
 
 完成後，把下面的文字稿填入 [方括號]，輸出完整 HTML。
 
