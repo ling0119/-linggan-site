@@ -2076,6 +2076,8 @@ function loadBgImgFile(file,index){
     // 更新個別標籤
     const lbl=document.getElementById('bgImgPer_'+index);
     if(lbl)lbl.textContent='📷 第 '+(index+1)+' 張：'+file.name;
+    const cl=document.getElementById('bgImgPerClear_'+index);
+    if(cl)cl.style.display='block';
    }
    // 立即重繪預覽
    requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
@@ -2121,12 +2123,18 @@ function buildPerSlideUploads(){
   lbl.onmouseleave=()=>lbl.style.borderColor='var(--line)';
   const spanTxt=document.createElement('span');
   spanTxt.id='bgImgPer_'+i;
+  spanTxt.style.flex='1';
   spanTxt.textContent='第 '+(i+1)+' 張 — 點擊上傳';
   const inp=document.createElement('input');
   inp.type='file';inp.accept='image/*';inp.style.display='none';
   const idx=i;
   inp.onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],idx);};
-  lbl.append(spanTxt,inp);
+  const clrBtn=document.createElement('div');
+  clrBtn.id='bgImgPerClear_'+i;
+  clrBtn.textContent='✕ 清除';
+  clrBtn.style.cssText='display:none;font-size:11px;color:var(--muted);cursor:pointer;padding:3px 7px;border-radius:6px;background:var(--surface);border:1px solid var(--line);flex:none';
+  clrBtn.onclick=(e)=>{e.preventDefault();clearBgImg(idx);clrBtn.style.display='none';spanTxt.textContent='第 '+(idx+1)+' 張 — 點擊上傳';};
+  lbl.append(spanTxt,inp,clrBtn);
   container.appendChild(lbl);
  }
 }
