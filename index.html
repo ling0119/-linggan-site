@@ -2796,11 +2796,7 @@ function render(){
   const hasSlides=!!(A._slides&&A._slides.some(s=>s&&(s.title||s.body)));
   const hasPaste=hasSlides||!!(A._paste&&A._paste.trim());
   h+=`
-  <!-- ── Canvas 直接出圖 ── -->
-  <div id="canvasOutputSection" style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:4px 0 12px">
-   <div style="font-weight:700;font-size:15px;margin-bottom:6px">🎨 直接出圖，不需要 Claude.ai</div>
-   <div style="font-size:13px;color:var(--muted);line-height:1.8">填好文字稿後，選一個風格，點「出圖」就能直接下載 PNG。</div>
-  </div>
+  <div id="canvasOutputSection"></div>
 
   <!-- ── 風格選擇 + 即時預覽 ── -->
   <div style="margin-bottom:14px">
