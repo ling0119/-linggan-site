@@ -2098,6 +2098,8 @@ function clearBgImg(index){
   if(lbl)lbl.textContent='第 '+(index+1)+' 張 — 點擊上傳';
  }
  requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
+ // 重繪風格按鈕讓 ✕ 消失
+ document.querySelectorAll('.bg-clear-btn').forEach(el=>el.remove());
 }
 function buildPerSlideUploads(){
  const container=document.getElementById('bgImgPerSlide');
@@ -2815,12 +2817,14 @@ function render(){
       {k:'faydea',label:'療癒金句',desc:'暖棕照片感・手寫金句・hashtag'},
      ].map(({k,label,desc})=>{
       const on=(A._canvasStyle||'dinero')===k;
+      const hasBg=!!(A._bgImages&&A._bgImages[0]);
       return `<button type="button" class="canvas-style-btn" data-cstyle="${k}" style="border:2px solid ${on?'var(--accent)':'var(--line)'};border-radius:10px;padding:9px 12px;background:${on?'rgba(var(--acc3-rgb,155,125,181),0.08)':'var(--surface)'};cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;width:100%">
        <div style="width:14px;height:14px;border-radius:50%;border:2px solid ${on?'var(--accent)':'var(--line)'};flex:none;background:${on?'var(--accent)':'transparent'}"></div>
-       <div>
+       <div style="flex:1;min-width:0">
         <div style="font-weight:700;font-size:13px;line-height:1.3">${label}</div>
         <div style="font-size:11px;color:var(--muted)">${desc}</div>
        </div>
+       ${hasBg?`<div class="bg-clear-btn" style="flex:none;font-size:11px;color:var(--muted);padding:3px 7px;border-radius:6px;background:var(--bg);border:1px solid var(--line);pointer-events:auto" onclick="event.stopPropagation();clearBgImg(-1)">✕</div>`:''}
       </button>`;
      }).join('')}
     </div>
