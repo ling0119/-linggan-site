@@ -1096,18 +1096,14 @@ ${v('take','請從故事裡幫我提煉一句，要讓人有共鳴、想截圖�
 // Canvas 直接出圖（v3 — 基於真實 IG 美學）
 // ════════════════════════════════════════
 const CANVAS_THEMES={
- // 1. 暗夜書卷：深棕黑底＋白色大字，右上紅色標籤（@vivi_college 古書暗調感）
- drama:{bg1:'#110c08',bg2:'#1e1208',acc:'#ffffff',txt:'#ffffff',sub:'rgba(255,255,255,0.5)',body:'rgba(255,255,255,0.82)',pgNum:'rgba(255,255,255,0.04)',bar:'rgba(255,255,255,0.18)',foot:'rgba(255,255,255,0.7)',footSub:'rgba(255,255,255,0.35)',tagBg:'rgba(220,50,50,0.9)',tagTxt:'#ffffff',layout:'drama'},
- // 2. 雜誌極簡：奶油白底＋黑色 serif，欄目頁碼格式（@_1mlinda WOMEN IN THE WORKPLACE）
- ink:{bg1:'#f4f0e8',bg2:'#ede8dc',acc:'#1a1a18',txt:'#1a1a18',sub:'rgba(26,26,24,0.42)',body:'rgba(26,26,24,0.75)',pgNum:'rgba(26,26,24,0.05)',bar:'rgba(26,26,24,0.65)',foot:'rgba(26,26,24,0.55)',footSub:'rgba(26,26,24,0.32)',layout:'ink'},
- // 3. 暖橙夕陽：橙金漸層底＋白色大字＋品牌落款（@sa668833 情感類）
- film:{bg1:'#c4561a',bg2:'#8a3010',acc:'#fde8c8',txt:'#ffffff',sub:'rgba(255,255,255,0.6)',body:'rgba(255,255,255,0.85)',pgNum:'rgba(255,255,255,0.04)',bar:'rgba(255,232,190,0.75)',foot:'rgba(255,255,255,0.75)',footSub:'rgba(255,255,255,0.42)',layout:'film'},
- // 4. 知識白板：淡米灰底＋黑色 serif＋金色小字（@minglightup 思維補丁感）
- neon:{bg1:'#f7f5f0',bg2:'#eeebe3',acc:'#1a1a18',txt:'#1a1a18',sub:'rgba(26,26,24,0.4)',body:'rgba(26,26,24,0.72)',pgNum:'rgba(26,26,24,0.04)',bar:'rgba(26,26,24,0.6)',foot:'rgba(26,26,24,0.5)',footSub:'rgba(26,26,24,0.3)',tagBg:'rgba(26,26,24,0.85)',tagTxt:'#f7f5f0',layout:'neon'},
- // 5. 療癒暖照：深棕橘底＋白色大字＋手寫感副標（@msnew_new 治癒系）
- earth:{bg1:'#2c1505',bg2:'#4a2210',acc:'#f5c87a',txt:'#ffffff',sub:'rgba(255,255,255,0.55)',body:'rgba(255,255,255,0.85)',pgNum:'rgba(255,255,255,0.04)',bar:'rgba(245,200,122,0.8)',foot:'rgba(255,255,255,0.72)',footSub:'rgba(255,255,255,0.42)',layout:'earth'},
- // 6. 雜誌框線：淡粉藍底＋外框線條＋品牌豎條（@pumozo.mag 知識雜誌感）
- stone:{bg1:'#e8eef4',bg2:'#d8e4ee',acc:'#1a3a5c',txt:'#1a3a5c',sub:'rgba(26,58,92,0.5)',body:'rgba(26,58,92,0.8)',pgNum:'rgba(26,58,92,0.04)',bar:'rgba(26,58,92,0.6)',foot:'rgba(26,58,92,0.65)',footSub:'rgba(26,58,92,0.38)',layout:'stone'}
+ // 1. dinero 風格：深色電影感，大白serif標題靠左下，橫線+引號裝飾
+ dinero:{bg1:'#0d0c0b',bg2:'#1a1610',acc:'#ffffff',txt:'#ffffff',sub:'rgba(255,255,255,0.55)',body:'rgba(255,255,255,0.80)',pgNum:'rgba(255,255,255,0.04)',bar:'rgba(255,255,255,0.18)',foot:'rgba(255,255,255,0.65)',footSub:'rgba(255,255,255,0.32)',layout:'dinero'},
+ // 2. afei 風格：黃昏/夜景照片感，標題置中清晰，帳號左側直排
+ afei:{bg1:'#1c1508',bg2:'#2e2010',acc:'#ffffff',txt:'#ffffff',sub:'rgba(255,255,255,0.52)',body:'rgba(255,255,255,0.78)',pgNum:'rgba(255,255,255,0.04)',bar:'rgba(255,200,100,0.4)',foot:'rgba(255,255,255,0.62)',footSub:'rgba(255,255,255,0.32)',layout:'afei'},
+ // 3. chiao 風格：封面照片感+粉色highlight，內頁米白純色+分類標籤
+ chiao:{bg1:'#f5f0eb',bg2:'#ede8e0',acc:'#2a2018',txt:'#2a2018',sub:'rgba(42,32,24,0.48)',body:'rgba(42,32,24,0.72)',pgNum:'rgba(42,32,24,0.04)',bar:'rgba(42,32,24,0.55)',foot:'rgba(42,32,24,0.52)',footSub:'rgba(42,32,24,0.30)',hl:'#c9a0b0',layout:'chiao'},
+ // 4. remind 風格：封面照片感+菱形符號，內頁米白紙質，置中，圓角框卡
+ remind:{bg1:'#f0ede7',bg2:'#e8e4dc',acc:'#4a4840',txt:'#3a3830',sub:'rgba(58,56,48,0.50)',body:'rgba(58,56,48,0.72)',pgNum:'rgba(58,56,48,0.04)',bar:'rgba(58,56,48,0.55)',foot:'rgba(58,56,48,0.52)',footSub:'rgba(58,56,48,0.30)',grn:'#6b7c5e',layout:'remind'}
 };
 
 // 標點後自動換行（。！？…「」等句末標點後插 \n，避免連成一行）
@@ -1203,585 +1199,450 @@ function drawPageBadge(ctx,num,total,x,y,color){
 
 // ── 背景渲染 ──
 function drawBg(ctx,W,H,th){
- const layout=th.layout||'drama';
+ const layout=th.layout||'dinero';
 
- if(layout==='ink'){
-  // @_1mlinda 風格：純奶油白，細緻米色紋理
-  ctx.fillStyle=th.bg1;ctx.fillRect(0,0,W,H);
-  // 細微紙張紋（橫向）
-  ctx.strokeStyle='rgba(26,26,24,0.018)';ctx.lineWidth=1;
-  for(let y=0;y<H;y+=8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  // 邊緣極淡暈影
-  const vg=ctx.createRadialGradient(W/2,H/2,H*0.35,W/2,H/2,H*0.82);
-  vg.addColorStop(0,'transparent');vg.addColorStop(1,'rgba(26,26,24,0.04)');
-  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
-  return;
- }
-
- if(layout==='film'){
-  // @sa668833 風格：橙金漸層，夕陽感，底部更深
-  const g=ctx.createLinearGradient(0,0,W*0.3,H);
-  g.addColorStop(0,'#e87030');g.addColorStop(0.5,th.bg1);g.addColorStop(1,th.bg2);
+ if(layout==='afei'){
+  // afei：深暗漸層模擬夜景/黃昏照片感
+  const g=ctx.createLinearGradient(0,H,W,0);
+  g.addColorStop(0,th.bg2);g.addColorStop(0.4,'#221a0a');g.addColorStop(1,th.bg1);
   ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // 頂部天空感亮光
-  const sky=ctx.createRadialGradient(W*0.6,0,0,W*0.6,0,W*0.9);
-  sky.addColorStop(0,'rgba(255,210,120,0.35)');sky.addColorStop(0.5,'rgba(220,110,30,0.1)');sky.addColorStop(1,'transparent');
-  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
-  // 底部暗影
-  const shd=ctx.createLinearGradient(0,H*0.75,0,H);
-  shd.addColorStop(0,'transparent');shd.addColorStop(1,'rgba(0,0,0,0.35)');
+  // 右上角暖光暈（模擬路燈/夕陽餘光）
+  const gl=ctx.createRadialGradient(W*0.75,H*0.25,0,W*0.75,H*0.25,W*0.65);
+  gl.addColorStop(0,'rgba(200,140,40,0.18)');gl.addColorStop(0.5,'rgba(150,80,10,0.06)');gl.addColorStop(1,'transparent');
+  ctx.fillStyle=gl;ctx.fillRect(0,0,W,H);
+  // 底部深暗壓角
+  const shd=ctx.createLinearGradient(0,H*0.7,0,H);
+  shd.addColorStop(0,'transparent');shd.addColorStop(1,'rgba(0,0,0,0.45)');
   ctx.fillStyle=shd;ctx.fillRect(0,0,W,H);
   return;
  }
 
- if(layout==='neon'){
-  // @minglightup 風格：淡米灰白，知識感，極簡
-  ctx.fillStyle=th.bg1;ctx.fillRect(0,0,W,H);
-  // 極淡斜紋紙感
-  ctx.strokeStyle='rgba(26,26,24,0.015)';ctx.lineWidth=1;
-  for(let i=-H;i<W+H;i+=32){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+H,H);ctx.stroke();}
-  // 底部淡角
-  const vg=ctx.createRadialGradient(W/2,H,0,W/2,H,W*0.85);
-  vg.addColorStop(0,'rgba(26,26,24,0.04)');vg.addColorStop(1,'transparent');
+ if(layout==='chiao'){
+  // chiao：米白淡色底（內頁）
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,th.bg1);g.addColorStop(1,th.bg2);
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // 細微紙張質感
+  ctx.strokeStyle='rgba(42,32,24,0.012)';ctx.lineWidth=1;
+  for(let y=0;y<H;y+=10){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // 邊緣柔和陰影
+  const vg=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.78);
+  vg.addColorStop(0,'transparent');vg.addColorStop(1,'rgba(42,32,24,0.05)');
   ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
   return;
  }
 
- if(layout==='earth'){
-  // @msnew_new 風格：深暖棕漸層，療癒暗色
-  const g=ctx.createLinearGradient(0,0,W*0.7,H);
-  g.addColorStop(0,th.bg1);g.addColorStop(0.6,'#3d1a07');g.addColorStop(1,th.bg2);
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // 中央暖光暈
-  const l=ctx.createRadialGradient(W*0.5,H*0.5,0,W*0.5,H*0.5,W*0.7);
-  l.addColorStop(0,'rgba(180,80,20,0.12)');l.addColorStop(1,'transparent');
-  ctx.fillStyle=l;ctx.fillRect(0,0,W,H);
-  // 細微光點
-  ctx.fillStyle='rgba(245,200,122,0.028)';
-  for(let x=0;x<W;x+=12){for(let y=0;y<H;y+=12){if((x+y)%24===0)ctx.fillRect(x,y,2,2);}}
+ if(layout==='remind'){
+  // remind：米白亞麻紙質感底（內頁）
+  ctx.fillStyle=th.bg1;ctx.fillRect(0,0,W,H);
+  // 極細紙纖維感
+  ctx.strokeStyle='rgba(58,56,48,0.018)';ctx.lineWidth=1;
+  for(let y=0;y<H;y+=7){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // 邊角淡暈
+  const vg=ctx.createRadialGradient(W/2,H/2,H*0.28,W/2,H/2,H*0.75);
+  vg.addColorStop(0,'transparent');vg.addColorStop(1,'rgba(58,56,48,0.06)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
   return;
  }
 
- if(layout==='stone'){
-  // @pumozo.mag 風格：淡藍白，雜誌清新感
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,th.bg1);g.addColorStop(1,th.bg2);
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // 左側品牌豎條（像 pumozo 的 Pumo生活 側欄）
-  ctx.fillStyle='rgba(26,58,92,0.06)';ctx.fillRect(0,0,80,H);
-  // 極淡網格
-  ctx.strokeStyle='rgba(26,58,92,0.04)';ctx.lineWidth=1;
-  for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  return;
- }
-
- // drama（@vivi_college 古書暗調）
- const g=ctx.createLinearGradient(0,0,W*0.4,H);
- g.addColorStop(0,th.bg1);g.addColorStop(0.5,'#180e08');g.addColorStop(1,th.bg2);
+ // dinero（預設：電影感深暗背景）
+ const g=ctx.createLinearGradient(0,0,W*0.6,H);
+ g.addColorStop(0,'#111014');g.addColorStop(0.4,th.bg1);g.addColorStop(1,th.bg2);
  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- // 微妙書頁感橫紋
- ctx.strokeStyle='rgba(255,255,255,0.012)';ctx.lineWidth=1;
- for(let y=0;y<H;y+=6){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
- // 頂部右側微亮光（像翻書光）
- const l=ctx.createRadialGradient(W*0.7,0,0,W*0.7,0,W*0.6);
- l.addColorStop(0,'rgba(255,200,120,0.06)');l.addColorStop(1,'transparent');
+ // 左上角淡冷光（模擬螢幕/月光）
+ const l=ctx.createRadialGradient(0,0,0,0,0,W*0.9);
+ l.addColorStop(0,'rgba(100,120,180,0.06)');l.addColorStop(1,'transparent');
  ctx.fillStyle=l;ctx.fillRect(0,0,W,H);
+ // 底部深化
+ const shd=ctx.createLinearGradient(0,H*0.65,0,H);
+ shd.addColorStop(0,'transparent');shd.addColorStop(1,'rgba(0,0,0,0.35)');
+ ctx.fillStyle=shd;ctx.fillRect(0,0,W,H);
 }
 
 // ── 封面 ──
 function drawCanvasCover(ctx,W,H,th,acct,title,sub,body){
  drawBg(ctx,W,H,th);
- const layout=th.layout||'drama';
+ const layout=th.layout||'dinero';
  const px=80;
  body=normalizeBodyText(body);
 
- if(layout==='drama'){
-  // @vivi_college 風格：暗色底，左上小紅標籤，大白字靠左壓下半部
-  // 左上標籤（像 #顯化人生人物拆解）
-  const tag=acct||'@帳號';
-  ctx.fillStyle='rgba(220,50,50,0.88)';
-  const tagW=ctx.measureText('#靈感救援隊').width+48;
-  ctx.fillRect(px,56,tagW,52);
-  ctx.font='700 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='#ffffff';ctx.textAlign='left';
-  ctx.fillText('#靈感救援隊',px+24,89);
-  // 大標題（靠左，下半部）
-  ctx.font='900 108px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;
-  const tlines=(title||'').split('\n');let ty=H*0.42;
-  for(const l of tlines){ctx.fillText(l,px,ty);ty+=130;}
-  // 白色細線
-  ctx.strokeStyle='rgba(255,255,255,0.22)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(px,ty+4);ctx.lineTo(px+360,ty+4);ctx.stroke();
-  // 副標（斜體感小字）
-  ctx.font='400 42px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.sub;ctx.fillText(sub||'',px,ty+66);
-  // 正文
-  ctx.font='400 34px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle=th.body;
-  wrapCanvasText(ctx,body||'',px,ty+140,W-px*2,52);
-  // 底欄：帳號左，SWIPE 右
-  ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
-  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.55)';ctx.textAlign='left';ctx.fillText(tag,px,H-80);
-  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillText('往右滑 →',W-px,H-80);
-  ctx.textAlign='left';
-  return;
- }
-
- if(layout==='ink'){
-  // @_1mlinda 風格：頂部「SERIES TITLE  01 — 05」格式，大字偏下，底部帳號+SWIPE →
+ if(layout==='afei'){
+  // afei 封面：標題中央偏下，細欄頂部，帳號直排左側
   const cx=W/2;
-  // 頂部欄目列（完全照 _1mlinda 的格式）
-  const seriesTitle=acct.replace('@','').toUpperCase()+' PRESENTS';
-  ctx.font='500 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,26,24,0.35)';ctx.textAlign='left';
-  ctx.fillText(seriesTitle,px,80);
-  ctx.textAlign='right';ctx.fillText('SWIPE →',W-px,80);
-  ctx.textAlign='left';
-  ctx.strokeStyle='rgba(26,26,24,0.14)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,98);ctx.lineTo(W-px,98);ctx.stroke();
-  // 大標題置中
-  ctx.font='900 120px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;ctx.textAlign='center';
-  const tlines=(title||'').split('\n');let ty=H*0.38;
-  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=144;}
-  // 短橫線
-  ctx.strokeStyle='rgba(26,26,24,0.18)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-60,ty+12);ctx.lineTo(cx+60,ty+12);ctx.stroke();
-  // 副標
-  ctx.font='400 46px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.sub;ctx.fillText(sub||'',cx,ty+72);
-  // 正文
-  ctx.font='400 36px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;
-  const blines=(body||'').split('\n');let by=ty+152;
-  for(const l of blines){if(!l){by+=22;continue;}ctx.fillText(l,cx,by);by+=56;}
-  ctx.textAlign='left';
-  // 底欄（像 _1mlinda 的 @_1MLINDA ／ SWIPE →）
-  ctx.strokeStyle='rgba(26,26,24,0.12)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
-  ctx.font='400 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,26,24,0.45)';ctx.textAlign='left';
-  ctx.fillText((acct||'@帳號').toUpperCase().replace('@','@'),px,H-76);
-  ctx.textAlign='right';ctx.fillStyle='rgba(26,26,24,0.32)';ctx.fillText('SWIPE →',W-px,H-76);
-  ctx.textAlign='left';
-  return;
- }
-
- if(layout==='film'){
-  // @sa668833 風格：暖橙漸層背景，白色大字置中，品牌落款底部
-  const cx=W/2;
-  // 大標題置中，略偏下
-  ctx.font='900 112px "Noto Serif TC","PingFang TC",serif';
+  // 頂部細橫線+小帳號文字
+  ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,72);ctx.lineTo(W-px,72);ctx.stroke();
+  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';
+  ctx.fillText(acct||'@帳號',px,60);
+  // 大標題置中（白色 serif）
+  ctx.font='800 108px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const tlines=(title||'').split('\n');let ty=H*0.36;
-  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=134;}
-  // 裝飾橫線（像 sa668833 的中央豎線）
-  ctx.strokeStyle='rgba(255,232,190,0.6)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(cx-120,ty+8);ctx.lineTo(cx+120,ty+8);ctx.stroke();
-  // 副標（手寫感斜體）
-  ctx.font='italic 500 50px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,232,190,0.88)';ctx.fillText(sub||'',cx,ty+78);
+  const tlines=(title||'').split('\n');let ty=H*0.40;
+  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=130;}
+  // 細橫線
+  ctx.strokeStyle='rgba(255,255,255,0.22)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(cx-160,ty+8);ctx.lineTo(cx+160,ty+8);ctx.stroke();
+  // 副標
+  ctx.font='300 44px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle='rgba(255,255,255,0.65)';ctx.textAlign='center';
+  ctx.fillText(sub||'',cx,ty+68);
   // 正文
   ctx.font='400 34px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.82)';
-  const blines=(body||'').split('\n');let by=ty+158;
-  for(const l of blines){if(!l){by+=18;continue;}ctx.fillText(l,cx,by);by+=52;}
+  ctx.fillStyle='rgba(255,255,255,0.78)';
+  const blines=(body||'').split('\n');let by=ty+140;
+  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText(l,cx,by);by+=52;}
   ctx.textAlign='left';
-  // 底部品牌落款（像 宏彤學 HONG × TONG）
-  ctx.strokeStyle='rgba(255,232,190,0.4)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-200,H-148);ctx.lineTo(cx+200,H-148);ctx.stroke();
-  ctx.font='600 30px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,232,190,0.78)';ctx.textAlign='center';
-  ctx.fillText(acct||'@帳號',cx,H-104);
-  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,232,190,0.45)';ctx.fillText('往右滑 →',cx,H-68);
-  ctx.textAlign='left';
-  return;
- }
-
- if(layout==='neon'){
-  // @minglightup 風格：淡色底，黑色 serif，頂部欄目，底部「收藏」提示
-  const cx=W/2;
-  // 頂部欄目（像 minglightup 的「未來規劃·思維補丁」+ 「收藏起來 Save this」）
-  ctx.font='500 27px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,26,24,0.38)';ctx.textAlign='left';
-  ctx.fillText('靈感救援隊',px,78);
-  ctx.textAlign='right';
-  ctx.fillStyle='rgba(26,26,24,0.28)';
-  ctx.fillText('收藏起來 Save this',W-px,78);
-  ctx.textAlign='left';
-  ctx.strokeStyle='rgba(26,26,24,0.12)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,96);ctx.lineTo(W-px,96);ctx.stroke();
-  // 大標題置中（黑色 serif）
-  ctx.font='900 114px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;ctx.textAlign='center';
-  const tlines=(title||'').split('\n');let ty=H*0.38;
-  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=136;}
-  // 短橫線
-  ctx.strokeStyle='rgba(26,26,24,0.15)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-50,ty+10);ctx.lineTo(cx+50,ty+10);ctx.stroke();
-  // 副標
-  ctx.font='400 46px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.sub;ctx.fillText(sub||'',cx,ty+72);
-  // 正文
-  ctx.font='400 36px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;
-  const blines=(body||'').split('\n');let by=ty+150;
-  for(const l of blines){if(!l){by+=20;continue;}ctx.fillText(l,cx,by);by+=56;}
-  ctx.textAlign='left';
-  // 底部帳號落款
-  ctx.strokeStyle='rgba(26,26,24,0.1)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
-  ctx.font='500 28px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(26,26,24,0.5)';ctx.textAlign='center';
-  ctx.fillText(acct||'@帳號',cx,H-80);
-  ctx.textAlign='left';
-  return;
- }
-
- if(layout==='earth'){
-  // @msnew_new 風格：深暖棕底，大白字靠左，手寫感副標，底欄
-  drawTopBar(ctx,W,acct,'HEALING WORDS','rgba(245,200,122,0.45)','rgba(245,200,122,0.18)');
-  // 右側幾何光暈
-  const gl=ctx.createRadialGradient(W,H*0.3,0,W,H*0.3,480);
-  gl.addColorStop(0,'rgba(245,200,122,0.08)');gl.addColorStop(1,'transparent');
-  ctx.fillStyle=gl;ctx.fillRect(0,0,W,H);
-  // 大標題靠左
-  ctx.font='900 112px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='#ffffff';ctx.textAlign='left';
-  const tlines=(title||'').split('\n');let ty=H*0.38;
-  for(const l of tlines){ctx.fillText(l,px,ty);ty+=136;}
-  // 金色細線
-  ctx.strokeStyle='rgba(245,200,122,0.55)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(px,ty+6);ctx.lineTo(px+300,ty+6);ctx.stroke();
-  // 副標（細小字，像 msnew_new 的手寫感小字）
-  ctx.font='italic 400 44px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(245,200,122,0.85)';ctx.fillText(sub||'',px,ty+70);
-  // 正文
-  ctx.font='400 33px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.8)';
-  wrapCanvasText(ctx,body||'',px,ty+148,W-px*2,52);
-  drawBottomBar(ctx,W,H,acct,'往右滑 →',th.bar,th.foot,th.footSub);
-  return;
- }
-
- if(layout==='stone'){
-  // @pumozo.mag 風格：淡藍白底，外框線，頂部欄目，左側品牌條
-  const cx=W/2;
-  const margin=58;
-  // 外框線（像 pumozo 的方框）
-  ctx.strokeStyle='rgba(26,58,92,0.25)';ctx.lineWidth=1.5;
-  ctx.strokeRect(margin,margin,W-margin*2,H-margin*2);
-  ctx.strokeStyle='rgba(26,58,92,0.1)';ctx.lineWidth=1;
-  ctx.strokeRect(margin+14,margin+14,W-margin*2-28,H-margin*2-28);
-  // 頂部欄目（像 PURE MOTIVATION ZONE）
-  ctx.font='600 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.4)';ctx.textAlign='center';
-  ctx.fillText('PURE MOTIVATION ZONE',cx,130);
-  ctx.strokeStyle='rgba(26,58,92,0.15)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(margin+50,150);ctx.lineTo(W-margin-50,150);ctx.stroke();
-  // 主標題
-  ctx.font='900 106px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;
-  const tlines=(title||'').split('\n');let ty=H*0.36;
-  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=130;}
-  // 副標
-  ctx.font='italic 500 50px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.sub;ctx.fillText(sub||'',cx,ty+30);
-  // 底部「播放箭頭」提示（像 pumozo 的 ▶ 格式）
-  ctx.font='400 32px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.55)';
-  const blines=(body||'').split('\n');let by=ty+108;
-  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText((by===ty+108?'▶ ':'')+l,cx,by);by+=48;}
-  // 底部品牌條
-  ctx.strokeStyle='rgba(26,58,92,0.2)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(margin+50,H-148);ctx.lineTo(W-margin-50,H-148);ctx.stroke();
-  ctx.font='600 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.55)';ctx.textAlign='center';
-  ctx.fillText('| '+((acct||'@帳號').replace('@','').toUpperCase())+'.MAG |',cx,H-104);
-  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.38)';ctx.fillText('往右滑 →',cx,H-68);
-  ctx.textAlign='left';
-  return;
- }
-}
-
-// ── 內頁 ──
-function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
- drawBg(ctx,W,H,th);
- const layout=th.layout||'drama';
- const px=80;
- const total=totalN||'08';
- body=normalizeBodyText(body);
-
- if(layout==='drama'){
-  // @vivi_college 內頁：暗底，左上小標籤，左側大字，底欄
-  // 小標籤
-  ctx.fillStyle='rgba(220,50,50,0.82)';ctx.fillRect(px,56,160,44);
-  ctx.font='700 22px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='#ffffff';ctx.textAlign='left';ctx.fillText('#'+num,px+20,84);
-  // 帳號右上
-  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.textAlign='right';ctx.fillText(acct||'@帳號',W-px,80);
-  ctx.textAlign='left';
-  // 頁碼大背景字（vivi_college 式左下大號頁碼）
-  ctx.font='900 220px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.textAlign='right';
-  ctx.fillText(num,W-px,H*0.88);ctx.textAlign='left';
-  // 標題（自動換行）
-  ctx.font='700 84px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='#ffffff';
-  const titleEndY_drama=wrapCanvasText(ctx,title||'',px,260,W-px*2,96);
-  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,titleEndY_drama+14);ctx.lineTo(px+Math.min(W-px*2,400),titleEndY_drama+14);ctx.stroke();
-  // 正文（自動調字體）
-  const bodyY_drama=Math.max(372,titleEndY_drama+40);
-  const {fontSize:bfs_d,lineH:blh_d}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_drama,H-140,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
-  ctx.font='400 '+bfs_d+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;
-  wrapCanvasText(ctx,body||'',px,bodyY_drama,W-px*2,blh_d);
   // 底欄
   ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.45)';ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.fillStyle='rgba(255,255,255,0.42)';ctx.textAlign='left';
+  ctx.fillText(acct||'@帳號',px,H-80);
   ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.28)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
  }
 
- if(layout==='ink'){
-  // @_1mlinda 內頁：頂部系列名+頁碼，中央大標，底部帳號+SWIPE
-  const cx=W/2;
-  // 頂部欄目（完全像 _1mlinda：系列名左，頁碼右）
-  ctx.font='500 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,26,24,0.32)';ctx.textAlign='left';
-  ctx.fillText((acct||'').replace('@','').toUpperCase(),px,80);
-  ctx.textAlign='right';ctx.fillText(num+' — '+total,W-px,80);ctx.textAlign='left';
-  ctx.strokeStyle='rgba(26,26,24,0.12)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,98);ctx.lineTo(W-px,98);ctx.stroke();
-  // 標題置中（大 serif，自動換行）
-  ctx.font='700 84px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;ctx.textAlign='center';
-  const titleEndY_ink=wrapCanvasText(ctx,title||'',cx,290,W-px*2,96);
-  // 短橫線
-  ctx.strokeStyle='rgba(26,26,24,0.15)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-80,titleEndY_ink+14);ctx.lineTo(cx+80,titleEndY_ink+14);ctx.stroke();
-  // 正文（自動調字體）
-  const bodyY_ink=Math.max(400,titleEndY_ink+40);
-  const {fontSize:bfs_i,lineH:blh_i}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_ink,H-140,'400 42px "Noto Serif TC","PingFang TC",serif',42,26);
-  ctx.font='400 '+bfs_i+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;ctx.textAlign='center';
-  wrapCanvasText(ctx,body||'',cx,bodyY_ink,W-px*2,blh_i);
-  ctx.textAlign='left';
+ if(layout==='chiao'){
+  // chiao 封面：米白底，大標題靠左，最後詞語粉紅highlight色塊
+  // 覆蓋背景為暖米白
+  ctx.fillStyle=th.bg1;ctx.fillRect(0,0,W,H);
+  // 頂部分類標籤（左上）
+  const catLabel=sub||'感情';
+  ctx.font='600 24px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(42,32,24,0.38)';ctx.textAlign='left';
+  ctx.fillText('# '+catLabel,px,76);
+  ctx.strokeStyle='rgba(42,32,24,0.12)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,92);ctx.lineTo(W-px,92);ctx.stroke();
+  // 大標題靠左（深色）
+  ctx.font='800 104px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.txt;ctx.textAlign='left';
+  const tlines=(title||'').split('\n');let ty=H*0.38;
+  for(const l of tlines){
+   // 最後一行加粉色底highlight
+   const nextTy=ty+128;
+   if(tlines.indexOf(l)===tlines.length-1&&l){
+    const tw=ctx.measureText(l).width;
+    ctx.fillStyle=th.hl;ctx.globalAlpha=0.25;
+    ctx.fillRect(px-8,ty-90,tw+16,108);ctx.globalAlpha=1;
+   }
+   ctx.fillStyle=th.txt;ctx.fillText(l,px,ty);ty+=128;
+  }
+  // 橫線
+  ctx.strokeStyle='rgba(42,32,24,0.14)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,ty+4);ctx.lineTo(px+340,ty+4);ctx.stroke();
+  // 正文
+  ctx.font='400 36px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle=th.body;
+  wrapCanvasText(ctx,body||'',px,ty+58,W-px*2,54);
   // 底欄
-  ctx.strokeStyle='rgba(26,26,24,0.1)';ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(42,32,24,0.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
-  ctx.font='400 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,26,24,0.42)';ctx.textAlign='left';
-  ctx.fillText((acct||'@帳號').toUpperCase().replace('@','@'),px,H-76);
-  ctx.textAlign='right';ctx.fillStyle='rgba(26,26,24,0.28)';ctx.fillText('SWIPE →',W-px,H-76);
+  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(42,32,24,0.42)';ctx.textAlign='left';
+  ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.textAlign='right';ctx.fillStyle='rgba(42,32,24,0.28)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
  }
 
- if(layout==='film'){
-  // @sa668833 內頁：暖橙底，白字，頁碼右上，品牌底部
+ if(layout==='remind'){
+  // remind 封面：米白底，大標題置中，菱形符號，副標問句
+  ctx.fillStyle=th.bg1;ctx.fillRect(0,0,W,H);
+  // 細橫線頂部
+  ctx.strokeStyle='rgba(58,56,48,0.12)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,88);ctx.lineTo(W-px,88);ctx.stroke();
   const cx=W/2;
-  // 頁碼右上
-  ctx.font='600 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,232,190,0.7)';ctx.textAlign='right';
-  ctx.fillText(num+' / '+total,W-px,80);ctx.textAlign='left';
-  ctx.strokeStyle='rgba(255,232,190,0.3)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,100);ctx.lineTo(W-px,100);ctx.stroke();
-  // 標題置中（自動換行）
+  // 大標題置中（深色 serif）
+  ctx.font='700 100px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.txt;ctx.textAlign='center';
+  const tlines=(title||'').split('\n');let ty=H*0.38;
+  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=122;}
+  // 菱形 ◆ 分隔
+  ctx.font='28px "Noto Sans TC",sans-serif';
+  ctx.fillStyle=th.grn||'#6b7c5e';ctx.fillText('◆',cx,ty+38);
+  // 副標（問句）
+  ctx.font='300 44px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.sub;ctx.textAlign='center';
+  ctx.fillText(sub||'',cx,ty+98);
+  // 正文
+  ctx.font='400 34px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle=th.body;
+  const blines=(body||'').split('\n');let by=ty+168;
+  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText(l,cx,by);by+=52;}
+  // 底欄
+  ctx.strokeStyle='rgba(58,56,48,0.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
+  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(58,56,48,0.40)';ctx.textAlign='left';
+  ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.textAlign='right';ctx.fillStyle='rgba(58,56,48,0.26)';ctx.fillText('往右滑 →',W-px,H-80);
+  ctx.textAlign='left';
+  return;
+ }
+
+ // dinero 封面：深暗底，左側帳號小字，大白 serif 標題靠左下，橫線+引號裝飾
+ const tag=acct||'@帳號';
+ // 頂部右側帳號小字
+ ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='right';
+ ctx.fillText(tag,W-px,68);ctx.textAlign='left';
+ // 左側引號大字裝飾（電影感）
+ ctx.font='900 200px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle='rgba(255,255,255,0.04)';
+ ctx.fillText('"',px-20,H*0.30);
+ // 大標題（靠左下，白色粗 serif）
+ ctx.font='900 110px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.txt;
+ const tlines=(title||'').split('\n');let ty=H*0.44;
+ for(const l of tlines){ctx.fillText(l,px,ty);ty+=132;}
+ // 橫線
+ ctx.strokeStyle='rgba(255,255,255,0.28)';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.moveTo(px,ty+6);ctx.lineTo(px+380,ty+6);ctx.stroke();
+ // 副標
+ ctx.font='300 42px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.sub;ctx.fillText(sub||'',px,ty+62);
+ // 正文
+ ctx.font='400 33px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle=th.body;
+ wrapCanvasText(ctx,body||'',px,ty+134,W-px*2,50);
+ // 底欄
+ ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.lineWidth=1;
+ ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
+ ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle='rgba(255,255,255,0.50)';ctx.textAlign='left';ctx.fillText(tag,px,H-80);
+ ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.30)';ctx.fillText('往右滑 →',W-px,H-80);
+ ctx.textAlign='left';
+}
+
+// ── 內頁 ──
+function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
+ drawBg(ctx,W,H,th);
+ const layout=th.layout||'dinero';
+ const px=80;
+ const total=totalN||'08';
+ body=normalizeBodyText(body);
+
+ if(layout==='afei'){
+  // afei 內頁：深暗底，頂欄頁碼，標題置中，白字
+  const cx=W/2;
+  // 頂部欄
+  ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,78);ctx.lineTo(W-px,78);ctx.stroke();
+  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='left';
+  ctx.fillText(acct||'@帳號',px,65);
+  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.30)';
+  ctx.fillText(num+' / '+total,W-px,65);ctx.textAlign='left';
+  // 標題置中（白色 serif，自動換行）
   ctx.font='700 82px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const titleEndY_film=wrapCanvasText(ctx,title||'',cx,272,W-px*2,94);
-  ctx.strokeStyle='rgba(255,232,190,0.55)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(cx-160,titleEndY_film+14);ctx.lineTo(cx+160,titleEndY_film+14);ctx.stroke();
+  const titleEndY_afei=wrapCanvasText(ctx,title||'',cx,280,W-px*2,94);
+  ctx.strokeStyle='rgba(255,255,255,0.20)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(cx-130,titleEndY_afei+14);ctx.lineTo(cx+130,titleEndY_afei+14);ctx.stroke();
   // 正文（自動調字體）
-  const bodyY_film=Math.max(388,titleEndY_film+40);
-  const {fontSize:bfs_f,lineH:blh_f}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_film,H-170,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
-  ctx.font='400 '+bfs_f+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.85)';ctx.textAlign='center';
-  wrapCanvasText(ctx,body||'',cx,bodyY_film,W-px*2,blh_f);
+  const bodyY_afei=Math.max(390,titleEndY_afei+40);
+  const {fontSize:bfs_af,lineH:blh_af}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_afei,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+  ctx.font='400 '+bfs_af+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.body;ctx.textAlign='center';
+  wrapCanvasText(ctx,body||'',cx,bodyY_afei,W-px*2,blh_af);
   ctx.textAlign='left';
-  // 底部品牌
-  ctx.strokeStyle='rgba(255,232,190,0.3)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-180,H-148);ctx.lineTo(cx+180,H-148);ctx.stroke();
-  ctx.font='500 28px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,232,190,0.65)';ctx.textAlign='center';
-  ctx.fillText(acct||'@帳號',cx,H-104);
-  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,232,190,0.38)';ctx.fillText('往右滑 →',cx,H-68);
+  // 底欄
+  ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
+  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.22)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
  }
 
- if(layout==='neon'){
-  // @minglightup 內頁：淡底，黑字，頂欄頁碼，底部帳號
+ if(layout==='chiao'){
+  // chiao 內頁：米白底，頂部分類標籤，標題靠左，正文
+  // 頂部分類標籤（小字）
+  ctx.font='600 23px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(42,32,24,0.36)';ctx.textAlign='left';
+  ctx.fillText('No.'+num,px,72);
+  ctx.textAlign='right';ctx.fillStyle='rgba(42,32,24,0.30)';
+  ctx.fillText(acct||'@帳號',W-px,72);ctx.textAlign='left';
+  ctx.strokeStyle='rgba(42,32,24,0.10)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,90);ctx.lineTo(W-px,90);ctx.stroke();
+  // 分類色塊標籤
+  const catH=46;
+  ctx.fillStyle=th.hl;ctx.globalAlpha=0.18;
+  ctx.fillRect(px,118,180,catH);ctx.globalAlpha=1;
+  ctx.font='700 22px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle=th.txt;ctx.fillText('感情・關係',px+14,147);
+  // 標題靠左（大字 serif，自動換行）
+  ctx.font='700 82px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.txt;
+  const titleEndY_ch=wrapCanvasText(ctx,title||'',px,266,W-px*2,94);
+  ctx.strokeStyle=th.hl;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(px,titleEndY_ch+14);ctx.lineTo(px+200,titleEndY_ch+14);ctx.stroke();
+  // 正文（自動調字體）
+  const bodyY_ch=Math.max(380,titleEndY_ch+42);
+  const {fontSize:bfs_ch,lineH:blh_ch}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_ch,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+  ctx.font='400 '+bfs_ch+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.body;
+  wrapCanvasText(ctx,body||'',px,bodyY_ch,W-px*2,blh_ch);
+  // 底欄
+  ctx.strokeStyle='rgba(42,32,24,0.08)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
+  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(42,32,24,0.38)';ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.textAlign='right';ctx.fillStyle='rgba(42,32,24,0.24)';ctx.fillText('往右滑 →',W-px,H-80);
+  ctx.textAlign='left';
+  return;
+ }
+
+ if(layout==='remind'){
+  // remind 內頁：米白紙質底，置中，圓角框卡
   const cx=W/2;
-  // 頂部（系列名左，頁碼右）
-  ctx.font='500 27px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,26,24,0.35)';ctx.textAlign='left';
-  ctx.fillText('靈感救援隊',px,78);
-  ctx.textAlign='right';ctx.fillStyle='rgba(26,26,24,0.32)';
-  ctx.fillText(num+' / '+total,W-px,78);ctx.textAlign='left';
-  ctx.strokeStyle='rgba(26,26,24,0.1)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,96);ctx.lineTo(W-px,96);ctx.stroke();
-  // 頁碼大背景字（minglightup 式）
-  ctx.font='900 200px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(26,26,24,0.04)';ctx.textAlign='right';
-  ctx.fillText(num,W-px,H*0.58);ctx.textAlign='left';
-  // 標題置中（自動換行）
+  // 頂部
+  ctx.strokeStyle='rgba(58,56,48,0.10)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px,78);ctx.lineTo(W-px,78);ctx.stroke();
+  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(58,56,48,0.32)';ctx.textAlign='left';
+  ctx.fillText(acct||'@帳號',px,65);
+  ctx.textAlign='right';ctx.fillStyle='rgba(58,56,48,0.26)';
+  ctx.fillText(num+' / '+total,W-px,65);ctx.textAlign='left';
+  // 標題置中（深色 serif，自動換行）
   ctx.font='700 82px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.txt;ctx.textAlign='center';
-  const titleEndY_neon=wrapCanvasText(ctx,title||'',cx,280,W-px*2,94);
-  ctx.strokeStyle='rgba(26,26,24,0.14)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-80,titleEndY_neon+14);ctx.lineTo(cx+80,titleEndY_neon+14);ctx.stroke();
-  // 正文（自動調字體）
-  const bodyY_neon=Math.max(390,titleEndY_neon+40);
-  const {fontSize:bfs_n,lineH:blh_n}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_neon,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
-  ctx.font='400 '+bfs_n+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;ctx.textAlign='center';
-  wrapCanvasText(ctx,body||'',cx,bodyY_neon,W-px*2,blh_n);
+  const titleEndY_rm=wrapCanvasText(ctx,title||'',cx,278,W-px*2,94);
+  // 菱形分隔
+  ctx.font='24px "Noto Sans TC",sans-serif';
+  ctx.fillStyle=th.grn||'#6b7c5e';ctx.fillText('◆',cx,titleEndY_rm+44);
+  // 正文（圓角框卡 或 直接文字）
+  const bodyY_rm=titleEndY_rm+80;
+  const body_rm=body||'';
+  // 判斷是否有項目符號 — 有「•」或「-」開頭則畫圓角卡
+  const hasBullet=/^[•\-]/m.test(body_rm);
+  if(hasBullet){
+   const lines=body_rm.split('\n').filter(l=>l.trim());
+   let cy=bodyY_rm;
+   for(const l of lines){
+    if(cy>H-160)break;
+    const cardW=W-px*2;const cardH=72;
+    const r=14;
+    ctx.beginPath();ctx.moveTo(px+r,cy);ctx.lineTo(px+cardW-r,cy);
+    ctx.arcTo(px+cardW,cy,px+cardW,cy+r,r);ctx.lineTo(px+cardW,cy+cardH-r);
+    ctx.arcTo(px+cardW,cy+cardH,px+cardW-r,cy+cardH,r);ctx.lineTo(px+r,cy+cardH);
+    ctx.arcTo(px,cy+cardH,px,cy+cardH-r,r);ctx.lineTo(px,cy+r);
+    ctx.arcTo(px,cy,px+r,cy,r);ctx.closePath();
+    ctx.fillStyle='rgba(107,124,94,0.09)';ctx.fill();
+    ctx.font='400 34px "Noto Serif TC","PingFang TC",serif';
+    ctx.fillStyle=th.body;ctx.textAlign='center';
+    ctx.fillText(l.replace(/^[•\-]\s*/,''),cx,cy+48);
+    cy+=cardH+12;
+   }
+  } else {
+   const {fontSize:bfs_rm,lineH:blh_rm}=autoFitFontSize(ctx,body_rm,W-px*2,bodyY_rm,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+   ctx.font='400 '+bfs_rm+'px "Noto Serif TC","PingFang TC",serif';
+   ctx.fillStyle=th.body;ctx.textAlign='center';
+   wrapCanvasText(ctx,body_rm,cx,bodyY_rm,W-px*2,blh_rm);
+  }
   ctx.textAlign='left';
-  // 底部
-  ctx.strokeStyle='rgba(26,26,24,0.08)';ctx.lineWidth=1;
+  // 底欄
+  ctx.strokeStyle='rgba(58,56,48,0.08)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
-  ctx.font='500 26px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(26,26,24,0.42)';ctx.textAlign='center';
-  ctx.fillText(acct||'@帳號',cx,H-80);
+  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(58,56,48,0.36)';ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.textAlign='right';ctx.fillStyle='rgba(58,56,48,0.22)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
  }
 
- if(layout==='earth'){
-  // @msnew_new 內頁：暖深棕底，頂欄+頁碼，大白字，底欄
-  drawTopBar(ctx,W,acct,'HEALING WORDS','rgba(245,200,122,0.42)','rgba(245,200,122,0.16)',num,total);
-  // 金色細分隔線
-  ctx.strokeStyle='rgba(245,200,122,0.22)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,170);ctx.lineTo(W-px,170);ctx.stroke();
-  // 標題（自動換行）
-  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='#ffffff';
-  const titleEndY_earth=wrapCanvasText(ctx,title||'',px,284,W-px*2,92);
-  ctx.strokeStyle='rgba(245,200,122,0.5)';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(px,titleEndY_earth+14);ctx.lineTo(px+220,titleEndY_earth+14);ctx.stroke();
-  // 正文（自動調字體）
-  const bodyY_earth=Math.max(394,titleEndY_earth+40);
-  const {fontSize:bfs_e,lineH:blh_e}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_earth,H-140,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
-  ctx.font='400 '+bfs_e+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.84)';
-  wrapCanvasText(ctx,body||'',px,bodyY_earth,W-px*2,blh_e);
-  drawBottomBar(ctx,W,H,acct,'往右滑 →',th.bar,th.foot,th.footSub);
-  return;
- }
-
- if(layout==='stone'){
-  // @pumozo.mag 內頁：淡藍白，外框，頂欄+頁碼，大字
-  const cx=W/2;
-  const margin=58;
-  ctx.strokeStyle='rgba(26,58,92,0.2)';ctx.lineWidth=1.5;
-  ctx.strokeRect(margin,margin,W-margin*2,H-margin*2);
-  // 頂部欄目+頁碼
-  ctx.font='500 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.35)';ctx.textAlign='left';
-  ctx.fillText('PURE MOTIVATION ZONE',margin+px,130);
-  ctx.textAlign='right';ctx.fillStyle='rgba(26,58,92,0.42)';
-  ctx.fillText(num+' / '+total,W-margin-px+margin,130);ctx.textAlign='left';
-  ctx.strokeStyle='rgba(26,58,92,0.14)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(margin+50,150);ctx.lineTo(W-margin-50,150);ctx.stroke();
-  // 標題靠左（自動換行）
-  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;
-  const titleEndY_stone=wrapCanvasText(ctx,title||'',px,280,W-px*2,92);
-  ctx.strokeStyle='rgba(26,58,92,0.35)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(px,titleEndY_stone+14);ctx.lineTo(px+220,titleEndY_stone+14);ctx.stroke();
-  // 正文（自動調字體）
-  const bodyY_stone=Math.max(390,titleEndY_stone+40);
-  const {fontSize:bfs_s,lineH:blh_s}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_stone,H-160,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
-  ctx.font='400 '+bfs_s+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body;
-  wrapCanvasText(ctx,body||'',px,bodyY_stone,W-px*2,blh_s);
-  // 底部品牌
-  ctx.strokeStyle='rgba(26,58,92,0.16)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(margin+50,H-148);ctx.lineTo(W-margin-50,H-148);ctx.stroke();
-  ctx.font='500 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.48)';ctx.textAlign='center';
-  ctx.fillText('| '+((acct||'@帳號').replace('@','').toUpperCase())+'.MAG |',cx,H-104);
-  ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(26,58,92,0.32)';ctx.fillText('往右滑 →',cx,H-68);
-  ctx.textAlign='left';
-  return;
- }
+ // dinero 內頁：深暗底，左上帳號，大白字靠左，底欄頁碼
+ // 頁碼大背景字（電影感）
+ ctx.font='900 220px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle='rgba(255,255,255,0.03)';ctx.textAlign='right';
+ ctx.fillText(num,W-px,H*0.88);ctx.textAlign='left';
+ // 頂部帳號+橫線
+ ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='left';
+ ctx.fillText(acct||'@帳號',px,68);
+ ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.28)';
+ ctx.fillText(num+' / '+total,W-px,68);ctx.textAlign='left';
+ ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
+ ctx.beginPath();ctx.moveTo(px,84);ctx.lineTo(W-px,84);ctx.stroke();
+ // 標題靠左（白色大 serif，自動換行）
+ ctx.font='700 84px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle='#ffffff';
+ const titleEndY_dn=wrapCanvasText(ctx,title||'',px,258,W-px*2,96);
+ ctx.strokeStyle='rgba(255,255,255,0.20)';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.moveTo(px,titleEndY_dn+14);ctx.lineTo(px+Math.min(W-px*2,380),titleEndY_dn+14);ctx.stroke();
+ // 正文（自動調字體）
+ const bodyY_dn=Math.max(374,titleEndY_dn+40);
+ const {fontSize:bfs_dn,lineH:blh_dn}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_dn,H-140,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
+ ctx.font='400 '+bfs_dn+'px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.body;
+ wrapCanvasText(ctx,body||'',px,bodyY_dn,W-px*2,blh_dn);
+ // 底欄
+ ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
+ ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
+ ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle='rgba(255,255,255,0.42)';ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+ ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.26)';ctx.fillText('往右滑 →',W-px,H-80);
+ ctx.textAlign='left';
 }
 
 // ── 結尾頁 ──
 function drawCanvasEndPage(ctx,W,H,th,acct,title,body){
  drawBg(ctx,W,H,th);
  body=normalizeBodyText(body);
- const layout=th.layout||'drama';
+ const layout=th.layout||'dinero';
  const cx=W/2;
  const px=100;
  const acctStr=acct||'@帳號';
 
- if(layout==='drama'){
-  // 暗底：置中大標題 + 正文 + 帳號
+ if(layout==='dinero'){
+  // dinero 結尾：深暗底，大白字置中，橫線，帳號大字
   ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='#ffffff';ctx.textAlign='center';
   const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
-  // 分隔線
-  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;
+  ctx.strokeStyle='rgba(255,255,255,0.22)';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-120,tEndY+36);ctx.lineTo(cx+120,tEndY+36);ctx.stroke();
-  // 互動文字
   const bodyY=tEndY+80;
   const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
   ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.75)';
+  ctx.fillStyle='rgba(255,255,255,0.72)';
   wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
-  // 帳號底部
-  ctx.font='700 28px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='center';
-  ctx.fillText(acctStr,cx,H-80);
+  ctx.font='600 30px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText(acctStr,cx,H-80);
   ctx.textAlign='left';
- } else if(layout==='ink'){
+ } else if(layout==='chiao'||layout==='remind'){
+  // chiao/remind 結尾：淡色底，深字，置中
+  const titleClr=th.txt||'#2a2018';
   ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.title||'#1a1a1a';ctx.textAlign='center';
+  ctx.fillStyle=titleClr;ctx.textAlign='center';
   const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
-  ctx.strokeStyle=th.accent||'#2c2c2c';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
-  const bodyY=tEndY+80;
-  const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 42px "Noto Serif TC","PingFang TC",serif',42,26);
-  ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.body||'#333';
-  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
-  ctx.font='700 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fillText(acctStr,cx,H-80);
-  ctx.textAlign='left';
- } else {
-  // film / neon / earth / stone — 通用結尾
-  const titleColor=th.title||'#1a1a1a';
-  const bodyColor=th.body||'#333';
-  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=titleColor;ctx.textAlign='center';
-  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
-  ctx.strokeStyle=typeof titleColor==='string'?titleColor:'#333';
-  ctx.globalAlpha=0.2;ctx.lineWidth=1.5;
+  ctx.strokeStyle=titleClr;ctx.globalAlpha=0.15;ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
   ctx.globalAlpha=1;
   const bodyY=tEndY+80;
+  const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 42px "Noto Serif TC","PingFang TC",serif',42,26);
+  ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.body;
+  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  ctx.font='600 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle=titleClr;ctx.globalAlpha=0.42;ctx.fillText(acctStr,cx,H-80);
+  ctx.globalAlpha=1;ctx.textAlign='left';
+ } else {
+  // afei — 深暗底，置中，帳號落款
+  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle='#ffffff';ctx.textAlign='center';
+  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
+  ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
+  const bodyY=tEndY+80;
   const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
   ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=bodyColor;
+  ctx.fillStyle='rgba(255,255,255,0.70)';
   wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
-  ctx.font='700 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle=bodyColor;ctx.globalAlpha=0.45;
-  ctx.fillText(acctStr,cx,H-80);
+  ctx.font='600 28px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.42)';ctx.fillText(acctStr,cx,H-80);
   ctx.globalAlpha=1;ctx.textAlign='left';
  }
 }
@@ -1829,7 +1690,7 @@ function buildPagesFromPaste(pasteText,n){
 function drawStylePreview(styleKey){
  const container=document.getElementById('stylePreviewStrip');
  if(!container)return;
- const th=CANVAS_THEMES[styleKey||'drama']||CANVAS_THEMES.drama;
+ const th=CANVAS_THEMES[styleKey||'dinero']||CANVAS_THEMES.dinero;
  const W=1080,H=1350;
  const acct=A.acct||'@帳號';
  const n=A.n||5;
@@ -1879,8 +1740,8 @@ function drawStylePreview(styleKey){
  });
 }
 function drawCarouselCanvas(){
- const style=A._canvasStyle||'drama';
- const th=CANVAS_THEMES[style]||CANVAS_THEMES.dark;
+ const style=A._canvasStyle||'dinero';
+ const th=CANVAS_THEMES[style]||CANVAS_THEMES.dinero;
  const acct=A.acct||'@帳號';
  const n=A.n||5;
  const pasteText=A._paste||'';
@@ -2613,14 +2474,12 @@ function render(){
     <!-- 風格按鈕清單 -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
      ${[
-      {k:'drama',label:'暗夜戲劇',desc:'純黑・金字壓底'},
-      {k:'ink',label:'白紙墨跡',desc:'純白・極簡留白'},
-      {k:'film',label:'菲林舊照',desc:'米黃・復古框線'},
-      {k:'neon',label:'知識白板',desc:'米白・極簡・思維補丁感'},
-      {k:'earth',label:'大地詩集',desc:'磚橘・奶白・溫暖土地'},
-      {k:'stone',label:'水墨石板',desc:'深灰・白字・硃砂紅點'},
+      {k:'dinero',label:'電影暗夜',desc:'深黑・白serif・引號裝飾'},
+      {k:'afei',label:'夜景光暈',desc:'深暗・黃昏照片感・置中'},
+      {k:'chiao',label:'米白感情',desc:'米白底・粉highlight・分類標籤'},
+      {k:'remind',label:'自然紙質',desc:'亞麻紙・橄欖綠・菱形◆符號'},
      ].map(({k,label,desc})=>{
-      const on=(A._canvasStyle||'drama')===k;
+      const on=(A._canvasStyle||'dinero')===k;
       return `<button type="button" class="canvas-style-btn" data-cstyle="${k}" style="border:2px solid ${on?'var(--accent)':'var(--line)'};border-radius:10px;padding:9px 12px;background:${on?'rgba(var(--acc3-rgb,155,125,181),0.08)':'var(--surface)'};cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;width:100%">
        <div style="width:14px;height:14px;border-radius:50%;border:2px solid ${on?'var(--accent)':'var(--line)'};flex:none;background:${on?'var(--accent)':'transparent'}"></div>
        <div>
@@ -2801,7 +2660,7 @@ function render(){
 
  // 如果是風格選擇步驟，自動畫封面預覽
  if(Q[S.i]&&Q[S.i].styles){
-  requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'drama'));
+  requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
  }
 
  const nb=document.getElementById('next'),bb=document.getElementById('back');
@@ -2886,7 +2745,7 @@ app.addEventListener('input',e=>{
      });
     }
     // live update canvas preview
-    requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'drama'));
+    requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
    },400);
    return;
   }
@@ -2899,7 +2758,7 @@ app.addEventListener('input',e=>{
    // debounce canvas preview update
    clearTimeout(window._slideDbt);
    window._slideDbt=setTimeout(()=>{
-    requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'drama'));
+    requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
    },300);
    return;
   }
@@ -2907,7 +2766,7 @@ app.addEventListener('input',e=>{
   if(e.target.id==='captionBox'){A._caption=e.target.value;save();return;}
   const k=e.target.dataset.k;if(k){A[k]=e.target.value;save();
    // 帳號改動即時更新 canvas 預覽
-   if(k==='acct'){clearTimeout(window._acctDbt);window._acctDbt=setTimeout(()=>{requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'drama'));},300);}
+   if(k==='acct'){clearTimeout(window._acctDbt);window._acctDbt=setTimeout(()=>{requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));},300);}
   }
 });
 app.addEventListener('click',e=>{
