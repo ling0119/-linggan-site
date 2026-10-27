@@ -1493,11 +1493,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   ctx.font='900 220px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='rgba(255,255,255,0.04)';ctx.textAlign='right';
   ctx.fillText(num,W-px,H*0.88);ctx.textAlign='left';
-  // 標題
+  // 標題（自動換行）
   ctx.font='700 84px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='#ffffff';ctx.fillText(title||'',px,260);
+  ctx.fillStyle='#ffffff';
+  const titleEndY_drama=wrapCanvasText(ctx,title||'',px,260,W-px*2,96);
   ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(px,288);ctx.lineTo(px+Math.min(ctx.measureText(title||'').width,W-px*2),288);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px,titleEndY_drama+14);ctx.lineTo(px+Math.min(W-px*2,400),titleEndY_drama+14);ctx.stroke();
   // 正文
   ctx.font='400 46px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.body;
@@ -1522,12 +1523,13 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   ctx.textAlign='right';ctx.fillText(num+' — '+total,W-px,80);ctx.textAlign='left';
   ctx.strokeStyle='rgba(26,26,24,0.12)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,98);ctx.lineTo(W-px,98);ctx.stroke();
-  // 標題置中（大 serif）
+  // 標題置中（大 serif，自動換行）
   ctx.font='700 84px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;ctx.textAlign='center';ctx.fillText(title||'',cx,290);
+  ctx.fillStyle=th.txt;ctx.textAlign='center';
+  const titleEndY_ink=wrapCanvasText(ctx,title||'',cx,290,W-px*2,96);
   // 短橫線
   ctx.strokeStyle='rgba(26,26,24,0.15)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-80,320);ctx.lineTo(cx+80,320);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-80,titleEndY_ink+14);ctx.lineTo(cx+80,titleEndY_ink+14);ctx.stroke();
   // 正文
   ctx.font='400 42px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.body;
@@ -1554,11 +1556,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   ctx.fillText(num+' / '+total,W-px,80);ctx.textAlign='left';
   ctx.strokeStyle='rgba(255,232,190,0.3)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,100);ctx.lineTo(W-px,100);ctx.stroke();
-  // 標題置中
+  // 標題置中（自動換行）
   ctx.font='700 82px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='#ffffff';ctx.textAlign='center';ctx.fillText(title||'',cx,272);
+  ctx.fillStyle='#ffffff';ctx.textAlign='center';
+  const titleEndY_film=wrapCanvasText(ctx,title||'',cx,272,W-px*2,94);
   ctx.strokeStyle='rgba(255,232,190,0.55)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(cx-160,300);ctx.lineTo(cx+160,300);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-160,titleEndY_film+14);ctx.lineTo(cx+160,titleEndY_film+14);ctx.stroke();
   // 正文
   ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='rgba(255,255,255,0.85)';
@@ -1592,11 +1595,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   ctx.font='900 200px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='rgba(26,26,24,0.04)';ctx.textAlign='right';
   ctx.fillText(num,W-px,H*0.58);ctx.textAlign='left';
-  // 標題置中
+  // 標題置中（自動換行）
   ctx.font='700 82px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;ctx.textAlign='center';ctx.fillText(title||'',cx,280);
+  ctx.fillStyle=th.txt;ctx.textAlign='center';
+  const titleEndY_neon=wrapCanvasText(ctx,title||'',cx,280,W-px*2,94);
   ctx.strokeStyle='rgba(26,26,24,0.14)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(cx-80,308);ctx.lineTo(cx+80,308);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-80,titleEndY_neon+14);ctx.lineTo(cx+80,titleEndY_neon+14);ctx.stroke();
   // 正文
   ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.body;
@@ -1619,11 +1623,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   // 金色細分隔線
   ctx.strokeStyle='rgba(245,200,122,0.22)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,170);ctx.lineTo(W-px,170);ctx.stroke();
-  // 標題
+  // 標題（自動換行）
   ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='#ffffff';ctx.fillText(title||'',px,284);
+  ctx.fillStyle='#ffffff';
+  const titleEndY_earth=wrapCanvasText(ctx,title||'',px,284,W-px*2,92);
   ctx.strokeStyle='rgba(245,200,122,0.5)';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(px,310);ctx.lineTo(px+220,310);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px,titleEndY_earth+14);ctx.lineTo(px+220,titleEndY_earth+14);ctx.stroke();
   // 正文
   ctx.font='400 46px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='rgba(255,255,255,0.84)';
@@ -1646,11 +1651,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
   ctx.fillText(num+' / '+total,W-margin-px+margin,130);ctx.textAlign='left';
   ctx.strokeStyle='rgba(26,58,92,0.14)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(margin+50,150);ctx.lineTo(W-margin-50,150);ctx.stroke();
-  // 標題靠左
+  // 標題靠左（自動換行）
   ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.txt;ctx.fillText(title||'',px,280);
+  ctx.fillStyle=th.txt;
+  const titleEndY_stone=wrapCanvasText(ctx,title||'',px,280,W-px*2,92);
   ctx.strokeStyle='rgba(26,58,92,0.35)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(px,306);ctx.lineTo(px+Math.min(ctx.measureText(title||'').width,W-px*2),306);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px,titleEndY_stone+14);ctx.lineTo(px+220,titleEndY_stone+14);ctx.stroke();
   // 正文
   ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.body;
@@ -1682,7 +1688,9 @@ function buildPagesFromPaste(pasteText,n){
    continue;
   }
   const lines=blk.split('\n').filter(l=>l.trim());
-  const title=lines[0]||('第 '+(i+1)+' 頁');
+  const rawTitle=lines[0]||('第 '+(i+1)+' 頁');
+  // 清掉 markdown 粗體星號、#號、多餘空白
+  const title=rawTitle.replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').replace(/^#+\s*/,'').trim();
   const body=lines.slice(1).join('\n')||blk;
   pages.push({title,body});
  }
