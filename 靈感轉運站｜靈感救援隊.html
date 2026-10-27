@@ -1202,8 +1202,36 @@ function drawPageBadge(ctx,num,total,x,y,color){
 }
 
 // ── 背景渲染 ──
-function drawBg(ctx,W,H,th){
+// ── 背景圖畫工具 ──
+// bgImg: HTMLImageElement | null；opacity: 0-1 蒙版深度
+function drawBgImage(ctx,W,H,bgImg,overlayColor,overlayAlpha){
+ if(!bgImg||!bgImg.complete||!bgImg.naturalWidth)return;
+ // 等比裁切填滿（cover）
+ const iw=bgImg.naturalWidth,ih=bgImg.naturalHeight;
+ const scale=Math.max(W/iw,H/ih);
+ const sw=iw*scale,sh=ih*scale;
+ const sx=(W-sw)/2,sy=(H-sh)/2;
+ ctx.drawImage(bgImg,sx,sy,sw,sh);
+ // 蒙版
+ const ov=ctx.createLinearGradient(0,0,0,H);
+ const col=overlayColor||'#000000';
+ const al=overlayAlpha!=null?overlayAlpha:0.52;
+ ov.addColorStop(0,col+(Math.round(al*255).toString(16).padStart(2,'0')));
+ ov.addColorStop(0.5,col+(Math.round((al*0.75)*255).toString(16).padStart(2,'0')));
+ ov.addColorStop(1,col+(Math.round(Math.min(al+0.15,1)*255).toString(16).padStart(2,'0')));
+ ctx.fillStyle=ov;ctx.fillRect(0,0,W,H);
+}
+
+function drawBg(ctx,W,H,th,bgImg){
  const layout=th.layout||'dinero';
+ // 如果有自訂背景圖，所有主題都直接用圖+蒙版
+ if(bgImg&&bgImg.complete&&bgImg.naturalWidth){
+  // 根據主題決定蒙版深淺
+  const darkLayouts=['dinero','afei','babyou','faydea'];
+  const isDark=darkLayouts.includes(layout);
+  drawBgImage(ctx,W,H,bgImg,isDark?'#000000':'#1a1408',isDark?0.50:0.42);
+  return;
+ }
 
  if(layout==='afei'){
   // afei：深暗漸層模擬夜景/黃昏照片感
@@ -1296,8 +1324,8 @@ function drawBg(ctx,W,H,th){
 }
 
 // ── 封面 ──
-function drawCanvasCover(ctx,W,H,th,acct,title,sub,body){
- drawBg(ctx,W,H,th);
+function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
+ drawBg(ctx,W,H,th,bgImg);
  const layout=th.layout||'dinero';
  const px=80;
  body=normalizeBodyText(body);
@@ -1516,8 +1544,8 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body){
 }
 
 // ── 內頁 ──
-function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
- drawBg(ctx,W,H,th);
+function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
+ drawBg(ctx,W,H,th,bgImg);
  const layout=th.layout||'dinero';
  const px=80;
  const total=totalN||'08';
@@ -1776,8 +1804,8 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
 }
 
 // ── 結尾頁 ──
-function drawCanvasEndPage(ctx,W,H,th,acct,title,body){
- drawBg(ctx,W,H,th);
+function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
+ drawBg(ctx,W,H,th,bgImg);
  body=normalizeBodyText(body);
  const layout=th.layout||'dinero';
  const cx=W/2;
@@ -1916,16 +1944,22 @@ function drawStylePreview(styleKey){
  const pages=buildPagesFromPaste(A._paste||'',n);
  const totalLabel=String(n).padStart(2,'0');
 
+ // 取得背景圖（統一用第 0 張 bgImage，或各自）
+ const getBg=(i)=>{
+  const imgs=A._bgImages||[];
+  return imgs[i]||imgs[0]||null;
+ };
  // 建立全部張的 draw 描述
  const slides=pages.map((p,i)=>{
+  const bg=getBg(i);
   if(i===0){
-   return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',p.sub||'探索靈感的方式',p.body||'往右滑，看看怎麼開始 →')};
+   return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',p.sub||'探索靈感的方式',p.body||'往右滑，看看怎麼開始 →',bg)};
   }
   if(p.isEnd||i===n-1){
-   return {label:'結尾頁',draw:(ctx)=>drawCanvasEndPage(ctx,W,H,th,acct,p.title,p.body)};
+   return {label:'結尾頁',draw:(ctx)=>drawCanvasEndPage(ctx,W,H,th,acct,p.title,p.body,bg)};
   }
   const num=String(i).padStart(2,'0');
-  return {label:'第 '+(i+1)+' 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,num,p.title,p.body,totalLabel)};
+  return {label:'第 '+(i+1)+' 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,num,p.title,p.body,totalLabel,bg)};
  });
 
  const buildSlides=()=>{
@@ -1989,22 +2023,101 @@ function drawCarouselCanvas(){
   wrap.append(lbl,canvas,btn);
   return wrap;
  };
+ // 背景圖取得函式
+ const getBgImg=(i)=>{const imgs=A._bgImages||[];return imgs[i]||imgs[0]||null;};
  // 封面
  const p0=pages[0];
  slidesDiv.appendChild(makeSlide('封面',(ctx,W,H,th,acct)=>{
-  drawCanvasCover(ctx,W,H,th,acct,p0.title,p0.sub||'',p0.body||'');
+  drawCanvasCover(ctx,W,H,th,acct,p0.title,p0.sub||'',p0.body||'',getBgImg(0));
  }));
  // 內頁 + 結尾頁
  for(let i=1;i<n;i++){
   const p=pages[i]||{title:'',body:''};
   if(p.isEnd||i===n-1){
-   ((pg)=>{slidesDiv.appendChild(makeSlide('結尾頁',(ctx,W,H,th,acct)=>{drawCanvasEndPage(ctx,W,H,th,acct,pg.title,pg.body);}));})(p);
+   ((pg,idx)=>{slidesDiv.appendChild(makeSlide('結尾頁',(ctx,W,H,th,acct)=>{drawCanvasEndPage(ctx,W,H,th,acct,pg.title,pg.body,getBgImg(idx));}));})(p,i);
   } else {
    const num=String(i).padStart(2,'0');
-   ((pg,nm)=>{slidesDiv.appendChild(makeSlide('第 '+(i+1)+' 張',(ctx,W,H,th,acct)=>{drawCanvasPage(ctx,W,H,th,acct,nm,pg.title,pg.body,String(n).padStart(2,'0'));}));})(p,num);
+   ((pg,nm,idx)=>{slidesDiv.appendChild(makeSlide('第 '+(i+1)+' 張',(ctx,W,H,th,acct)=>{drawCanvasPage(ctx,W,H,th,acct,nm,pg.title,pg.body,String(n).padStart(2,'0'),getBgImg(idx));}));})(p,num,i);
   }
  }
  preview.style.display='block';
+}
+
+// ── 背景圖管理 ──
+function loadBgImgFile(file,index){
+ // index: -1 = 統一，0~n = 個別
+ if(!file||!file.type.startsWith('image/'))return;
+ const reader=new FileReader();
+ reader.onload=(e)=>{
+  const src=e.target.result;
+  const img=new Image();
+  img.onload=()=>{
+   if(!A._bgImages)A._bgImages=[];
+   if(!A._bgImageSrc)A._bgImageSrc=[];
+   if(index===-1){
+    // 統一：放 index 0，其他清掉
+    A._bgImages=[img];A._bgImageSrc=[src];
+    // 更新統一標籤
+    const nm=document.getElementById('bgImgAllName');
+    if(nm)nm.textContent='📷 '+file.name;
+    const cl=document.getElementById('bgImgAllClear');
+    if(cl)cl.style.display='block';
+   } else {
+    A._bgImages[index]=img;A._bgImageSrc[index]=src;
+    // 更新個別標籤
+    const lbl=document.getElementById('bgImgPer_'+index);
+    if(lbl)lbl.textContent='📷 第 '+(index+1)+' 張：'+file.name;
+   }
+   // 立即重繪預覽
+   requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
+  };
+  img.src=src;
+ };
+ reader.readAsDataURL(file);
+}
+function clearBgImg(index){
+ if(!A._bgImages)return;
+ if(index===-1){
+  A._bgImages=[];A._bgImageSrc=[];
+  const nm=document.getElementById('bgImgAllName');
+  if(nm)nm.textContent='統一背景圖（全部張）';
+  const cl=document.getElementById('bgImgAllClear');
+  if(cl)cl.style.display='none';
+  // 重設 input
+  const inp=document.getElementById('bgImgAllInput');
+  if(inp)inp.value='';
+  // 也清個別
+  for(let i=0;i<(A.n||5);i++){
+   const lbl=document.getElementById('bgImgPer_'+i);
+   if(lbl)lbl.textContent='第 '+(i+1)+' 張 — 點擊上傳';
+  }
+ } else {
+  A._bgImages[index]=null;A._bgImageSrc[index]=null;
+  const lbl=document.getElementById('bgImgPer_'+index);
+  if(lbl)lbl.textContent='第 '+(index+1)+' 張 — 點擊上傳';
+ }
+ requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'dinero'));
+}
+function buildPerSlideUploads(){
+ const container=document.getElementById('bgImgPerSlide');
+ if(!container)return;
+ container.innerHTML='';
+ const n=A.n||5;
+ for(let i=0;i<n;i++){
+  const lbl=document.createElement('label');
+  lbl.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px dashed var(--line);border-radius:8px;cursor:pointer;background:var(--bg);font-size:12px';
+  lbl.onmouseenter=()=>lbl.style.borderColor='var(--accent)';
+  lbl.onmouseleave=()=>lbl.style.borderColor='var(--line)';
+  const spanTxt=document.createElement('span');
+  spanTxt.id='bgImgPer_'+i;
+  spanTxt.textContent='第 '+(i+1)+' 張 — 點擊上傳';
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';inp.style.display='none';
+  const idx=i;
+  inp.onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],idx);};
+  lbl.append(spanTxt,inp);
+  container.appendChild(lbl);
+ }
 }
 
 function buildCSSExtractPrompt(){
@@ -2718,6 +2831,25 @@ function render(){
    </div>
   </div>
 
+  <!-- ── 背景圖上傳 ── -->
+  <div id="bgImgSection" style="margin-bottom:14px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px">
+   <div style="font-size:13px;font-weight:700;margin-bottom:8px">🖼 背景照片（選填）</div>
+   <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">上傳後每張圖都會自動套用，疊上蒙版讓文字清晰。<br>想每張不同？分別上傳即可。</div>
+   <!-- 統一背景圖 -->
+   <label id="bgImgAllLabel" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px dashed var(--line);border-radius:10px;cursor:pointer;background:var(--bg);margin-bottom:8px;transition:border-color .2s" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--line)'">
+    <span style="font-size:22px">📷</span>
+    <div>
+     <div id="bgImgAllName" style="font-size:13px;font-weight:700">統一背景圖（全部張）</div>
+     <div style="font-size:11px;color:var(--muted)">點擊上傳 JPG / PNG</div>
+    </div>
+    <input type="file" id="bgImgAllInput" accept="image/*" style="display:none">
+    <div id="bgImgAllClear" style="display:none;margin-left:auto;font-size:12px;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;background:var(--surface)" onclick="event.preventDefault();clearBgImg(-1)">✕ 清除</div>
+   </label>
+   <!-- 個別上傳（摺疊）-->
+   <div id="bgImgPerSlide" style="display:none;flex-direction:column;gap:6px;margin-top:4px"></div>
+   <button type="button" id="bgImgToggleBtn" style="font:inherit;font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:2px">＋ 各張分開上傳</button>
+  </div>
+
   <!-- ── 出圖按鈕 ── -->
   <button type="button" id="canvasGenBtn" style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:8px;letter-spacing:.04em">
    ⬇︎ 出圖下載（全部）
@@ -2902,6 +3034,7 @@ app.addEventListener('change',e=>{
   });
  }
 });
+document.getElementById('bgImgAllInput').onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],-1);};
 app.addEventListener('input',e=>{
   if(e.target.classList.contains('pick-sel')&&e.target.value){const k=e.target.dataset.pk,el=document.getElementById('f_'+k);A[k]=e.target.value;if(el){el.value=e.target.value;el.focus()}save();return}
   if(e.target.type==='color'&&e.target.dataset.fcsec){const sec=e.target.dataset.fcsec,key=e.target.dataset.fckey,val=e.target.value;if(!A.fcs)A.fcs={};if(!A.fcs[sec])A.fcs[sec]={};A.fcs[sec][key]=val;setFCVars();save();const pane=e.target.closest('.fc-pane');if(pane)pane.querySelectorAll(`[data-fcsec="${sec}"][data-fckey="${key}"]`).forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed','false')});if(!sp.hidden){const curPane=sp.querySelector('.sp-stpane:not(.hidden)');if(curPane){const lw=sp.querySelector('[id="slcw_'+curPane.dataset.stpane+'"]')||document.getElementById('slcw_'+curPane.dataset.stpane);if(lw)lw.innerHTML=spLiveHTML(curPane.dataset.stpane);}}return}
@@ -3094,6 +3227,16 @@ app.addEventListener('click',e=>{
   const src=(document.getElementById('pasteArea')?.value?.trim())||A._paste||'';
   const capPrompt=`根據以下 IG 輪播貼文文字稿，寫一段 400 字內的 IG Caption。\n\n文字稿：\n${src||'（請把你的輪播文字稿貼在這裡）'}\n\n要求：\n- 開頭一句話勾住人，不要用「分享」「今天」這類開場\n- 結尾一句互動邀請，引導留言\n- 加 5–8 個繁體中文 hashtag（和文章主題相關）\n- 帳號：${v('acct','@帳號')}\n- 請只輸出 Caption 本身，不要加任何說明或標題`;
   copy(capPrompt,false,t);return}
+ // 背景圖 toggle（各張分開上傳）
+ if(t.id==='bgImgToggleBtn'){
+  const ps=document.getElementById('bgImgPerSlide');
+  if(!ps)return;
+  const open=ps.style.display==='flex';
+  ps.style.display=open?'none':'flex';
+  t.textContent=open?'＋ 各張分開上傳':'－ 收合個別上傳';
+  if(!open)buildPerSlideUploads();
+  return;
+ }
  // Canvas 風格選擇
  if(t.classList.contains('canvas-style-btn')){
   A._canvasStyle=t.dataset.cstyle;save();render();
