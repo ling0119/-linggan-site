@@ -1110,6 +1110,15 @@ const CANVAS_THEMES={
  stone:{bg1:'#e8eef4',bg2:'#d8e4ee',acc:'#1a3a5c',txt:'#1a3a5c',sub:'rgba(26,58,92,0.5)',body:'rgba(26,58,92,0.8)',pgNum:'rgba(26,58,92,0.04)',bar:'rgba(26,58,92,0.6)',foot:'rgba(26,58,92,0.65)',footSub:'rgba(26,58,92,0.38)',layout:'stone'}
 };
 
+// 標點後自動換行（。！？…「」等句末標點後插 \n，避免連成一行）
+function normalizeBodyText(text){
+ if(!text)return text;
+ // 在句末標點後加換行，但不重複加（已有 \n 就不加）
+ return text
+  .replace(/([。！？…]{1,2})(?!\n)/g,'$1\n')
+  .replace(/\n{3,}/g,'\n\n') // 最多兩個空行
+  .trim();
+}
 function wrapCanvasText(ctx,text,x,y,maxW,lineH){
  const lines=text.split('\n');let cy=y;
  for(const line of lines){
@@ -1284,6 +1293,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body){
  drawBg(ctx,W,H,th);
  const layout=th.layout||'drama';
  const px=80;
+ body=normalizeBodyText(body);
 
  if(layout==='drama'){
   // @vivi_college 風格：暗色底，左上小紅標籤，大白字靠左壓下半部
@@ -1505,6 +1515,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
  const layout=th.layout||'drama';
  const px=80;
  const total=totalN||'08';
+ body=normalizeBodyText(body);
 
  if(layout==='drama'){
   // @vivi_college 內頁：暗底，左上小標籤，左側大字，底欄
@@ -1750,48 +1761,46 @@ function buildPagesFromPaste(pasteText,n){
  }
  return pages;
 }
-// ── 即時風格預覽（封面＋內頁 3 張）──
+// ── 即時風格預覽（全部張數）──
 function drawStylePreview(styleKey){
  const container=document.getElementById('stylePreviewStrip');
  if(!container)return;
  const th=CANVAS_THEMES[styleKey||'drama']||CANVAS_THEMES.drama;
  const W=1080,H=1350;
  const acct=A.acct||'@帳號';
- const pasteText=A._paste||'';
- const pages=buildPagesFromPaste(pasteText,3);
- const p0=pages[0];
- const p1=pages[1]||{title:'第一個重點',body:'精彩的故事\n就從這裡開始'};
- const p2=pages[2]||{title:'第二個重點',body:'每一張都是\n你的精彩瞬間'};
- const coverLines=(p0.body||'').split('\n');
- const coverSub=coverLines[0]||'探索靈感的方式';
- const coverBody=coverLines.slice(1).join('\n')||'往右滑，看看怎麼開始 →';
- // 清空重建
- container.innerHTML='';
- const slides=[
-  {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p0.title||'你的標題',coverSub,coverBody)},
-  {label:'第 2 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,'01',p1.title,p1.body,'03')},
-  {label:'第 3 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,'02',p2.title,p2.body,'03')},
- ];
+ const n=A.n||5;
+ const pages=buildPagesFromPaste(A._paste||'',n);
+ const totalLabel=String(n).padStart(2,'0');
+
+ // 建立全部張的 draw 描述
+ const slides=pages.map((p,i)=>{
+  if(i===0){
+   const coverLines=(p.body||'').split('\n');
+   const coverSub=coverLines[0]||'探索靈感的方式';
+   const coverBody=coverLines.slice(1).join('\n')||'往右滑，看看怎麼開始 →';
+   return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',coverSub,coverBody)};
+  }
+  const num=String(i).padStart(2,'0');
+  return {label:'第 '+(i+1)+' 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,num,p.title,p.body,totalLabel)};
+ });
+
  const buildSlides=()=>{
+  container.innerHTML='';
   slides.forEach((sl,idx)=>{
    const wrap=document.createElement('div');
-   wrap.style.cssText='flex:0 0 auto;display:flex;flex-direction:column;gap:8px;align-items:center';
-   // 標籤
+   wrap.style.cssText='flex:0 0 auto;display:flex;flex-direction:column;gap:6px;align-items:center';
    const lbl=document.createElement('div');
    lbl.style.cssText='font-size:11px;font-weight:700;color:var(--muted);text-align:center;letter-spacing:.05em';
    lbl.textContent=sl.label;
-   // Canvas
    const canvas=document.createElement('canvas');
    canvas.width=W;canvas.height=H;
-   // 第一張封面稍大一點
-   const cw=idx===0?240:220;
+   const cw=idx===0?200:180;
    const ch=Math.round(cw*(H/W));
    canvas.style.cssText=`width:${cw}px;height:${ch}px;border-radius:10px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.28);display:block`;
    const ctx=canvas.getContext('2d');
    sl.draw(ctx);
    canvas.title='點擊下載 '+sl.label;
    canvas.onclick=()=>{const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=sl.label+'.png';a.click();};
-   // 下載小提示
    const hint=document.createElement('div');
    hint.style.cssText='font-size:10px;color:var(--muted);opacity:.6';
    hint.textContent='點圖下載';
@@ -1799,11 +1808,9 @@ function drawStylePreview(styleKey){
    container.appendChild(wrap);
   });
  };
- // 先同步畫一次（背景色等不需字體），再等字體就緒重畫以渲染文字
  buildSlides();
  document.fonts.ready.then(()=>{
   if(!document.getElementById('stylePreviewStrip'))return;
-  container.innerHTML='';
   buildSlides();
  });
 }
