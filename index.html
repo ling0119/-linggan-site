@@ -3034,7 +3034,7 @@ app.addEventListener('change',e=>{
   });
  }
 });
-document.getElementById('bgImgAllInput').onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],-1);};
+const _bgAllInp=document.getElementById('bgImgAllInput');if(_bgAllInp)_bgAllInp.onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],-1);};
 app.addEventListener('input',e=>{
   if(e.target.classList.contains('pick-sel')&&e.target.value){const k=e.target.dataset.pk,el=document.getElementById('f_'+k);A[k]=e.target.value;if(el){el.value=e.target.value;el.focus()}save();return}
   if(e.target.type==='color'&&e.target.dataset.fcsec){const sec=e.target.dataset.fcsec,key=e.target.dataset.fckey,val=e.target.value;if(!A.fcs)A.fcs={};if(!A.fcs[sec])A.fcs[sec]={};A.fcs[sec][key]=val;setFCVars();save();const pane=e.target.closest('.fc-pane');if(pane)pane.querySelectorAll(`[data-fcsec="${sec}"][data-fckey="${key}"]`).forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed','false')});if(!sp.hidden){const curPane=sp.querySelector('.sp-stpane:not(.hidden)');if(curPane){const lw=sp.querySelector('[id="slcw_'+curPane.dataset.stpane+'"]')||document.getElementById('slcw_'+curPane.dataset.stpane);if(lw)lw.innerHTML=spLiveHTML(curPane.dataset.stpane);}}return}
