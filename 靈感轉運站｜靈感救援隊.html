@@ -1674,22 +1674,40 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
  }
 }
 
+function buildPagesFromSlides(n){
+ // 優先讀 A._slides（逐張手動輸入）
+ const slides=A._slides||[];
+ const pages=[];
+ for(let i=0;i<n;i++){
+  const sl=slides[i]||{};
+  const title=(sl.title||'').trim()||('第 '+(i+1)+' 張');
+  const sub=(sl.sub||'').trim();
+  const body=(sl.body||'').trim()||(i===0?'往右滑，看看怎麼開始 →':'在上方填入這張的內容');
+  // sub 如果有填就接在 body 前面作為第一行
+  const fullBody=sub?(sub+'\n'+body):body;
+  pages.push({title,sub,body:fullBody});
+ }
+ return pages;
+}
 function buildPagesFromPaste(pasteText,n){
+ // 如果有手動填欄位就優先用欄位資料
+ const slides=A._slides||[];
+ const hasSlideData=slides.some(s=>s&&(s.title||s.body));
+ if(hasSlideData)return buildPagesFromSlides(n);
  const pages=[];
  if(!pasteText||!pasteText.trim()){
-  for(let i=1;i<=n;i++)pages.push({title:'第 '+i+' 頁',body:'在上方「文字稿」步驟貼入文案\n內容會自動帶入這裡'});
+  for(let i=1;i<=n;i++)pages.push({title:'第 '+i+' 頁',body:'在上方填入每張的標題和內容'});
   return pages;
  }
  const blocks=pasteText.trim().split(/\n{2,}/);
  for(let i=0;i<n;i++){
   const blk=blocks[i]||'';
   if(!blk){
-   pages.push({title:'（第 '+(i+1)+' 張）',body:'在「文字稿」步驟的文案中\n補充更多段落即可'});
+   pages.push({title:'（第 '+(i+1)+' 張）',body:'在上方填入這張的內容'});
    continue;
   }
   const lines=blk.split('\n').filter(l=>l.trim());
   const rawTitle=lines[0]||('第 '+(i+1)+' 頁');
-  // 清掉 markdown 粗體星號、#號、多餘空白
   const title=rawTitle.replace(/\*{1,2}([^*]+)\*{1,2}/g,'$1').replace(/^#+\s*/,'').trim();
   const body=lines.slice(1).join('\n')||blk;
   pages.push({title,body});
@@ -2420,16 +2438,33 @@ function render(){
    </div>
   </details>
 
-  <div style="margin:12px 0 4px">
-   <p style="font-size:13px;color:var(--muted);margin:0 0 8px">Claude 給你文案後，貼在這裡：</p>
-   <textarea id="pasteArea" rows="5" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="把 Claude 生成的文案貼在這裡…"></textarea>
-   <p style="font-size:13px;color:var(--muted);margin:8px 0 0;text-align:center">✅ 文案貼好後，點右下角「下一步」去拿出圖指令 →</p>
+  <!-- ── 每張獨立輸入欄位 ── -->
+  <div style="margin:16px 0 4px" id="slideFieldsWrap">
+   <p style="font-size:13px;font-weight:700;color:var(--muted);margin:0 0 10px">✍️ 直接填每張內容：</p>
+   <div id="slideFields" style="display:flex;flex-direction:column;gap:14px">${(()=>{
+    const n=A.n||5;const slides=A._slides||[];let out='';
+    for(let i=0;i<n;i++){
+     const sl=slides[i]||{};const num=i+1;
+     const isCover=i===0;
+     out+=`<div style="background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px">
+      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">${isCover?'📌 封面':'第 '+num+' 張'}</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+       <input type="text" class="slide-field" data-si="${i}" data-fk="title" placeholder="${isCover?'封面主標題':'標題'}" value="${esc(sl.title||'')}" style="border-radius:10px">
+       <input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標題（一句話說重點）':'副標或小標（可留空）'}" value="${esc(sl.sub||'')}" style="border-radius:10px">
+       <textarea class="slide-field" data-si="${i}" data-fk="body" placeholder="${isCover?'封面引言或說明（往右滑 →）':'內文'}" style="min-height:80px;border-radius:10px">${esc(sl.body||'')}</textarea>
+      </div>
+     </div>`;
+    }
+    return out;
+   })()}</div>
+   <p style="font-size:12px;color:var(--muted);margin:10px 0 0;text-align:center">✅ 填好後選風格，點「生成全部輪播圖」→</p>
   </div>
 
 `;
  }
  if(s.styles){
-  const hasPaste=!!(A._paste&&A._paste.trim());
+  const hasSlides=!!(A._slides&&A._slides.some(s=>s&&(s.title||s.body)));
+  const hasPaste=hasSlides||!!(A._paste&&A._paste.trim());
   h+=`
   <!-- ── Canvas 直接出圖 ── -->
   <div style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:4px 0 12px">
@@ -2657,6 +2692,13 @@ app.addEventListener('input',e=>{
   if(e.target.classList.contains('pick-sel')&&e.target.value){const k=e.target.dataset.pk,el=document.getElementById('f_'+k);A[k]=e.target.value;if(el){el.value=e.target.value;el.focus()}save();return}
   if(e.target.type==='color'&&e.target.dataset.fcsec){const sec=e.target.dataset.fcsec,key=e.target.dataset.fckey,val=e.target.value;if(!A.fcs)A.fcs={};if(!A.fcs[sec])A.fcs[sec]={};A.fcs[sec][key]=val;setFCVars();save();const pane=e.target.closest('.fc-pane');if(pane)pane.querySelectorAll(`[data-fcsec="${sec}"][data-fckey="${key}"]`).forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed','false')});if(!sp.hidden){const curPane=sp.querySelector('.sp-stpane:not(.hidden)');if(curPane){const lw=sp.querySelector('[id="slcw_'+curPane.dataset.stpane+'"]')||document.getElementById('slcw_'+curPane.dataset.stpane);if(lw)lw.innerHTML=spLiveHTML(curPane.dataset.stpane);}}return}
   if(e.target.id==='pasteArea'){A._paste=e.target.value;save();return;}
+  if(e.target.classList.contains('slide-field')){
+   const si=parseInt(e.target.dataset.si),fk=e.target.dataset.fk;
+   if(!A._slides)A._slides=[];
+   while(A._slides.length<=si)A._slides.push({});
+   A._slides[si][fk]=e.target.value;
+   save();return;
+  }
   if(e.target.id==='cssVarsInput'){A._cssVars=e.target.value;save();render();return;}
   if(e.target.id==='captionBox'){A._caption=e.target.value;save();return;}
   const k=e.target.dataset.k;if(k){A[k]=e.target.value;save()}
