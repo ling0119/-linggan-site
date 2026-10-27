@@ -1093,6 +1093,50 @@ ${v('take','請從故事裡幫我提煉一句，要讓人有共鳴、想截圖�
 2. 我挑完後，寫完整文案，共 ${n} 個段落，每段落 2–4 行短句。
 3. 結尾一句互動邀請，加 5–8 個 hashtag。`;
 }
+function buildCSSExtractPrompt(){
+ return `請仔細看我上傳的截圖，把它的設計風格轉成以下 CSS 變數格式。
+
+只輸出 :root{...} 的內容，不要其他說明、不要多餘文字，直接給我可以貼上的 CSS。
+
+字體請用 Google Fonts 名稱（例：'Noto Serif TC',serif）。
+顏色請用 hex 格式（例：#f5f0e8）。
+排版數字請依截圖視覺感判斷。
+
+:root{
+  --font-body:;        /* 內文主字體 */
+  --font-accent:;      /* 帳號、數字裝飾字體 */
+  --cover-bg:;         /* 封面背景色 */
+  --cover-title:;      /* 主標題文字色 */
+  --cover-sub:;        /* 副標題文字色 */
+  --cover-tag:;        /* 標籤＋分隔線色 */
+  --cover-acc:;        /* 封面帳號文字色 */
+  --cover-deco:;       /* 封面裝飾線顏色 */
+  --inner-bg:;         /* 內頁背景色 */
+  --inner-text:;       /* 內頁文字色 */
+  --inner-acc:;        /* 內頁帳號色 */
+  --inner-num:;        /* 頁碼描邊色 */
+  --hl:;               /* 強調文字色 */
+  --pill-bg:;          /* 膠囊背景色 */
+  --btn-bg:;           /* CTA 按鈕背景色 */
+  --btn-text:;         /* CTA 按鈕文字色 */
+  --h1-size:68px;      /* 主標題字級 */
+  --h1-weight:700;     /* 主標題字重 */
+  --h1-line:1.5;       /* 主標題行距 */
+  --h1-ls:6px;         /* 主標題字距 */
+  --sub-size:36px;     /* 副標題字級 */
+  --sub-line:1.6;      /* 副標題行距 */
+  --sub-ls:5px;        /* 副標題字距 */
+  --txt-size:38px;     /* 內文字級 */
+  --txt-line:1.85;     /* 內文行距 */
+  --txt-ls:4px;        /* 內文字距 */
+  --txt-align:center;  /* 內文對齊（center／left） */
+  --tag-size:34px;     /* 封面標籤字級 */
+  --tag-ls:14px;       /* 封面標籤字距 */
+  --acc-size:40px;     /* 帳號字級 */
+  --acc-ls:6px;        /* 帳號字距 */
+  --pill-size:38px;    /* 膠囊按鈕字級 */
+}`;
+}
 function buildScreenshotStylePrompt(){
  const v=(k,f)=>A[k]&&A[k].trim()?A[k].trim():f;
  const n=A.n||5;
@@ -1230,6 +1274,61 @@ window.addEventListener('resize',fit);fit();
 <\/script>
 <\/body>
 <\/html>`;
+ // 方向三：若有貼入 CSS，直接嵌入模板，只叫 Claude.ai 填文案
+ const cssVars=A._cssVars&&A._cssVars.trim()?A._cssVars.trim():null;
+ if(cssVars){
+  // 把 :root{...} 抽出純內容，再嵌回模板
+  let rootContent=cssVars;
+  // 如果使用者貼的是整段 :root{...}，抽出大括號內的內容
+  const m=cssVars.match(/:root\s*\{([\s\S]*?)\}/);
+  if(m) rootContent=m[1];
+  // 把 Google Fonts link 從 cssVars 裡抽出（如果有的話）
+  const fontLinkMatch=cssVars.match(/href="(https:\/\/fonts\.googleapis\.com[^"]+)"/);
+  const fontLink=fontLinkMatch?fontLinkMatch[1]:null;
+  // 把模板裡的 :root{...} 換成嵌入版
+  let embeddedTmpl=tmpl.replace(
+   /\/\* ═+\s*🎨 風格變數區[\s\S]*?\/\* ═+[^\n]*\*\//,
+   `/* ═══════════════════════════════════════════════════════
+   🎨 風格變數區（已由截圖 CSS 填入）
+   ═══════════════════════════════════════════════════════ */
+:root{${rootContent}
+  /* 頁面底色（預覽用，不用改） */
+  --page:#e9e6e0;--note:#555;
+}
+/* ═══════════════════════════════════════════════════════ */`
+  );
+  // 如果有 Google Fonts 連結，換掉 gfont link
+  if(fontLink){
+   embeddedTmpl=embeddedTmpl.replace(
+    /(<link id="gfont" href=")[^"]*(")/,
+    `$1${fontLink}$2`
+   );
+  }
+  return `你是擅長身心靈領域的 IG 輪播圖設計師。
+
+✅ 風格 CSS 已由截圖提取完成，模板裡的 :root 已預填好顏色與字體。
+
+你的任務：只需把文字稿填入 [方括號]，輸出完整 HTML。
+
+⚠️ 嚴格規則：
+1. 不要修改任何 CSS，包含 :root、style 屬性
+2. 只替換 [方括號] 裡的文字佔位符
+3. 封面的 <br> 換行保留
+4. [照片] 佔位符保留不動，我自己換
+5. 數字編號（class="num"）不要改
+6. 輸出完整 HTML，用 artifact 呈現
+
+【我的文字稿】
+${paste}
+
+---
+
+【HTML 模板（只換 [方括號] 文字，CSS 完全不動）】
+\`\`\`html
+${embeddedTmpl}
+\`\`\``;
+ }
+ // 舊流程（沒有貼入 CSS）
  return `你是擅長身心靈領域的 IG 輪播圖設計師。
 
 ⚠️ 步驟一：先看截圖，再動手
@@ -1644,29 +1743,57 @@ function render(){
  }
  if(s.styles){
   const hasPaste=!!(A._paste&&A._paste.trim());
+  const hasCss=!!(A._cssVars&&A._cssVars.trim());
   let _ssBuilt='';try{_ssBuilt=buildScreenshotStylePrompt();}catch(e){_ssBuilt='[指令生成時出現錯誤]\n'+e;}
-  h+=`<div style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:4px 0 12px;line-height:1.8">
-   <div style="font-weight:700;font-size:15px;margin-bottom:6px">💡 怎麼用這份指令？</div>
-   <div style="font-size:13px;color:var(--ink)">
-    ${hasPaste
-      ?`<span style="color:#38a169;font-weight:700">✅ 文字稿已帶入指令</span><br>
-    <b>Step 1.</b> 點下方「複製截圖風格指令」<br>
-    <b>Step 2.</b> 到 Claude.ai 開新對話，同時上傳你喜歡的 IG 截圖<br>
-    <b>Step 3.</b> 貼上指令，送出<br>
-    <b>Step 4.</b> Claude 照截圖風格生成 <b>${A.n||5} 張輪播內容</b>，直接複製上傳 IG！🎉`
-      :`<b>Step 1.</b> 點下方「複製截圖風格指令」<br>
-    <b>Step 2.</b> 到 Claude.ai 開新對話，同時上傳你喜歡的 IG 截圖<br>
-    <b>Step 3.</b> 貼上指令，在指令裡找到【我的故事素材】，把文字稿貼進去<br>
-    <b>Step 4.</b> 送出，Claude 照截圖風格生成 <b>${A.n||5} 張輪播內容</b>，直接複製上傳 IG！🎉`
-    }
-   </div>
-   <div style="margin-top:10px;background:rgba(155,125,181,.12);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--ink);line-height:1.6">
-    ⚠️ 生成出來的圖是參考風格，想要有自己的品牌感記得更換<b>顏色、字體、排版</b>！
+  h+=`
+  <!-- ── 方向三流程說明卡 ── -->
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:4px 0 12px;line-height:1.8">
+   <div style="font-weight:700;font-size:15px;margin-bottom:8px">🎨 兩步驟出圖流程</div>
+   <div style="font-size:13px;color:var(--ink);line-height:1.9">
+    <b style="color:var(--accent)">第一步（先做）</b><br>
+    複製下方「CSS 抽取指令」→ 到 Claude.ai 開新對話上傳截圖 → 貼上指令 → Claude 回傳一段 CSS → 貼到下面的框框<br><br>
+    <b style="color:var(--accent)">第二步</b><br>
+    CSS 貼好後，點「複製出圖指令」→ 回到 Claude.ai，上傳截圖 → 貼上指令送出 → 出圖 🎉
    </div>
   </div>
-  <div style="display:flex;gap:8px;margin-top:10px">
-   <button type="button" id="copyPrompt" class="copy-prompt-btn" style="flex:1;margin:0">📋 複製截圖風格指令</button>
-   <a href="https://claude.ai" target="_blank" rel="noopener" style="flex:none;background:#EDE8F5;color:#7D64A3;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;display:flex;align-items:center">📡 打開 Claude ↗</a>
+
+  <!-- ── 第一步：CSS 抽取指令 ── -->
+  <div style="background:rgba(155,125,181,.08);border:1.5px dashed var(--accent);border-radius:14px;padding:14px 16px;margin-bottom:12px">
+   <div style="font-size:13px;font-weight:700;margin-bottom:8px">📋 第一步：複製 CSS 抽取指令</div>
+   <div style="font-size:12px;color:var(--muted);margin-bottom:10px">把截圖 + 這份指令丟給 Claude.ai，它會回傳一段 CSS 變數</div>
+   <div style="display:flex;gap:8px">
+    <button type="button" id="copyCssExtract" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer">📋 複製 CSS 抽取指令</button>
+    <a href="https://claude.ai" target="_blank" rel="noopener" style="flex:none;background:#EDE8F5;color:#7D64A3;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;display:flex;align-items:center">打開 Claude ↗</a>
+   </div>
+  </div>
+
+  <!-- ── 貼入 CSS ── -->
+  <div style="margin-bottom:12px">
+   <label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px">
+    📥 把 Claude 給你的 CSS 貼到這裡
+    ${hasCss?'<span style="color:#38a169;font-weight:700;margin-left:8px">✅ 已貼入</span>':'<span style="color:var(--muted);font-weight:400;font-size:12px;margin-left:6px">（貼了才能精準出圖）</span>'}
+   </label>
+   <textarea id="cssVarsInput" placeholder=":root{
+  --font-body: 'Noto Serif TC', serif;
+  --cover-bg: #f5f0e8;
+  ...
+}" style="width:100%;height:120px;border-radius:10px;border:1.5px solid ${hasCss?'#38a169':'var(--border)'};padding:10px 12px;font-size:12px;font-family:monospace;resize:vertical;box-sizing:border-box;background:var(--surface);color:var(--ink)">${hasCss?esc(A._cssVars||''):''}</textarea>
+   <p style="font-size:11px;color:var(--muted);margin:4px 0 0">貼上後會自動帶入出圖指令，CSS 不用完整也沒關係</p>
+  </div>
+
+  <!-- ── 第二步：出圖指令 ── -->
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:4px">
+   <div style="font-size:13px;font-weight:700;margin-bottom:4px">🚀 第二步：複製出圖指令</div>
+   <div style="font-size:12px;color:var(--muted);margin-bottom:10px">
+    ${hasCss
+      ?'<span style="color:#38a169;font-weight:700">✅ CSS 已嵌入，出圖指令已準備好</span>'
+      :'<span style="color:#c0956a">⚠️ 建議先完成第一步再複製，沒有 CSS 的話出圖風格可能跑掉</span>'}
+    ${hasPaste?'　<span style="color:#38a169">✅ 文字稿已帶入</span>':''}
+   </div>
+   <div style="display:flex;gap:8px">
+    <button type="button" id="copyPrompt" class="copy-prompt-btn" style="flex:1;margin:0">📋 複製出圖指令</button>
+    <a href="https://claude.ai" target="_blank" rel="noopener" style="flex:none;background:#EDE8F5;color:#7D64A3;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;display:flex;align-items:center">打開 Claude ↗</a>
+   </div>
   </div>
   <p style="font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.6;text-align:center;text-decoration:underline">＊出圖後建議調整成自己的品牌配色，讓帳號更有辨識度 🎨</p>`;
  }
@@ -1841,6 +1968,7 @@ app.addEventListener('input',e=>{
   if(e.target.classList.contains('pick-sel')&&e.target.value){const k=e.target.dataset.pk,el=document.getElementById('f_'+k);A[k]=e.target.value;if(el){el.value=e.target.value;el.focus()}save();return}
   if(e.target.type==='color'&&e.target.dataset.fcsec){const sec=e.target.dataset.fcsec,key=e.target.dataset.fckey,val=e.target.value;if(!A.fcs)A.fcs={};if(!A.fcs[sec])A.fcs[sec]={};A.fcs[sec][key]=val;setFCVars();save();const pane=e.target.closest('.fc-pane');if(pane)pane.querySelectorAll(`[data-fcsec="${sec}"][data-fckey="${key}"]`).forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed','false')});if(!sp.hidden){const curPane=sp.querySelector('.sp-stpane:not(.hidden)');if(curPane){const lw=sp.querySelector('[id="slcw_'+curPane.dataset.stpane+'"]')||document.getElementById('slcw_'+curPane.dataset.stpane);if(lw)lw.innerHTML=spLiveHTML(curPane.dataset.stpane);}}return}
   if(e.target.id==='pasteArea'){A._paste=e.target.value;save();return;}
+  if(e.target.id==='cssVarsInput'){A._cssVars=e.target.value;save();render();return;}
   if(e.target.id==='captionBox'){A._caption=e.target.value;save();return;}
   const k=e.target.dataset.k;if(k){A[k]=e.target.value;save()}
 });
@@ -1948,6 +2076,13 @@ app.addEventListener('click',e=>{
   const src=(document.getElementById('pasteArea')?.value?.trim())||A._paste||'';
   const capPrompt=`根據以下 IG 輪播貼文文字稿，寫一段 400 字內的 IG Caption。\n\n文字稿：\n${src||'（請把你的輪播文字稿貼在這裡）'}\n\n要求：\n- 開頭一句話勾住人，不要用「分享」「今天」這類開場\n- 結尾一句互動邀請，引導留言\n- 加 5–8 個繁體中文 hashtag（和文章主題相關）\n- 帳號：${v('acct','@帳號')}\n- 請只輸出 Caption 本身，不要加任何說明或標題`;
   copy(capPrompt,false,t);return}
+ if(t.id==='copyCssExtract'){
+  let prompt='';try{prompt=buildCSSExtractPrompt();}catch(e){prompt='[指令生成失敗]\n'+e;}
+  copy(prompt,false,t);
+  t.textContent='✅ 已複製！去貼給 Claude →';
+  setTimeout(()=>{t.textContent='📋 複製 CSS 抽取指令';},3500);
+  return;
+ }
  if(t.id==='copyPrompt'){
   const step=Q[S.i];
   copy(step.txt?buildTextDraftPrompt():step.styles?buildScreenshotStylePrompt():(A._scanData?buildScanPrompt():build()),false,t);return}
