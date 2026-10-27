@@ -1093,6 +1093,144 @@ ${v('take','請從故事裡幫我提煉一句，要讓人有共鳴、想截圖�
 2. 我挑完後，寫完整文案，共 ${n} 個段落，每段落 2–4 行短句。
 3. 結尾一句互動邀請，加 5–8 個 hashtag。`;
 }
+// ════════════════════════════════════════
+// Canvas 直接出圖
+// ════════════════════════════════════════
+const CANVAS_THEMES={
+ dark:{bg1:'#2a1f0e',bg2:'#0e0c06',overlay:'rgba(10,8,3,0.45)',acc:'#d4a843',txt:'#ffffff',sub:'rgba(255,255,255,0.75)',body:'rgba(255,255,255,0.9)',pgNum:'rgba(255,255,255,0.07)',bar:'rgba(212,168,67,0.9)',foot:'rgba(255,255,255,0.85)',footSub:'rgba(255,255,255,0.55)'},
+ light:{bg1:'#f5f0e8',bg2:'#e8ddd0',overlay:'rgba(245,240,232,0.1)',acc:'#7a5c38',txt:'#2d1f0e',sub:'rgba(45,31,14,0.8)',body:'rgba(45,31,14,0.85)',pgNum:'rgba(45,31,14,0.05)',bar:'rgba(122,92,56,0.8)',foot:'rgba(45,31,14,0.8)',footSub:'rgba(45,31,14,0.5)'},
+ night:{bg1:'#0d1b2a',bg2:'#1a2744',overlay:'rgba(13,27,42,0.5)',acc:'#8ab4f8',txt:'#e8edf5',sub:'rgba(232,237,245,0.75)',body:'rgba(232,237,245,0.9)',pgNum:'rgba(232,237,245,0.06)',bar:'rgba(138,180,248,0.85)',foot:'rgba(232,237,245,0.85)',footSub:'rgba(232,237,245,0.5)'},
+ rose:{bg1:'#2a0a18',bg2:'#1a0810',overlay:'rgba(42,10,24,0.45)',acc:'#e8a0b0',txt:'#fce8ef',sub:'rgba(252,232,239,0.75)',body:'rgba(252,232,239,0.9)',pgNum:'rgba(252,232,239,0.07)',bar:'rgba(232,160,176,0.85)',foot:'rgba(252,232,239,0.85)',footSub:'rgba(252,232,239,0.5)'}
+};
+function wrapCanvasText(ctx,text,x,y,maxW,lineH){
+ const lines=text.split('\n');let cy=y;
+ for(const line of lines){
+  if(!line){cy+=lineH*0.6;continue;}
+  const chars=line.split('');let cur='';
+  for(let i=0;i<chars.length;i++){
+   const test=cur+chars[i];
+   if(ctx.measureText(test).width>maxW&&cur){ctx.fillText(cur,x,cy);cy+=lineH;cur=chars[i];}
+   else cur=test;
+  }
+  if(cur){ctx.fillText(cur,x,cy);cy+=lineH;}
+ }
+ return cy;
+}
+function drawBg(ctx,W,H,th){
+ const g=ctx.createLinearGradient(0,0,W,H);
+ g.addColorStop(0,th.bg1);g.addColorStop(1,th.bg2);
+ ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ const r=ctx.createRadialGradient(W*.7,H*.3,0,W*.7,H*.3,W*.6);
+ r.addColorStop(0,th.acc.replace('#','rgba(').replace(/(.{2})(.{2})(.{2})/,'$1,$2,$3').replace('rgba(','rgba(')+',0.15)');
+ r.addColorStop(1,'transparent');
+ try{ctx.fillStyle=r;ctx.fillRect(0,0,W,H);}catch(e){}
+ ctx.fillStyle=th.overlay;ctx.fillRect(0,0,W,H);
+}
+function drawCanvasCover(ctx,W,H,th,acct,title,sub,body){
+ drawBg(ctx,W,H,th);
+ const px=80;
+ ctx.font='500 42px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle=th.sub;ctx.fillText('#靈感日常',px,360);
+ ctx.font='900 110px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.txt;
+ const titleLines=(title||'').split('\n');let ty=520;
+ for(const l of titleLines){ctx.fillText(l,px,ty);ty+=130;}
+ ctx.font='700 62px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.acc;
+ ctx.fillText(sub||'',px,ty+20);
+ const bodyY=ty+120;
+ ctx.fillStyle=th.acc;ctx.fillRect(px,bodyY,6,180);
+ ctx.font='400 36px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle=th.body;
+ wrapCanvasText(ctx,body||'',px+28,bodyY+46,W-px*2-28,52);
+ ctx.font='500 34px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle=th.sub;
+ const aw=ctx.measureText(acct||'@帳號').width;
+ ctx.fillText(acct||'@帳號',W-px-aw,H-80);
+}
+function drawCanvasPage(ctx,W,H,th,acct,num,title,body){
+ drawBg(ctx,W,H,th);
+ const px=80;
+ ctx.fillStyle=th.acc;ctx.fillRect(px,265,10,68);
+ ctx.font='700 68px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.acc;ctx.fillText(title||'',px+28,318);
+ ctx.strokeStyle=th.acc.replace('#','rgba(').replace(/(.{2})(.{2})(.{2})/,(m,r,g,b)=>`rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},0.3)`);
+ ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px,360);ctx.lineTo(W-px,360);ctx.stroke();
+ ctx.font='400 44px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.body;
+ wrapCanvasText(ctx,body||'',px,450,W-px*2,66);
+ ctx.font='900 210px "Noto Serif TC","PingFang TC",serif';
+ ctx.fillStyle=th.pgNum;ctx.textAlign='right';
+ ctx.fillText(num||'01',W-px,H-100);ctx.textAlign='left';
+ ctx.fillStyle=th.bar;ctx.fillRect(px,H-130,W-px*2,3);
+ ctx.font='500 32px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle=th.foot;ctx.fillText(acct||'@帳號',px,H-76);
+ ctx.font='400 28px "Noto Sans TC","PingFang TC",sans-serif';
+ ctx.fillStyle=th.footSub;ctx.fillText('私訊一對一諮詢',px,H-36);
+}
+function buildPagesFromPaste(pasteText,n){
+ const pages=[];
+ if(!pasteText||!pasteText.trim()){
+  for(let i=1;i<=n;i++)pages.push({title:'第 '+i+' 頁',body:'在上方「文字稿」步驟貼入文案\n內容會自動帶入這裡'});
+  return pages;
+ }
+ const blocks=pasteText.trim().split(/\n{2,}/);
+ for(let i=0;i<n;i++){
+  const blk=blocks[i]||blocks[blocks.length-1]||'';
+  const lines=blk.split('\n').filter(l=>l.trim());
+  const title=lines[0]||('第 '+(i+1)+' 頁');
+  const body=lines.slice(1).join('\n')||blk;
+  pages.push({title,body});
+ }
+ return pages;
+}
+function drawCarouselCanvas(){
+ const style=A._canvasStyle||'dark';
+ const th=CANVAS_THEMES[style]||CANVAS_THEMES.dark;
+ const acct=A.acct||'@帳號';
+ const n=A.n||5;
+ const pasteText=A._paste||'';
+ const pages=buildPagesFromPaste(pasteText,n);
+ const W=1080,H=1350;
+ const preview=document.getElementById('canvasPreview');
+ const slidesDiv=document.getElementById('canvasSlides');
+ if(!preview||!slidesDiv)return;
+ slidesDiv.innerHTML='';
+ const makeSlide=(label,drawFn)=>{
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;flex-direction:column;gap:6px';
+  const lbl=document.createElement('div');
+  lbl.style.cssText='font-size:12px;color:var(--muted);font-weight:700';
+  lbl.textContent=label;
+  const canvas=document.createElement('canvas');
+  canvas.width=W;canvas.height=H;
+  canvas.style.cssText='width:100%;border-radius:10px;cursor:pointer';
+  const ctx=canvas.getContext('2d');
+  drawFn(ctx,W,H,th,acct);
+  const btn=document.createElement('button');
+  btn.style.cssText='font:inherit;font-size:13px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px;cursor:pointer';
+  btn.textContent='⬇ 下載 PNG';
+  btn.onclick=()=>{const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=label+'.png';a.click();};
+  canvas.onclick=()=>btn.click();
+  wrap.append(lbl,canvas,btn);
+  return wrap;
+ };
+ // 封面
+ const p0=pages[0];
+ slidesDiv.appendChild(makeSlide('封面',(ctx,W,H,th,acct)=>{
+  const lines=p0.body.split('\n');
+  const sub=lines[0]||'';const body=lines.slice(1).join('\n')||p0.body;
+  drawCanvasCover(ctx,W,H,th,acct,p0.title,sub,body);
+ }));
+ // 內頁
+ for(let i=1;i<n;i++){
+  const p=pages[i]||{title:'',body:''};
+  const num=String(i).padStart(2,'0');
+  ((pg,nm)=>{slidesDiv.appendChild(makeSlide('第 '+(i+1)+' 張',(ctx,W,H,th,acct)=>{drawCanvasPage(ctx,W,H,th,acct,nm,pg.title,pg.body);}));})(p,num);
+ }
+ preview.style.display='block';
+}
+
 function buildCSSExtractPrompt(){
  return `請仔細看我上傳的截圖，把它的設計風格轉成以下 CSS 變數格式。
 
@@ -1723,59 +1861,51 @@ function render(){
  }
  if(s.styles){
   const hasPaste=!!(A._paste&&A._paste.trim());
-  const hasCss=!!(A._cssVars&&A._cssVars.trim());
-  let _ssBuilt='';try{_ssBuilt=buildScreenshotStylePrompt();}catch(e){_ssBuilt='[指令生成時出現錯誤]\n'+e;}
   h+=`
-  <!-- ── 方向三流程說明卡 ── -->
-  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:4px 0 12px;line-height:1.8">
-   <div style="font-weight:700;font-size:15px;margin-bottom:8px">🎨 兩步驟出圖流程</div>
-   <div style="font-size:13px;color:var(--ink);line-height:1.9">
-    <b style="color:var(--accent)">第一步（先做）</b><br>
-    複製下方「CSS 抽取指令」→ 到 Claude.ai 開新對話上傳截圖 → 貼上指令 → Claude 回傳一段 CSS → 貼到下面的框框<br><br>
-    <b style="color:var(--accent)">第二步</b><br>
-    CSS 貼好後，點「複製出圖指令」→ 回到 Claude.ai，上傳截圖 → 貼上指令送出 → 出圖 🎉
+  <!-- ── Canvas 直接出圖 ── -->
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:4px 0 12px">
+   <div style="font-weight:700;font-size:15px;margin-bottom:6px">🎨 直接出圖，不需要 Claude.ai</div>
+   <div style="font-size:13px;color:var(--muted);line-height:1.8">填好文字稿後，選一個風格，點「出圖」就能直接下載 PNG。</div>
+  </div>
+
+  <!-- ── 風格選擇 ── -->
+  <div style="margin-bottom:14px">
+   <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--muted)">選擇風格</div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'dark')==='dark'?'canvas-style-on':''}" data-cstyle="dark" style="border:2px solid ${(A._canvasStyle||'dark')==='dark'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
+     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#2a1f0e,#0e0c06);margin-bottom:6px"></div>
+     <div style="font-weight:700;font-size:13px">深色禪意</div>
+     <div style="font-size:11px;color:var(--muted)">深棕背景・金色標題</div>
+    </button>
+    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'dark')==='light'?'canvas-style-on':''}" data-cstyle="light" style="border:2px solid ${(A._canvasStyle||'dark')==='light'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
+     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#f5f0e8,#e8ddd0);margin-bottom:6px"></div>
+     <div style="font-weight:700;font-size:13px">奶茶文青</div>
+     <div style="font-size:11px;color:var(--muted)">米白背景・深棕文字</div>
+    </button>
+    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'dark')==='night'?'canvas-style-on':''}" data-cstyle="night" style="border:2px solid ${(A._canvasStyle||'dark')==='night'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
+     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#0d1b2a,#1a2744);margin-bottom:6px"></div>
+     <div style="font-weight:700;font-size:13px">深夜星空</div>
+     <div style="font-size:11px;color:var(--muted)">深藍背景・銀白文字</div>
+    </button>
+    <button type="button" class="canvas-style-btn ${(A._canvasStyle||'dark')==='rose'?'canvas-style-on':''}" data-cstyle="rose" style="border:2px solid ${(A._canvasStyle||'dark')==='rose'?'var(--accent)':'var(--line)'};border-radius:12px;padding:10px;background:var(--surface);cursor:pointer;text-align:left">
+     <div style="width:100%;height:50px;border-radius:6px;background:linear-gradient(135deg,#2a0a18,#1a0810);margin-bottom:6px"></div>
+     <div style="font-weight:700;font-size:13px">玫瑰神秘</div>
+     <div style="font-size:11px;color:var(--muted)">深玫背景・玫瑰金點綴</div>
+    </button>
    </div>
   </div>
 
-  <!-- ── 第一步：CSS 抽取指令 ── -->
-  <div style="background:rgba(155,125,181,.08);border:1.5px dashed var(--accent);border-radius:14px;padding:14px 16px;margin-bottom:12px">
-   <div style="font-size:13px;font-weight:700;margin-bottom:8px">📋 第一步：複製 CSS 抽取指令</div>
-   <div style="font-size:12px;color:var(--muted);margin-bottom:10px">把截圖 + 這份指令丟給 Claude.ai，它會回傳一段 CSS 變數</div>
-   <div style="display:flex;gap:8px">
-    <button type="button" id="copyCssExtract" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer">📋 複製 CSS 抽取指令</button>
-    <a href="https://claude.ai" target="_blank" rel="noopener" style="flex:none;background:#EDE8F5;color:#7D64A3;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;display:flex;align-items:center">打開 Claude ↗</a>
-   </div>
-  </div>
+  <!-- ── 出圖按鈕 ── -->
+  <button type="button" id="canvasGenBtn" style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px">
+   ✨ 生成輪播圖
+  </button>
+  ${hasPaste?'':'<p style="font-size:12px;color:#c0956a;margin:0 0 8px;text-align:center">⚠️ 建議先完成上方「文字稿」步驟，有文案出圖效果更好</p>'}
 
-  <!-- ── 貼入 CSS ── -->
-  <div style="margin-bottom:12px">
-   <label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px">
-    📥 把 Claude 給你的 CSS 貼到這裡
-    ${hasCss?'<span style="color:#38a169;font-weight:700;margin-left:8px">✅ 已貼入</span>':'<span style="color:var(--muted);font-weight:400;font-size:12px;margin-left:6px">（貼了才能精準出圖）</span>'}
-   </label>
-   <textarea id="cssVarsInput" placeholder=":root{
-  --font-body: 'Noto Serif TC', serif;
-  --cover-bg: #f5f0e8;
-  ...
-}" style="width:100%;height:120px;border-radius:10px;border:1.5px solid ${hasCss?'#38a169':'var(--border)'};padding:10px 12px;font-size:12px;font-family:monospace;resize:vertical;box-sizing:border-box;background:var(--surface);color:var(--ink)">${hasCss?esc(A._cssVars||''):''}</textarea>
-   <p style="font-size:11px;color:var(--muted);margin:4px 0 0">貼上後會自動帶入出圖指令，CSS 不用完整也沒關係</p>
-  </div>
-
-  <!-- ── 第二步：出圖指令 ── -->
-  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:4px">
-   <div style="font-size:13px;font-weight:700;margin-bottom:4px">🚀 第二步：複製出圖指令</div>
-   <div style="font-size:12px;color:var(--muted);margin-bottom:10px">
-    ${hasCss
-      ?'<span style="color:#38a169;font-weight:700">✅ CSS 已嵌入，出圖指令已準備好</span>'
-      :'<span style="color:#c0956a">⚠️ 建議先完成第一步再複製，沒有 CSS 的話出圖風格可能跑掉</span>'}
-    ${hasPaste?'　<span style="color:#38a169">✅ 文字稿已帶入</span>':''}
-   </div>
-   <div style="display:flex;gap:8px">
-    <button type="button" id="copyPrompt" class="copy-prompt-btn" style="flex:1;margin:0">📋 複製出圖指令</button>
-    <a href="https://claude.ai" target="_blank" rel="noopener" style="flex:none;background:#EDE8F5;color:#7D64A3;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;display:flex;align-items:center">打開 Claude ↗</a>
-   </div>
-  </div>
-  <p style="font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.6;text-align:center;text-decoration:underline">＊出圖後建議調整成自己的品牌配色，讓帳號更有辨識度 🎨</p>`;
+  <!-- ── 預覽區 ── -->
+  <div id="canvasPreview" style="display:none;margin-top:12px">
+   <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--muted)">預覽（點圖可下載）</div>
+   <div id="canvasSlides" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>`;
  }
  if(s.out_img){
   const canBuild=['film','night','east','diary'].includes(A.style);
@@ -2056,6 +2186,21 @@ app.addEventListener('click',e=>{
   const src=(document.getElementById('pasteArea')?.value?.trim())||A._paste||'';
   const capPrompt=`根據以下 IG 輪播貼文文字稿，寫一段 400 字內的 IG Caption。\n\n文字稿：\n${src||'（請把你的輪播文字稿貼在這裡）'}\n\n要求：\n- 開頭一句話勾住人，不要用「分享」「今天」這類開場\n- 結尾一句互動邀請，引導留言\n- 加 5–8 個繁體中文 hashtag（和文章主題相關）\n- 帳號：${v('acct','@帳號')}\n- 請只輸出 Caption 本身，不要加任何說明或標題`;
   copy(capPrompt,false,t);return}
+ // Canvas 風格選擇
+ if(t.classList.contains('canvas-style-btn')){
+  A._canvasStyle=t.dataset.cstyle;save();render();return;
+ }
+ // Canvas 出圖
+ if(t.id==='canvasGenBtn'){
+  t.disabled=true;t.textContent='⏳ 生成中…';
+  try{
+   document.fonts.ready.then(()=>{
+    drawCarouselCanvas();
+    t.disabled=false;t.textContent='✨ 重新生成';
+   });
+  }catch(er){t.disabled=false;t.textContent='✨ 生成輪播圖';console.error(er);}
+  return;
+ }
  if(t.id==='copyCssExtract'){
   let prompt='';try{prompt=buildCSSExtractPrompt();}catch(e){prompt='[指令生成失敗]\n'+e;}
   copy(prompt,false,t);
