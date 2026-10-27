@@ -1163,62 +1163,43 @@ function buildScreenshotStylePrompt(){
 <title>${acct} 輪播圖</title>
 <link id="gfont" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════
-   🎨 風格變數區 — 請全部照截圖填入，不要保留預設值
-   ═══════════════════════════════════════════════════════ */
+/* __CSS_VARS_START__ */
 :root{
-  /* ── 字體（填 Google Fonts 名稱，例：'Noto Serif TC',serif） ── */
-  --font-body:;        /* 內文主字體 */
-  --font-accent:;      /* 帳號、數字裝飾字體 */
-
-  /* ── 顏色：封面 ── */
-  --cover-bg:;         /* 封面背景色 */
-  --cover-title:;      /* 主標題文字色 */
-  --cover-sub:;        /* 副標題文字色 */
-  --cover-tag:;        /* 標籤＋分隔線色 */
-  --cover-acc:;        /* 封面帳號文字色 */
-  --cover-deco:;       /* 封面裝飾線顏色 */
-
-  /* ── 顏色：內頁 ── */
-  --inner-bg:;         /* 內頁背景色 */
-  --inner-text:;       /* 內頁文字色 */
-  --inner-acc:;        /* 內頁帳號色 */
-  --inner-num:;        /* 頁碼描邊色 */
-
-  /* ── 顏色：強調／按鈕 ── */
-  --hl:;               /* 強調文字色（.hl） */
-  --pill-bg:;          /* 膠囊背景色 */
-  --btn-bg:;           /* CTA 按鈕背景色 */
-  --btn-text:;         /* CTA 按鈕文字色 */
-
-  /* ── 排版：封面標題 ── */
-  --h1-size:68px;      /* 主標題字級 */
-  --h1-weight:700;     /* 主標題字重 */
-  --h1-line:1.5;       /* 主標題行距 */
-  --h1-ls:6px;         /* 主標題字距 */
-
-  /* ── 排版：封面副標題 ── */
-  --sub-size:36px;     /* 副標題字級 */
-  --sub-line:1.6;      /* 副標題行距 */
-  --sub-ls:5px;        /* 副標題字距 */
-
-  /* ── 排版：內頁內文 ── */
-  --txt-size:38px;     /* 內文字級 */
-  --txt-line:1.85;     /* 內文行距 */
-  --txt-ls:4px;        /* 內文字距 */
-  --txt-align:center;  /* 內文對齊（center／left） */
-
-  /* ── 排版：其他 ── */
-  --tag-size:34px;     /* 封面標籤字級 */
-  --tag-ls:14px;       /* 封面標籤字距 */
-  --acc-size:40px;     /* 帳號字級 */
-  --acc-ls:6px;        /* 帳號字距 */
-  --pill-size:38px;    /* 膠囊按鈕字級 */
-
-  /* 頁面底色（預覽用，不用改） */
+  --font-body:;
+  --font-accent:;
+  --cover-bg:;
+  --cover-title:;
+  --cover-sub:;
+  --cover-tag:;
+  --cover-acc:;
+  --cover-deco:;
+  --inner-bg:;
+  --inner-text:;
+  --inner-acc:;
+  --inner-num:;
+  --hl:;
+  --pill-bg:;
+  --btn-bg:;
+  --btn-text:;
+  --h1-size:68px;
+  --h1-weight:700;
+  --h1-line:1.5;
+  --h1-ls:6px;
+  --sub-size:36px;
+  --sub-line:1.6;
+  --sub-ls:5px;
+  --txt-size:38px;
+  --txt-line:1.85;
+  --txt-ls:4px;
+  --txt-align:center;
+  --tag-size:34px;
+  --tag-ls:14px;
+  --acc-size:40px;
+  --acc-ls:6px;
+  --pill-size:38px;
   --page:#e9e6e0;--note:#555;
 }
-/* ═══════════════════════════════════════════════════════ */
+/* __CSS_VARS_END__ */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#1c1b1f;--note:#aaa}}
 :root[data-theme="dark"]{--page:#1c1b1f;--note:#aaa}
 html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box}
@@ -1285,18 +1266,17 @@ window.addEventListener('resize',fit);fit();
   // 把 Google Fonts link 從 cssVars 裡抽出（如果有的話）
   const fontLinkMatch=cssVars.match(/href="(https:\/\/fonts\.googleapis\.com[^"]+)"/);
   const fontLink=fontLinkMatch?fontLinkMatch[1]:null;
-  // 把模板裡的 :root{...} 換成嵌入版
-  let embeddedTmpl=tmpl.replace(
-   /\/\* ═+\s*🎨 風格變數區[\s\S]*?\/\* ═+[^\n]*\*\//,
-   `/* ═══════════════════════════════════════════════════════
-   🎨 風格變數區（已由截圖 CSS 填入）
-   ═══════════════════════════════════════════════════════ */
-:root{${rootContent}
-  /* 頁面底色（預覽用，不用改） */
-  --page:#e9e6e0;--note:#555;
-}
-/* ═══════════════════════════════════════════════════════ */`
-  );
+  // 把模板裡的 :root 區塊換成嵌入版（用 marker 定位，避免 regex 問題）
+  const MARKER_START='/* __CSS_VARS_START__ */';
+  const MARKER_END='/* __CSS_VARS_END__ */';
+  let embeddedTmpl=tmpl;
+  const si=tmpl.indexOf(MARKER_START);
+  const ei=tmpl.indexOf(MARKER_END);
+  if(si!==-1&&ei!==-1){
+   embeddedTmpl=tmpl.slice(0,si)+
+    `:root{\n${rootContent}\n  --page:#e9e6e0;--note:#555;\n}`+
+    tmpl.slice(ei+MARKER_END.length);
+  }
   // 如果有 Google Fonts 連結，換掉 gfont link
   if(fontLink){
    embeddedTmpl=embeddedTmpl.replace(
