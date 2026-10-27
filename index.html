@@ -2560,6 +2560,7 @@ function render(){
     <textarea id="pasteArea" rows="6" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="[標題] 封面標題&#10;[副標] 副標（可省略）&#10;[內文] 封面引言…&#10;&#10;[標題] 第二張標題&#10;[內文] 第二張內文…">${esc(A._paste||'')}</textarea>
     <div id="pasteParsingIndicator" style="display:none;position:absolute;right:12px;bottom:12px;font-size:12px;color:var(--accent);font-weight:600;pointer-events:none">⚡ 分張中…</div>
    </div>
+   <div id="pasteOverwriteWarn" style="display:none;margin-top:6px;padding:6px 12px;background:rgba(220,100,30,0.1);border:1px solid rgba(220,100,30,0.3);border-radius:8px;font-size:12px;color:#c06020">⚠️ 已覆蓋原本手動填寫的內容</div>
   </div>
 
   <!-- ── 每張獨立輸入欄位 ── -->
@@ -2577,13 +2578,14 @@ function render(){
      const isCover=i===0;
      const isEnd=(i===n-1);
      const cardLabel=isCover?'📌 封面':(isEnd?'🏁 結尾頁':'第 '+num+' 張');
-     const subField=isEnd?'':`<input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標題（一句話說重點）':'副標或小標（可留空）'}" value="${esc(sl.sub||'')}" style="border-radius:10px">`;
+     const subField=isEnd?'':`<input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標（會顯示在標題下方）':'副標或小標（可留空）'}" value="${esc(sl.sub||'')}" style="border-radius:10px">`;
+     const bodyPH=isCover?'封面引言或說明（往右滑 →）':(isEnd?'例：留言告訴我你的感受 💛\n或：謝謝你讀到這裡，這份整理是給你的禮物 🎁':'內文');
      out+=`<div style="background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px">
       <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">${cardLabel}</div>
       <div style="display:flex;flex-direction:column;gap:8px">
-       <input type="text" class="slide-field" data-si="${i}" data-fk="title" placeholder="${isCover?'封面主標題':(isEnd?'結尾標語':'標題')}" value="${esc(sl.title||'')}" style="border-radius:10px">
+       <input type="text" class="slide-field" data-si="${i}" data-fk="title" placeholder="${isCover?'封面主標題':(isEnd?'結尾標語，例：謝謝你滑到最後 ✨':'標題')}" value="${esc(sl.title||'')}" style="border-radius:10px">
        ${subField}
-       <textarea class="slide-field" data-si="${i}" data-fk="body" placeholder="${isCover?'封面引言或說明（往右滑 →）':(isEnd?'行動呼籲或感謝語':'內文')}" style="min-height:80px;border-radius:10px">${esc(sl.body||'')}</textarea>
+       <textarea class="slide-field" data-si="${i}" data-fk="body" placeholder="${bodyPH}" style="min-height:80px;border-radius:10px">${esc(sl.body||'')}</textarea>
       </div>
      </div>`;
     }
@@ -2860,6 +2862,12 @@ app.addEventListener('input',e=>{
      return out;
     }
     const blocks=raw.trim().split(/\n{2,}/);
+    // 如果已有手動填過的欄位，先警告再覆蓋
+    const hasManual=A._slides&&A._slides.some(s=>s&&(s.title||s.body));
+    if(hasManual){
+     const warn=document.getElementById('pasteOverwriteWarn');
+     if(warn){warn.style.display='block';clearTimeout(window._warnDbt);window._warnDbt=setTimeout(()=>{warn.style.display='none';},3000);}
+    }
     if(!A._slides)A._slides=[];
     for(let i=0;i<n;i++){
      if(!A._slides[i])A._slides[i]={};
@@ -2897,7 +2905,10 @@ app.addEventListener('input',e=>{
   }
   if(e.target.id==='cssVarsInput'){A._cssVars=e.target.value;save();render();return;}
   if(e.target.id==='captionBox'){A._caption=e.target.value;save();return;}
-  const k=e.target.dataset.k;if(k){A[k]=e.target.value;save()}
+  const k=e.target.dataset.k;if(k){A[k]=e.target.value;save();
+   // 帳號改動即時更新 canvas 預覽
+   if(k==='acct'){clearTimeout(window._acctDbt);window._acctDbt=setTimeout(()=>{requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'drama'));},300);}
+  }
 });
 app.addEventListener('click',e=>{
  const go=e.target.closest('[data-go]');
