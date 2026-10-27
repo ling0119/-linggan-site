@@ -2849,22 +2849,22 @@ function render(){
   </div>
 
   <!-- ── 背景圖上傳 ── -->
-  <div id="bgImgSection" style="margin-bottom:14px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px">
-   <div style="font-size:13px;font-weight:700;margin-bottom:8px">🖼 背景照片（選填）</div>
-   <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">上傳後每張圖都會自動套用，疊上蒙版讓文字清晰。<br>想每張不同？分別上傳即可。</div>
-   <!-- 統一背景圖 -->
-   <label id="bgImgAllLabel" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px dashed var(--line);border-radius:10px;cursor:pointer;background:var(--bg);margin-bottom:8px;transition:border-color .2s" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--line)'">
-    <span style="font-size:22px">📷</span>
-    <div>
-     <div id="bgImgAllName" style="font-size:13px;font-weight:700">統一背景圖（全部張）</div>
-     <div style="font-size:11px;color:var(--muted)">點擊上傳 JPG / PNG</div>
-    </div>
+  <div id="bgImgSection" style="margin-bottom:14px">
+   <!-- 標題列 -->
+   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">背景照片 <span style="font-weight:400;opacity:.7">選填</span></div>
+    <button type="button" id="bgImgToggleBtn" style="font:inherit;font-size:11px;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:20px;cursor:pointer;padding:3px 10px;opacity:.8">各張分開上傳</button>
+   </div>
+   <!-- 統一背景圖 — 大上傳區 -->
+   <label id="bgImgAllLabel" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:22px 16px;border:1.5px dashed var(--line);border-radius:14px;cursor:pointer;background:var(--surface);transition:all .2s;position:relative" onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(var(--acc3-rgb,155,125,181),0.05)'" onmouseleave="this.style.borderColor='var(--line)';this.style.background='var(--surface)'">
+    <div style="width:40px;height:40px;border-radius:50%;background:rgba(var(--acc3-rgb,155,125,181),0.12);display:flex;align-items:center;justify-content:center;font-size:20px">🖼</div>
+    <div id="bgImgAllName" style="font-size:13px;font-weight:700;text-align:center">點擊或拖拉上傳照片</div>
+    <div style="font-size:11px;color:var(--muted);text-align:center">套用到所有張・JPG / PNG</div>
     <input type="file" id="bgImgAllInput" accept="image/*" style="display:none">
-    <div id="bgImgAllClear" style="display:none;margin-left:auto;font-size:12px;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;background:var(--surface)" onclick="event.preventDefault();clearBgImg(-1)">✕ 清除</div>
+    <div id="bgImgAllClear" style="display:none;position:absolute;top:8px;right:8px;font-size:11px;color:var(--muted);cursor:pointer;padding:3px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line)" onclick="event.preventDefault();clearBgImg(-1)">✕ 清除</div>
    </label>
    <!-- 個別上傳（摺疊）-->
-   <div id="bgImgPerSlide" style="display:none;flex-direction:column;gap:6px;margin-top:4px"></div>
-   <button type="button" id="bgImgToggleBtn" style="font:inherit;font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:2px">＋ 各張分開上傳</button>
+   <div id="bgImgPerSlide" style="display:none;flex-direction:column;gap:6px;margin-top:8px"></div>
   </div>
 
   <!-- ── 出圖按鈕 ── -->
