@@ -1975,14 +1975,22 @@ function drawStylePreview(styleKey){
    canvas.width=W;canvas.height=H;
    const cw=idx===0?200:180;
    const ch=Math.round(cw*(H/W));
-   canvas.style.cssText=`width:${cw}px;height:${ch}px;border-radius:10px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.28);display:block`;
+   canvas.style.cssText=`width:${cw}px;height:${ch}px;border-radius:10px;cursor:zoom-in;box-shadow:0 4px 16px rgba(0,0,0,0.28);display:block`;
    const ctx=canvas.getContext('2d');
    sl.draw(ctx);
-   canvas.title='點擊下載 '+sl.label;
-   canvas.onclick=()=>{const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=sl.label+'.png';a.click();};
+   canvas.title='點擊放大預覽';
+   canvas.onclick=()=>{
+    const url=canvas.toDataURL('image/png');
+    const ov=document.createElement('div');
+    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+    const img=document.createElement('img');
+    img.src=url;img.style.cssText='max-width:92vw;max-height:92vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.6)';
+    ov.appendChild(img);ov.onclick=()=>ov.remove();
+    document.body.appendChild(ov);
+   };
    const hint=document.createElement('div');
    hint.style.cssText='font-size:10px;color:var(--muted);opacity:.6';
-   hint.textContent='點圖下載';
+   hint.textContent='點圖放大';
    wrap.append(lbl,canvas,hint);
    container.appendChild(wrap);
   });
@@ -2828,7 +2836,7 @@ function render(){
    <!-- 預覽橫排區：封面 + 2 內頁 -->
    <div style="margin-top:10px">
     <div id="stylePreviewStrip" style="display:flex;flex-direction:row;gap:14px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch"></div>
-    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">← 左右滑動 · 點圖可下載 PNG</div>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">← 左右滑動 · 點圖放大預覽</div>
    </div>
   </div>
 
