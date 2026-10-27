@@ -1721,18 +1721,88 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN){
  }
 }
 
+// ── 結尾頁 ──
+function drawCanvasEndPage(ctx,W,H,th,acct,title,body){
+ drawBg(ctx,W,H,th);
+ body=normalizeBodyText(body);
+ const layout=th.layout||'drama';
+ const cx=W/2;
+ const px=100;
+ const acctStr=acct||'@帳號';
+
+ if(layout==='drama'){
+  // 暗底：置中大標題 + 正文 + 帳號
+  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle='#ffffff';ctx.textAlign='center';
+  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
+  // 分隔線
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx-120,tEndY+36);ctx.lineTo(cx+120,tEndY+36);ctx.stroke();
+  // 互動文字
+  const bodyY=tEndY+80;
+  const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
+  ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle='rgba(255,255,255,0.75)';
+  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  // 帳號底部
+  ctx.font='700 28px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='center';
+  ctx.fillText(acctStr,cx,H-80);
+  ctx.textAlign='left';
+ } else if(layout==='ink'){
+  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.title||'#1a1a1a';ctx.textAlign='center';
+  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
+  ctx.strokeStyle=th.accent||'#2c2c2c';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
+  const bodyY=tEndY+80;
+  const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 42px "Noto Serif TC","PingFang TC",serif',42,26);
+  ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=th.body||'#333';
+  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  ctx.font='700 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fillText(acctStr,cx,H-80);
+  ctx.textAlign='left';
+ } else {
+  // film / neon / earth / stone — 通用結尾
+  const titleColor=th.title||'#1a1a1a';
+  const bodyColor=th.body||'#333';
+  ctx.font='700 80px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=titleColor;ctx.textAlign='center';
+  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320,W-px*2,96);
+  ctx.strokeStyle=typeof titleColor==='string'?titleColor:'#333';
+  ctx.globalAlpha=0.2;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
+  ctx.globalAlpha=1;
+  const bodyY=tEndY+80;
+  const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
+  ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
+  ctx.fillStyle=bodyColor;
+  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  ctx.font='700 26px "Noto Sans TC","PingFang TC",sans-serif';
+  ctx.fillStyle=bodyColor;ctx.globalAlpha=0.45;
+  ctx.fillText(acctStr,cx,H-80);
+  ctx.globalAlpha=1;ctx.textAlign='left';
+ }
+}
+
 function buildPagesFromSlides(n){
- // 優先讀 A._slides（逐張手動輸入）
  const slides=A._slides||[];
  const pages=[];
  for(let i=0;i<n;i++){
   const sl=slides[i]||{};
-  const title=(sl.title||'').trim()||('第 '+(i+1)+' 張');
+  const isEnd=(i===n-1);
+  const title=(sl.title||'').trim()||(isEnd?'謝謝你滑到最後 ✨':('第 '+(i+1)+' 張'));
   const sub=(sl.sub||'').trim();
-  const body=(sl.body||'').trim()||(i===0?'往右滑，看看怎麼開始 →':'在上方填入這張的內容');
-  // sub 如果有填就接在 body 前面作為第一行
-  const fullBody=sub?(sub+'\n'+body):body;
-  pages.push({title,sub,body:fullBody});
+  const body=(sl.body||'').trim()||(i===0?'往右滑，看看怎麼開始 →':(isEnd?'留言告訴我你的感受 💛':'在上方填入這張的內容'));
+  if(isEnd){
+   // 結尾頁：body 直接用，不合併 sub
+   pages.push({title,body,isEnd:true});
+  } else {
+   // 封面/內頁：sub 接在 body 前作為第一行
+   const fullBody=sub?(sub+'\n'+body):body;
+   pages.push({title,sub,body:fullBody});
+  }
  }
  return pages;
 }
@@ -1779,6 +1849,9 @@ function drawStylePreview(styleKey){
    const coverSub=coverLines[0]||'探索靈感的方式';
    const coverBody=coverLines.slice(1).join('\n')||'往右滑，看看怎麼開始 →';
    return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',coverSub,coverBody)};
+  }
+  if(p.isEnd||i===n-1){
+   return {label:'結尾頁',draw:(ctx)=>drawCanvasEndPage(ctx,W,H,th,acct,p.title,p.body)};
   }
   const num=String(i).padStart(2,'0');
   return {label:'第 '+(i+1)+' 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,num,p.title,p.body,totalLabel)};
@@ -1852,11 +1925,15 @@ function drawCarouselCanvas(){
   const sub=lines[0]||'';const body=lines.slice(1).join('\n')||p0.body;
   drawCanvasCover(ctx,W,H,th,acct,p0.title,sub,body);
  }));
- // 內頁
+ // 內頁 + 結尾頁
  for(let i=1;i<n;i++){
   const p=pages[i]||{title:'',body:''};
-  const num=String(i).padStart(2,'0');
-  ((pg,nm)=>{slidesDiv.appendChild(makeSlide('第 '+(i+1)+' 張',(ctx,W,H,th,acct)=>{drawCanvasPage(ctx,W,H,th,acct,nm,pg.title,pg.body,String(n).padStart(2,'0'));}));})(p,num);
+  if(p.isEnd||i===n-1){
+   ((pg)=>{slidesDiv.appendChild(makeSlide('結尾頁',(ctx,W,H,th,acct)=>{drawCanvasEndPage(ctx,W,H,th,acct,pg.title,pg.body);}));})(p);
+  } else {
+   const num=String(i).padStart(2,'0');
+   ((pg,nm)=>{slidesDiv.appendChild(makeSlide('第 '+(i+1)+' 張',(ctx,W,H,th,acct)=>{drawCanvasPage(ctx,W,H,th,acct,nm,pg.title,pg.body,String(n).padStart(2,'0'));}));})(p,num);
+  }
  }
  preview.style.display='block';
 }
@@ -2493,17 +2570,25 @@ function render(){
   <!-- ── 每張獨立輸入欄位 ── -->
   <div style="margin:16px 0 4px" id="slideFieldsWrap">
    <p style="font-size:13px;font-weight:700;color:var(--muted);margin:0 0 10px">✍️ 或直接填每張內容：</p>
+   <!-- 全局帳號 -->
+   <div style="background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px">👤 IG 帳號（顯示在每張圖上）</div>
+    <input type="text" data-k="acct" value="${esc(A.acct||'')}" placeholder="@yourname" style="border-radius:10px;width:100%;box-sizing:border-box">
+   </div>
    <div id="slideFields" style="display:flex;flex-direction:column;gap:14px">${(()=>{
     const n=A.n||5;const slides=A._slides||[];let out='';
     for(let i=0;i<n;i++){
      const sl=slides[i]||{};const num=i+1;
      const isCover=i===0;
+     const isEnd=(i===n-1);
+     const cardLabel=isCover?'📌 封面':(isEnd?'🏁 結尾頁':'第 '+num+' 張');
+     const subField=isEnd?'':`<input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標題（一句話說重點）':'副標或小標（可留空）'}" value="${esc(sl.sub||'')}" style="border-radius:10px">`;
      out+=`<div style="background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px">
-      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">${isCover?'📌 封面':'第 '+num+' 張'}</div>
+      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">${cardLabel}</div>
       <div style="display:flex;flex-direction:column;gap:8px">
-       <input type="text" class="slide-field" data-si="${i}" data-fk="title" placeholder="${isCover?'封面主標題':'標題'}" value="${esc(sl.title||'')}" style="border-radius:10px">
-       <input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標題（一句話說重點）':'副標或小標（可留空）'}" value="${esc(sl.sub||'')}" style="border-radius:10px">
-       <textarea class="slide-field" data-si="${i}" data-fk="body" placeholder="${isCover?'封面引言或說明（往右滑 →）':'內文'}" style="min-height:80px;border-radius:10px">${esc(sl.body||'')}</textarea>
+       <input type="text" class="slide-field" data-si="${i}" data-fk="title" placeholder="${isCover?'封面主標題':(isEnd?'結尾標語':'標題')}" value="${esc(sl.title||'')}" style="border-radius:10px">
+       ${subField}
+       <textarea class="slide-field" data-si="${i}" data-fk="body" placeholder="${isCover?'封面引言或說明（往右滑 →）':(isEnd?'行動呼籲或感謝語':'內文')}" style="min-height:80px;border-radius:10px">${esc(sl.body||'')}</textarea>
       </div>
      </div>`;
     }
