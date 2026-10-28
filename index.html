@@ -2252,17 +2252,9 @@ function drawStylePreview(styleKey){
      nextBtn.style.opacity=lbSlideIdx<totalSlides-1?'1':'0.25';
      nextBtn.style.pointerEvents=lbSlideIdx<totalSlides-1?'auto':'none';
      // 重繪大圖
-     const th2=getSlideTheme(lbSlideIdx,style);
-     const c2=bigCanvas.getContext('2d');
-     c2.clearRect(0,0,1080,1350);
-     curSl.draw(c2,th2);
+     drawBig();
      // 重建 tweakPanel
-     const newTweak=buildSlideTweakPanel(lbSlideIdx,style,()=>{
-      const th4=getSlideTheme(lbSlideIdx,style);
-      const c4=bigCanvas.getContext('2d');
-      c4.clearRect(0,0,1080,1350);
-      curSl.draw(c4,th4);
-     },curSl.type||'page');
+     const newTweak=buildSlideTweakPanel(lbSlideIdx,style,()=>{drawBig();},curSl.type||'page');
      if(tweakHolder.firstChild)tweakHolder.replaceChild(newTweak,tweakHolder.firstChild);
      else tweakHolder.appendChild(newTweak);
      // 背景圖縮圖
@@ -2271,12 +2263,13 @@ function drawStylePreview(styleKey){
      else{bgThumb.style.display='none';bgClearBtn.style.display='none';}
     };
 
-    // draw
+    // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
+     const curSlide=canvasSlides[lbSlideIdx];
      const th2=getSlideTheme(lbSlideIdx,style);
      const c2=bigCanvas.getContext('2d');
      c2.clearRect(0,0,1080,1350);
-     sl.draw(c2,th2);
+     curSlide.draw(c2,th2);
     };
     drawBig();
 
