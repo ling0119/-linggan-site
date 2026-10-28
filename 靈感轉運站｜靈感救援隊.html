@@ -1416,9 +1416,9 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   {const _sa=elA('sub','center');ctx.fillStyle=elC('sub','rgba(255,255,255,0.65)');ctx.textAlign=_sa;ctx.fillText(sub||'',_sa==='left'?px:_sa==='right'?W-px:cx,ty+68);}
   // 正文
   ctx.font=elFont('body',34,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle='rgba(255,255,255,0.78)';
-  const blines=(body||'').split('\n');let by=ty+140;
-  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText(l,cx,by);by+=52;}
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body','rgba(255,255,255,0.78)');ctx.textAlign=_ba;
+  const blines=(body||'').split('\n');let by=ty+140;const bx=_ba==='left'?px:_ba==='right'?W-px:cx;
+  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText(l,bx,by);by+=52;}}
   ctx.textAlign='left';
   // 底欄
   ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
@@ -1462,8 +1462,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.beginPath();ctx.moveTo(px,ty+4);ctx.lineTo(px+340,ty+4);ctx.stroke();
   // 正文
   ctx.font=elFont('body',36,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('body',th.body);
-  wrapCanvasText(ctx,body||'',px,ty+58,W-px*2,54);
+  {const _ba=elA('body','left');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,ty+58,W-px*2,54);}
   // 底欄
   ctx.strokeStyle='rgba(42,32,24,0.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
@@ -1493,9 +1492,9 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   {const _sa=elA('sub','center');ctx.fillStyle=elC('sub',th.sub);ctx.textAlign=_sa;ctx.fillText(sub||'',_sa==='left'?px:_sa==='right'?W-px:cx,ty+98);}
   // 正文
   ctx.font=elFont('body',34,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('body',th.body);
-  const blines=(body||'').split('\n');let by=ty+168;
-  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText(l,cx,by);by+=52;}
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;
+  const blines=(body||'').split('\n');let by=ty+168;const bx=_ba==='left'?px:_ba==='right'?W-px:cx;
+  for(const l of blines){if(!l){by+=16;continue;}ctx.fillText(l,bx,by);by+=52;}}
   // 底欄
   ctx.strokeStyle='rgba(58,56,48,0.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
@@ -1525,15 +1524,13 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   let ty=wrapCanvasText(ctx,title||'',(titleAlign==='center'?W/2:titleAlign==='right'?W-px:px),H*0.50+titleYOff,W-px*2,130);
   // 粉紅色副標（小字）
   ctx.font=elFont('sub',38,'500','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=th.pink;
-  ctx.fillText(sub||'',px,ty+20);
+  {const _sa=elA('sub','left');ctx.fillStyle=elC('sub',th.pink);ctx.textAlign=_sa;ctx.fillText(sub||'',_sa==='right'?W-px:_sa==='center'?W/2:px,ty+20);}
   // 橫分隔線（下半區）
   ctx.strokeStyle='rgba(232,130,154,0.30)';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(px,ty+54);ctx.lineTo(px+280,ty+54);ctx.stroke();
   // 正文
   ctx.font=elFont('body',32,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle='rgba(255,255,255,0.70)';
-  wrapCanvasText(ctx,body||'',px,ty+100,W-px*2,48);
+  {const _ba=elA('body','left');ctx.fillStyle=elC('body','rgba(255,255,255,0.70)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,ty+100,W-px*2,48);}
   // 底欄
   ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
@@ -1556,13 +1553,12 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   let ty=wrapCanvasText(ctx,title||'',(titleAlign==='center'?W/2:titleAlign==='right'?W-px:px),H*0.42+titleYOff,W-px*2,126);
   // 短詩意描述（小字，左對齊，行距寬）
   ctx.font=elFont('body',36,'300');
-  ctx.fillStyle='rgba(255,255,255,0.72)';
-  const blines=(body||'').split('\n');let by=ty+32;
-  for(const l of blines){if(!l){by+=20;continue;}ctx.fillText(l,px,by);by+=54;}
+  {const _ba=elA('body','left');ctx.fillStyle=elC('body','rgba(255,255,255,0.72)');ctx.textAlign=_ba;
+  const blines=(body||'').split('\n');let by=ty+32;const bx=_ba==='right'?W-px:_ba==='center'?W/2:px;
+  for(const l of blines){if(!l){by+=20;continue;}ctx.fillText(l,bx,by);by+=54;}}
   // 帳號右下（小字）
   ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.42)';ctx.textAlign='right';
-  ctx.fillText('𝕀𝔾 '+(acct||'@帳號'),W-px,H-80);
+  {const _aa=elA('acct','right');ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.textAlign=_aa;ctx.fillText('𝕀𝔾 '+(acct||'@帳號'),_aa==='left'?px:_aa==='center'?W/2:W-px,H-80);}
   ctx.textAlign='left';
   return;
  }
@@ -1579,23 +1575,22 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
  ctx.fillText('"',px-20,H*0.30);
  // 大標題（靠左下，白色粗 serif）
  ctx.font=elFont('title',110,'900');
- ctx.fillStyle=th.txt;
- let ty=wrapCanvasText(ctx,title||'',px,H*0.44+titleYOff,W-px*2,132);
+ ctx.fillStyle=elC('title',th.txt);ctx.textAlign=elA('title',titleAlign||'left');
+ let ty=wrapCanvasText(ctx,title||'',(titleAlign==='center'?W/2:titleAlign==='right'?W-px:px),H*0.44+titleYOff,W-px*2,132);
  // 橫線
  ctx.strokeStyle='rgba(255,255,255,0.28)';ctx.lineWidth=1.5;
  ctx.beginPath();ctx.moveTo(px,ty+6);ctx.lineTo(px+380,ty+6);ctx.stroke();
  // 副標
  ctx.font=elFont('sub',42,'300');
- ctx.fillStyle=elC('sub',th.sub);ctx.fillText(sub||'',px,ty+62);
+ {const _sa=elA('sub','left');ctx.fillStyle=elC('sub',th.sub);ctx.textAlign=_sa;ctx.fillText(sub||'',_sa==='right'?W-px:_sa==='center'?W/2:px,ty+62);}
  // 正文
  ctx.font=elFont('body',33,'400','"Noto Sans TC","PingFang TC",sans-serif');
- ctx.fillStyle=elC('body',th.body);
- wrapCanvasText(ctx,body||'',px,ty+134,W-px*2,50);
+ {const _ba=elA('body','left');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,ty+134,W-px*2,50);}
  // 底欄
  ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.lineWidth=1;
  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
- {const _aa=elA('acct','left');ctx.fillStyle='rgba(255,255,255,0.50)';ctx.textAlign=_aa;ctx.fillText(tag,_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
+ {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.50)');ctx.textAlign=_aa;ctx.fillText(tag,_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.30)';ctx.fillText('往右滑 →',W-px,H-80);
  ctx.textAlign='left';
 }
@@ -1671,8 +1666,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   const bodyY_ch=Math.max(380,titleEndY_ch+42);
   const {fontSize:bfs_ch,lineH:blh_ch}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_ch,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
   ctx.font='400 '+bfs_ch+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=elC('body',th.body);
-  wrapCanvasText(ctx,body||'',px,bodyY_ch,W-px*2,blh_ch);
+  {const _ba=elA('body','left');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,bodyY_ch,W-px*2,blh_ch);}
   // 底欄
   ctx.strokeStyle='rgba(42,32,24,0.08)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
@@ -1770,8 +1764,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   const bodyY_by=splitY+60;
   const {fontSize:bfs_by,lineH:blh_by}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_by,H-180,'400 40px "Noto Serif TC","PingFang TC",serif',40,26);
   ctx.font='400 '+bfs_by+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.82)';ctx.textAlign='left';
-  wrapCanvasText(ctx,body||'',px,bodyY_by,W-px*2,blh_by);
+  {const _ba=elA('body','left');ctx.fillStyle=elC('body','rgba(255,255,255,0.82)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,bodyY_by,W-px*2,blh_by);}
   // 粉紅金句（如果 body 有「。」結尾的最後一行抽出高亮 — 只做視覺點綴）
   // 底欄
   ctx.strokeStyle='rgba(232,130,154,0.18)';ctx.lineWidth=1;
@@ -1803,8 +1796,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   const bodyY_fd=tEndY_fd+40;
   const {fontSize:bfs_fd,lineH:blh_fd}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_fd,H-280,'400 38px "Noto Serif TC","PingFang TC",serif',38,24);
   ctx.font='300 '+bfs_fd+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.75)';ctx.textAlign='left';
-  wrapCanvasText(ctx,body||'',px,bodyY_fd,W-px*2,blh_fd);
+  {const _ba=elA('body','left');ctx.fillStyle=elC('body','rgba(255,255,255,0.75)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,bodyY_fd,W-px*2,blh_fd);}
   // 右下「手寫風」金句裝飾（amber色斜體感小字）
   const kwoteLines=(body||'').split('\n').filter(l=>l.trim());
   const lastLine=kwoteLines[kwoteLines.length-1]||'';
@@ -1816,8 +1808,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   }
   // 帳號（右下）
   ctx.font='400 24px "Noto Sans TC","PingFang TC",sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='right';
-  ctx.fillText('𝕀𝔾 '+(acct||'@帳號'),W-px,H-80);
+  {const _aa=elA('acct','right');ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign=_aa;ctx.fillText('𝕀𝔾 '+(acct||'@帳號'),_aa==='left'?px:_aa==='center'?W/2:W-px,H-80);}
   ctx.textAlign='left';
   return;
  }
@@ -1842,8 +1833,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  const bodyY_dn=Math.max(374,titleEndY_dn+40);
  const {fontSize:bfs_dn,lineH:blh_dn}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_dn,H-140,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
  ctx.font='400 '+bfs_dn+'px "Noto Serif TC","PingFang TC",serif';
- ctx.fillStyle=elC('body',th.body);
- wrapCanvasText(ctx,body||'',px,bodyY_dn,W-px*2,blh_dn);
+ {const _ba=elA('body','left');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='right'?W-px:_ba==='center'?W/2:px,bodyY_dn,W-px*2,blh_dn);}
  // 底欄
  ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
@@ -1871,82 +1861,77 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
  if(layout==='dinero'){
   // dinero 結尾：深暗底，大白字置中，橫線，帳號大字
   ctx.font=elFont('title',80,'700');
-  ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320+titleYOff,W-px*2,96);
+  {const _ta=elA('title','center');ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=_ta;
+  const tEndY=wrapCanvasText(ctx,title||'✨',_ta==='left'?px:_ta==='right'?W-px:cx,320+titleYOff,W-px*2,96);
   ctx.strokeStyle='rgba(255,255,255,0.22)';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-120,tEndY+36);ctx.lineTo(cx+120,tEndY+36);ctx.stroke();
   const bodyY=tEndY+80;
   const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 46px "Noto Serif TC","PingFang TC",serif',46,28);
   ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');
-  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body','rgba(255,255,255,0.72)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='left'?px:_ba==='right'?W-px:cx,bodyY,W-px*2,blh);}
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.45)');ctx.fillText(acctStr,cx,H-80);
-  ctx.textAlign='left';
+  {const _aa=elA('acct','center');ctx.fillStyle=elC('acct','rgba(255,255,255,0.45)');ctx.textAlign=_aa;ctx.fillText(acctStr,_aa==='left'?px:_aa==='right'?W-px:cx,H-80);}
+  ctx.textAlign='left';}
  } else if(layout==='chiao'||layout==='remind'){
   // chiao/remind 結尾：淡色底，深字，置中
   const titleClr=th.txt||'#2a2018';
   ctx.font=elFont('title',80,'700');
-  ctx.fillStyle=titleClr;ctx.textAlign='center';
-  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320+titleYOff,W-px*2,96);
+  {const _ta=elA('title','center');ctx.fillStyle=elC('title',titleClr);ctx.textAlign=_ta;
+  const tEndY=wrapCanvasText(ctx,title||'✨',_ta==='left'?px:_ta==='right'?W-px:cx,320+titleYOff,W-px*2,96);
   ctx.strokeStyle=titleClr;ctx.globalAlpha=0.15;ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
   ctx.globalAlpha=1;
   const bodyY=tEndY+80;
   const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 42px "Noto Serif TC","PingFang TC",serif',42,26);
   ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=elC('body',th.body);
-  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='left'?px:_ba==='right'?W-px:cx,bodyY,W-px*2,blh);}
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct',titleClr);ctx.globalAlpha=0.42;ctx.fillText(acctStr,cx,H-80);
-  ctx.globalAlpha=1;ctx.textAlign='left';
+  {const _aa=elA('acct','center');ctx.fillStyle=elC('acct',titleClr);ctx.globalAlpha=0.42;ctx.textAlign=_aa;ctx.fillText(acctStr,_aa==='left'?px:_aa==='right'?W-px:cx,H-80);}
+  ctx.globalAlpha=1;ctx.textAlign='left';}
  } else if(layout==='babyou'){
   // babyou 結尾：暗底，大白字置中，粉紅橫線，帳號
   ctx.font=elFont('title',80,'700');
-  ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const tEndY_be=wrapCanvasText(ctx,title||'✨',cx,320+titleYOff,W-px*2,96);
+  {const _ta=elA('title','center');ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=_ta;
+  const tEndY_be=wrapCanvasText(ctx,title||'✨',_ta==='left'?px:_ta==='right'?W-px:cx,320+titleYOff,W-px*2,96);
   ctx.strokeStyle=th.pink;ctx.globalAlpha=0.40;ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-120,tEndY_be+36);ctx.lineTo(cx+120,tEndY_be+36);ctx.stroke();
   ctx.globalAlpha=1;
   const bodyY_be=tEndY_be+80;
   const {fontSize:bfs_be,lineH:blh_be}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_be,H-180,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
   ctx.font='400 '+bfs_be+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');
-  wrapCanvasText(ctx,body||'',cx,bodyY_be,W-px*2,blh_be);
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body','rgba(255,255,255,0.72)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='left'?px:_ba==='right'?W-px:cx,bodyY_be,W-px*2,blh_be);}
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.fillText(acctStr,cx,H-80);
-  ctx.textAlign='left';
+  {const _aa=elA('acct','center');ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.textAlign=_aa;ctx.fillText(acctStr,_aa==='left'?px:_aa==='right'?W-px:cx,H-80);}
+  ctx.textAlign='left';}
  } else if(layout==='faydea'){
   // faydea 結尾：暖棕底，引號標題，詩意正文，amber帳號落款
   ctx.font=elFont('title',80,'700');
-  ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const tEndY_fe=wrapCanvasText(ctx,'"'+(title||'✨')+'"',cx,320+titleYOff,W-px*2,96);
+  {const _ta=elA('title','center');ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=_ta;
+  const tEndY_fe=wrapCanvasText(ctx,'"'+(title||'✨')+'"',_ta==='left'?px:_ta==='right'?W-px:cx,320+titleYOff,W-px*2,96);
   ctx.strokeStyle=th.amber;ctx.globalAlpha=0.32;ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(cx-100,tEndY_fe+36);ctx.lineTo(cx+100,tEndY_fe+36);ctx.stroke();
   ctx.globalAlpha=1;
   const bodyY_fe=tEndY_fe+80;
   const {fontSize:bfs_fe,lineH:blh_fe}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_fe,H-180,'300 42px "Noto Serif TC","PingFang TC",serif',42,26);
   ctx.font='300 '+bfs_fe+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle='rgba(255,255,255,0.70)';
-  wrapCanvasText(ctx,body||'',cx,bodyY_fe,W-px*2,blh_fe);
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body','rgba(255,255,255,0.70)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='left'?px:_ba==='right'?W-px:cx,bodyY_fe,W-px*2,blh_fe);}
   ctx.font='italic 500 28px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=th.amber;ctx.globalAlpha=0.75;ctx.fillText('𝕀𝔾 '+acctStr,cx,H-80);
-  ctx.globalAlpha=1;ctx.textAlign='left';
+  {const _aa=elA('acct','center');ctx.fillStyle=elC('acct',th.amber);ctx.globalAlpha=0.75;ctx.textAlign=_aa;ctx.fillText('𝕀𝔾 '+acctStr,_aa==='left'?px:_aa==='right'?W-px:cx,H-80);}
+  ctx.globalAlpha=1;ctx.textAlign='left';}
  } else {
   // afei — 深暗底，置中，帳號落款
   ctx.font=elFont('title',80,'700');
-  ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const tEndY=wrapCanvasText(ctx,title||'✨',cx,320+titleYOff,W-px*2,96);
+  {const _ta=elA('title','center');ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=_ta;
+  const tEndY=wrapCanvasText(ctx,title||'✨',_ta==='left'?px:_ta==='right'?W-px:cx,320+titleYOff,W-px*2,96);
   ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(cx-100,tEndY+36);ctx.lineTo(cx+100,tEndY+36);ctx.stroke();
   const bodyY=tEndY+80;
   const {fontSize:bfs,lineH:blh}=autoFitFontSize(ctx,body||'',W-px*2,bodyY,H-180,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
   ctx.font='400 '+bfs+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.70)');
-  wrapCanvasText(ctx,body||'',cx,bodyY,W-px*2,blh);
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body','rgba(255,255,255,0.70)');ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='left'?px:_ba==='right'?W-px:cx,bodyY,W-px*2,blh);}
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.fillText(acctStr,cx,H-80);
-  ctx.globalAlpha=1;ctx.textAlign='left';
+  {const _aa=elA('acct','center');ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.textAlign=_aa;ctx.fillText(acctStr,_aa==='left'?px:_aa==='right'?W-px:cx,H-80);}
+  ctx.globalAlpha=1;ctx.textAlign='left';}
  }
 }
 
