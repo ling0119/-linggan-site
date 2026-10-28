@@ -2205,7 +2205,7 @@ function drawStylePreview(styleKey){
     if(isMobile){
      ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;flex-direction:column;overflow:hidden';
     }else{
-     ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:stretch;justify-content:center;overflow:hidden;pointer-events:none';
+     ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:stretch;justify-content:center;overflow:hidden';
     }
     // 左/上：大圖 + 左右箭頭
     const left=document.createElement('div');
@@ -2301,6 +2301,8 @@ function drawStylePreview(styleKey){
     prevBtn.onclick=(e)=>{e.stopPropagation();if(lbSlideIdx>0)renderPanel(lbSlideIdx-1);};
     nextBtn.onclick=(e)=>{e.stopPropagation();if(lbSlideIdx<totalSlides-1)renderPanel(lbSlideIdx+1);};
 
+    // 點擊左側（畫布外暗區）關閉
+    left.onclick=(e)=>{if(e.target===left)removeLB();};
     left.appendChild(bigCanvas);
     // 箭頭直接掛在 document.body，fixed 定位，完全不受 ov 影響
     document.body.appendChild(prevBtn);
@@ -2310,7 +2312,7 @@ function drawStylePreview(styleKey){
     const removeLB=()=>{
      if(_lbDone)return;_lbDone=true;
      document.removeEventListener('keydown',keyHandler);
-     prevBtn.remove();nextBtn.remove();backdrop.remove();ov.remove();
+     prevBtn.remove();nextBtn.remove();ov.remove();
     };
     // 鍵盤左右鍵
     const keyHandler=(e)=>{
@@ -2397,12 +2399,7 @@ function drawStylePreview(styleKey){
     btnRow2.append(dlBtn2,closeBtn);
     rightInner.append(slideLabel,bgSection,tweakHolder,btnRow2);
     right.append(rightInner);
-    // backdrop：獨立 fixed div，z-index 低於箭頭，點擊關閉
-    const backdrop=document.createElement('div');
-    backdrop.style.cssText='position:fixed;inset:0;z-index:9998;cursor:default';
-    backdrop.onclick=(e)=>{if(e.target===backdrop)removeLB();};
     ov.append(left,right);
-    document.body.appendChild(backdrop);
     document.body.appendChild(ov);
    };
    const hint=document.createElement('div');
