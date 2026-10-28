@@ -1610,6 +1610,23 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  const elFont=(ek,sz,wt,fam)=>thFont(th,ek,sz,wt,fam);
  const total=totalN||'08';
  body=normalizeBodyText(body);
+ // 頁碼格式：根據 el_num_fmt tweak 決定顯示文字
+ const numFmt=(th._el&&th._el.num&&th._el.num.fmt)||'';
+ const fmtNum=(defSlash)=>{
+  if(numFmt==='bare')return num;
+  if(numFmt==='hash')return '#'+num;
+  if(numFmt==='no')return 'No.'+num;
+  if(numFmt==='slash'||(!numFmt&&defSlash))return num+' / '+total;
+  return num; // default bare（非 slash 預設版型）
+ };
+ const fmtNumSlash=()=>fmtNum(true);  // 版型預設用斜線的
+ const fmtNumBare=()=>fmtNum(false);  // 版型預設純數字的
+ const fmtNumNo=()=>{                  // 版型預設 No. 的
+  if(numFmt==='bare')return num;
+  if(numFmt==='hash')return '#'+num;
+  if(numFmt==='slash')return num+' / '+total;
+  return 'No.'+num;
+ };
 
  if(layout==='afei'){
   // afei 內頁：深暗底，頂欄頁碼，標題置中，白字
@@ -1620,7 +1637,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
   {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.35)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,65);}
   ctx.font=elFont('num',26,'700','"Noto Sans TC","PingFang TC",sans-serif');
-  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,65);}ctx.textAlign='left';
+  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.fillText(fmtNumSlash(),_na==='left'?px:_na==='center'?W/2:W-px,65);}ctx.textAlign='left';
   // 標題置中（白色 serif，自動換行）
   ctx.font=elFont('title',82,'700');
   ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=elA('title',titleAlign||'center');
@@ -1647,7 +1664,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   // chiao 內頁：米白底，頂部分類標籤，標題靠左，正文
   // 頂部分類標籤（小字）
   ctx.font=elFont('num',26,'700','"Noto Sans TC","PingFang TC",sans-serif');
-  {const _na=elA('num','left');ctx.fillStyle=elC('num','rgba(42,32,24,0.36)');ctx.textAlign=_na;ctx.fillText('No.'+num,_na==='right'?W-px:_na==='center'?W/2:px,72);}
+  {const _na=elA('num','left');ctx.fillStyle=elC('num','rgba(42,32,24,0.36)');ctx.textAlign=_na;ctx.fillText(fmtNumNo(),_na==='right'?W-px:_na==='center'?W/2:px,72);}
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
   {const _aa=elA('acct','right');ctx.textAlign=_aa;ctx.fillStyle=elC('acct','rgba(42,32,24,0.30)');ctx.fillText(acct||'@帳號',_aa==='left'?px:_aa==='center'?W/2:W-px,72);}ctx.textAlign='left';
   ctx.strokeStyle='rgba(42,32,24,0.10)';ctx.lineWidth=1;
@@ -1688,7 +1705,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
   {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(58,56,48,0.32)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,65);}
   ctx.font=elFont('num',26,'700','"Noto Sans TC","PingFang TC",sans-serif');
-  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(58,56,48,0.26)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,65);}ctx.textAlign='left';
+  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(58,56,48,0.26)');ctx.fillText(fmtNumSlash(),_na==='left'?px:_na==='center'?W/2:W-px,65);}ctx.textAlign='left';
   // 標題置中（深色 serif，自動換行）
   ctx.font=elFont('title',82,'700');
   ctx.fillStyle=elC('title',th.txt);ctx.textAlign=elA('title',titleAlign||'center');
@@ -1748,7 +1765,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.fillText('# 感情',px,60);
   // 頁碼右上（小）
   ctx.font=elFont('num',32,'700','"Noto Sans TC","PingFang TC",sans-serif');
-  {const _na=elA('num','right');ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.textAlign=_na;ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,60);}ctx.textAlign='left';
+  {const _na=elA('num','right');ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.textAlign=_na;ctx.fillText(fmtNumSlash(),_na==='left'?px:_na==='center'?W/2:W-px,60);}ctx.textAlign='left';
   // 分隔線（照片/文字界線）
   ctx.strokeStyle='rgba(232,130,154,0.20)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,splitY);ctx.lineTo(W-px,splitY);ctx.stroke();
@@ -1786,7 +1803,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.fillStyle='rgba(255,255,255,0.40)';ctx.textAlign='left';
   ctx.fillText('# 慢熟女子備忘錄',px,60);
   // 頁碼右上
-  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,60);}ctx.textAlign='left';
+  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');ctx.fillText(fmtNumSlash(),_na==='left'?px:_na==='center'?W/2:W-px,60);}ctx.textAlign='left';
   // 細線
   ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,76);ctx.lineTo(W-px,76);ctx.stroke();
@@ -1819,12 +1836,12 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  // dinero 內頁：深暗底，左上帳號，大白字靠左，底欄頁碼
  // 頁碼大背景字（電影感）
  ctx.font=elFont('title',220,'900');
- {const _na=elA('num','right');ctx.fillStyle=elC('num','rgba(255,255,255,0.03)');ctx.textAlign=_na;ctx.fillText(num,_na==='left'?px:_na==='center'?W/2:W-px,H*0.88);}ctx.textAlign='left';
+ {const _na=elA('num','right');ctx.fillStyle=elC('num','rgba(255,255,255,0.03)');ctx.textAlign=_na;ctx.fillText(fmtNumBare(),_na==='left'?px:_na==='center'?W/2:W-px,H*0.88);}ctx.textAlign='left';
  // 頂部帳號+橫線
  ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.35)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,68);}
  ctx.font=elFont('num',26,'700','"Noto Sans TC","PingFang TC",sans-serif');
- {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,68);}ctx.textAlign='left';
+ {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');ctx.fillText(fmtNumSlash(),_na==='left'?px:_na==='center'?W/2:W-px,68);}ctx.textAlign='left';
  ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
  ctx.beginPath();ctx.moveTo(px,84);ctx.lineTo(W-px,84);ctx.stroke();
  // 標題靠左（白色大 serif，自動換行）
@@ -2336,7 +2353,7 @@ function getSlideTheme(slideIdx,styleKey){
  if(tw.bg1)th.bg1=tw.bg1;
  // per-element overrides: el_title_size, el_title_weight, el_title_family, el_title_align, el_title_color ...
  const elKeys=['title','sub','body','acct','num'];
- const elProps=['size','weight','family','align','color'];
+ const elProps=['size','weight','family','align','color','fmt'];
  th._el=th._el||{};
  elKeys.forEach(ek=>{
   th._el[ek]=th._el[ek]||{};
@@ -2483,7 +2500,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   {ek:'sub',  label:'副標',defSize:defSubSize,  defW:'300',   defF:'serif',defC:defSubColor,  defA:subDefA},
   {ek:'body', label:'內文',defSize:defBodySize, defW:'400',   defF:'sans', defC:defBodyColor, defA:bodyDefA},
   {ek:'acct', label:'帳號',defSize:defAcctSize, defW:'400',   defF:'sans', defC:defAcctColor, defA:acctDefA},
-  {ek:'num',  label:'小標',defSize:defNumSize,  defW:'700',   defF:'sans', defC:defNumColor,  defA:numDefA},
+  {ek:'num',  label:'頁碼',defSize:defNumSize,  defW:'700',   defF:'sans', defC:defNumColor,  defA:numDefA},
  ];
 
  elements.forEach(({ek,label,defSize,defW,defF,defC,defA})=>{
@@ -2533,21 +2550,39 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   });
   rSize.append(lSize,selSize);body.appendChild(rSize);
 
-  // 粗細 seg
-  const rW=document.createElement('div');rW.className='stw-ctrl-row';
-  const lW=document.createElement('span');lW.className='stw-lbl';lW.textContent='粗細';
-  const seg=document.createElement('div');seg.className='stw-seg';
-  [['300','細'],['400','常'],['600','中'],['700','粗'],['900','黑']].forEach(([v,t])=>{
-   const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
-   if(v===curW)sp.classList.add('on');
-   onTap(sp,()=>{
-    seg.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
-    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
-    A._slideTweak[slideIdx][`el_${ek}_weight`]=v;save();redrawCb();updateHint();
+  // 粗細 seg（頁碼改為樣式選擇器）
+  if(ek==='num'){
+   const rFmt=document.createElement('div');rFmt.className='stw-ctrl-row';
+   const lFmt=document.createElement('span');lFmt.className='stw-lbl';lFmt.textContent='樣式';
+   const segFmt=document.createElement('div');segFmt.className='stw-seg';
+   const curFmt=(A._slideTweak[slideIdx]&&A._slideTweak[slideIdx]['el_num_fmt'])||'slash';
+   [['slash','01/08'],['bare','01'],['hash','#01'],['no','No.01']].forEach(([v,t])=>{
+    const sp=document.createElement('button');sp.type='button';sp.textContent=t;
+    if(v===curFmt)sp.classList.add('on');
+    onTap(sp,()=>{
+     segFmt.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+     A._slideTweak[slideIdx]['el_num_fmt']=v;save();redrawCb();
+    });
+    segFmt.appendChild(sp);
    });
-   seg.appendChild(sp);
-  });
-  rW.append(lW,seg);body.appendChild(rW);
+   rFmt.append(lFmt,segFmt);body.appendChild(rFmt);
+  }else{
+   const rW=document.createElement('div');rW.className='stw-ctrl-row';
+   const lW=document.createElement('span');lW.className='stw-lbl';lW.textContent='粗細';
+   const seg=document.createElement('div');seg.className='stw-seg';
+   [['300','細'],['400','常'],['600','中'],['700','粗'],['900','黑']].forEach(([v,t])=>{
+    const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
+    if(v===curW)sp.classList.add('on');
+    onTap(sp,()=>{
+     seg.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+     A._slideTweak[slideIdx][`el_${ek}_weight`]=v;save();redrawCb();updateHint();
+    });
+    seg.appendChild(sp);
+   });
+   rW.append(lW,seg);body.appendChild(rW);
+  }
 
   // 對齊 seg
   const rA=document.createElement('div');rA.className='stw-ctrl-row';
