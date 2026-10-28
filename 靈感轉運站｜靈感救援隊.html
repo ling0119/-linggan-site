@@ -4073,6 +4073,9 @@ app.addEventListener('click',e=>{
   setTimeout(()=>{
    drawStylePreview(A._canvasStyle);
    buildTweakPanel(A._canvasStyle);
+   // 把選中的卡片捲到可見位置
+   const onBtn=document.querySelector('.canvas-style-btn.csc-on');
+   if(onBtn)onBtn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   },0);
   return;
  }
