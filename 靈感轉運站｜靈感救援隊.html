@@ -2326,7 +2326,21 @@ function buildScreenshotStylePrompt(){
  const v=(k,f)=>A[k]&&A[k].trim()?A[k].trim():f;
  const n=A.n||5;
  const acct=v('acct','@帳號');
- const paste=(A._paste&&A._paste.trim())?A._paste.trim():'<在此貼上 Claude 給你的文字稿>';
+ // 優先用框框填的 slides，再 fallback 到大 textarea 貼的
+ let paste='';
+ const _sl=A._slides||[];
+ const _hasSlides=_sl.some(s=>s&&(s.title||s.body));
+ if(_hasSlides){
+  paste=_sl.slice(0,n).map((s,i)=>{
+   if(!s)return'';
+   let b='';
+   if(s.title)b+=`[標題] ${s.title}\n`;
+   if(s.sub&&s.sub.trim())b+=`[副標] ${s.sub}\n`;
+   if(s.body)b+=`[內文] ${s.body}`;
+   return b.trim();
+  }).filter(Boolean).join('\n\n');
+ }
+ if(!paste)paste=(A._paste&&A._paste.trim())?A._paste.trim():'<在此貼上 Claude 給你的文字稿>';
  // 動態產生內頁模板（第2張到第n-1張）
  let innerTmpl='';
  for(let i=2;i<=n-1;i++){
