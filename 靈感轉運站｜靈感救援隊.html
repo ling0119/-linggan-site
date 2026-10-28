@@ -1978,6 +1978,39 @@ function buildPagesFromPaste(pasteText,n){
   for(let i=1;i<=n;i++)pages.push({title:'第 '+i+' 頁',body:'在上方填入每張的標題和內容'});
   return pages;
  }
+ // 偵測是否用新格式 [標題]/[副標]/[內文]
+ const hasTagFormat=/\[標題\]|\[內文\]/.test(pasteText);
+ if(hasTagFormat){
+  // 以 [標題] 為分張依據，跳過 ✦ 開頭的裝飾行、hashtag 行
+  const slideBlocks=[];
+  let cur=null;
+  for(const raw of pasteText.split('\n')){
+   const l=raw.trim();
+   // 跳過裝飾行：✦、#開頭標籤整行、空白
+   if(!l||/^✦/.test(l)||/^#[\w一-鿿]/.test(l))continue;
+   const tagTitle=l.match(/^\[標題\]\s*(.*)/);
+   const tagSub=l.match(/^\[副標\]\s*(.*)/);
+   const tagBody=l.match(/^\[內文\]\s*(.*)/);
+   if(tagTitle){
+    if(cur)slideBlocks.push(cur);
+    cur={title:tagTitle[1].trim(),sub:'',body:''};
+   } else if(tagSub&&cur){
+    cur.sub=tagSub[1].trim();
+   } else if(tagBody&&cur){
+    cur.body=tagBody[1].trim();
+   } else if(cur&&cur.body!==undefined){
+    // 無標籤的行 → 接到 body（換行補上）
+    cur.body=cur.body?(cur.body+'\n'+l):l;
+   }
+  }
+  if(cur)slideBlocks.push(cur);
+  for(let i=0;i<n;i++){
+   const b=slideBlocks[i]||{};
+   pages.push({title:b.title||'（第 '+(i+1)+' 張）',sub:b.sub||'',body:b.body||''});
+  }
+  return pages;
+ }
+ // 舊格式：空行分張，第一行為標題
  const blocks=pasteText.trim().split(/\n{2,}/);
  for(let i=0;i<n;i++){
   const blk=blocks[i]||'';
