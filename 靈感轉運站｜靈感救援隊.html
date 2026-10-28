@@ -2382,12 +2382,13 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  const tw=A._slideTweak[slideIdx]||{};
  const baseTh=getTheme(styleKey);
  // iOS-safe tap: fires on touchend (no scroll drift) and falls back to click
+ const _dbg=(msg)=>{let d=document.getElementById('_stwDbg');if(!d){d=document.createElement('div');d.id='_stwDbg';d.style.cssText='position:fixed;bottom:60px;left:8px;right:8px;background:rgba(0,0,0,.82);color:#0f0;font:12px/1.5 monospace;padding:8px;border-radius:8px;z-index:99999;max-height:180px;overflow-y:auto;pointer-events:none';document.body.appendChild(d);}d.innerHTML=msg+'<br>'+d.innerHTML;};
  const onTap=(el,fn)=>{
   let _tStart={x:0,y:0},_moved=false;
   el.addEventListener('touchstart',e=>{_tStart={x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};_moved=false;},{passive:true});
   el.addEventListener('touchmove',e=>{const dx=e.changedTouches[0].clientX-_tStart.x,dy=e.changedTouches[0].clientY-_tStart.y;if(Math.abs(dx)>6||Math.abs(dy)>6)_moved=true;},{passive:true});
-  el.addEventListener('touchend',e=>{if(!_moved){e.preventDefault();fn(e);}},{passive:false});
-  el.addEventListener('click',e=>{if(!('ontouchstart' in window))fn(e);});
+  el.addEventListener('touchend',e=>{_dbg('touchend seg='+el.dataset.stwSeg+' val='+el.dataset.stwVal+' moved='+_moved);if(!_moved){e.preventDefault();fn(e);}},{passive:false});
+  el.addEventListener('click',e=>{_dbg('click seg='+el.dataset.stwSeg+' touch='+(!!('ontouchstart' in window)));if(!('ontouchstart' in window))fn(e);});
  };
  const isDark=['dinero','afei','babyou','faydea'].includes(styleKey);
  const toHex=c=>{if(!c)return'#ffffff';if(c.startsWith('#'))return c;const m=c.match(/[\d.]+/g)||[];return'#'+[m[0],m[1],m[2]].map(n=>parseInt(n).toString(16).padStart(2,'0')).join('');};
