@@ -1185,6 +1185,22 @@ function wrapCanvasText(ctx,text,x,y,maxW,lineH){
  }
  return cy;
 }
+function wrapCanvasTextCenter(ctx,text,cx,y,maxW,lineH){
+ const prevAlign=ctx.textAlign;ctx.textAlign='center';
+ const lines=text.split('\n');let cy=y;
+ for(const line of lines){
+  if(!line){cy+=lineH*0.55;continue;}
+  const chars=line.split('');let cur='';
+  for(let i=0;i<chars.length;i++){
+   const test=cur+chars[i];
+   if(ctx.measureText(test).width>maxW&&cur){ctx.fillText(cur,cx,cy);cy+=lineH;cur=chars[i];}
+   else cur=test;
+  }
+  if(cur){ctx.fillText(cur,cx,cy);cy+=lineH;}
+ }
+ ctx.textAlign=prevAlign;
+ return cy;
+}
 // 計算 wrapCanvasText 需要幾行（不繪製）
 function measureWrapLines(ctx,text,maxW){
  let count=0;
@@ -1366,17 +1382,17 @@ function drawD1Page(ctx,W,H,acct,num,title,body){
  const bx=px,by=100,bw=W-px*2,bh=Math.round(H*0.60);
  roundRect(ctx,bx,by,bw,bh,16);
  ctx.fillStyle='rgba(255,255,255,0.96)';ctx.fill();
- // 標題
+ // 標題（置中）
  ctx.font='700 60px "Noto Serif TC",serif';
- ctx.fillStyle='#0e0e10';ctx.textAlign='left';
- let ty=wrapCanvasText(ctx,title||'',bx+56,by+80,bw-112,76);
+ ctx.fillStyle='#0e0e10';ctx.textAlign='center';
+ let ty=wrapCanvasTextCenter(ctx,title||'',W/2,by+80,bw-112,76);
  // 橫線
  ctx.strokeStyle='rgba(14,14,16,0.16)';ctx.lineWidth=2;
  ctx.beginPath();ctx.moveTo(bx+56,ty+16);ctx.lineTo(bx+bw-56,ty+16);ctx.stroke();
- // 正文
+ // 正文（置中）
  ctx.font='300 40px "Noto Serif TC",serif';
  ctx.fillStyle='rgba(14,14,16,0.78)';
- wrapCanvasText(ctx,body||'',bx+56,ty+60,bw-112,60);
+ wrapCanvasTextCenter(ctx,body||'',W/2,ty+60,bw-112,60);
 }
 function drawD1End(ctx,W,H,acct,title,body){
  ctx.fillStyle='#0e0e10';ctx.fillRect(0,0,W,H);
