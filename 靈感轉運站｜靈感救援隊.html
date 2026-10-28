@@ -1403,8 +1403,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,72);ctx.lineTo(W-px,72);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign='left';
-  ctx.fillText(acct||'@帳號',px,60);
+  ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');{const _aa=elA('acct','left');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,60);}
   // 大標題置中（白色 serif）
   ctx.font=elFont('title',108,'800');
   ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=elA('title',titleAlign||'center');
@@ -1414,8 +1413,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.beginPath();ctx.moveTo(cx-160,ty+8);ctx.lineTo(cx+160,ty+8);ctx.stroke();
   // 副標
   ctx.font=elFont('sub',44,'300');
-  ctx.fillStyle=elC('sub','rgba(255,255,255,0.65)');ctx.textAlign='center';
-  ctx.fillText(sub||'',cx,ty+68);
+  {const _sa=elA('sub','center');ctx.fillStyle=elC('sub','rgba(255,255,255,0.65)');ctx.textAlign=_sa;ctx.fillText(sub||'',_sa==='left'?px:_sa==='right'?W-px:cx,ty+68);}
   // 正文
   ctx.font=elFont('body',34,'400','"Noto Sans TC","PingFang TC",sans-serif');
   ctx.fillStyle='rgba(255,255,255,0.78)';
@@ -1426,8 +1424,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.textAlign='left';
-  ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');{const _aa=elA('acct','left');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.28)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
@@ -1471,8 +1468,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.strokeStyle='rgba(42,32,24,0.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(42,32,24,0.42)');ctx.textAlign='left';
-  ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.fillStyle=elC('acct','rgba(42,32,24,0.42)');{const _aa=elA('acct','left');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle='rgba(42,32,24,0.28)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
@@ -1494,8 +1490,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.fillStyle=th.grn||'#6b7c5e';ctx.fillText('◆',cx,ty+38);
   // 副標（問句）
   ctx.font=elFont('sub',44,'300');
-  ctx.fillStyle=elC('sub',th.sub);ctx.textAlign='center';
-  ctx.fillText(sub||'',cx,ty+98);
+  {const _sa=elA('sub','center');ctx.fillStyle=elC('sub',th.sub);ctx.textAlign=_sa;ctx.fillText(sub||'',_sa==='left'?px:_sa==='right'?W-px:cx,ty+98);}
   // 正文
   ctx.font=elFont('body',34,'400','"Noto Sans TC","PingFang TC",sans-serif');
   ctx.fillStyle=elC('body',th.body);
@@ -1505,8 +1500,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.strokeStyle='rgba(58,56,48,0.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(58,56,48,0.40)');ctx.textAlign='left';
-  ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.fillStyle=elC('acct','rgba(58,56,48,0.40)');{const _aa=elA('acct','left');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle='rgba(58,56,48,0.26)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
@@ -1544,7 +1538,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.45)');ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  ctx.fillStyle=elC('acct','rgba(255,255,255,0.45)');{const _aa=elA('acct','left');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle=th.pink;ctx.globalAlpha=0.60;ctx.fillText('往右滑 →',W-px,H-80);
   ctx.globalAlpha=1;ctx.textAlign='left';
   return;
@@ -1601,7 +1595,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
  ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.lineWidth=1;
  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
  ctx.font='400 26px "Noto Sans TC","PingFang TC",sans-serif';
- ctx.fillStyle='rgba(255,255,255,0.50)';ctx.textAlign='left';ctx.fillText(tag,px,H-80);
+ {const _aa=elA('acct','left');ctx.fillStyle='rgba(255,255,255,0.50)';ctx.textAlign=_aa;ctx.fillText(tag,_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.30)';ctx.fillText('往右滑 →',W-px,H-80);
  ctx.textAlign='left';
 }
@@ -1628,10 +1622,8 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,78);ctx.lineTo(W-px,78);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.35)');ctx.textAlign='left';
-  ctx.fillText(acct||'@帳號',px,65);
-  ctx.textAlign='right';ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');
-  ctx.fillText(num+' / '+total,W-px,65);ctx.textAlign='left';
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.35)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,65);}
+  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,65);}ctx.textAlign='left';
   // 標題置中（白色 serif，自動換行）
   ctx.font=elFont('title',82,'700');
   ctx.fillStyle=elC('title','#ffffff');ctx.textAlign=elA('title',titleAlign||'center');
@@ -1642,14 +1634,13 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   const bodyY_afei=Math.max(390,titleEndY_afei+40);
   const {fontSize:bfs_af,lineH:blh_af}=autoFitFontSize(ctx,body||'',W-px*2,bodyY_afei,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
   ctx.font='400 '+bfs_af+'px "Noto Serif TC","PingFang TC",serif';
-  ctx.fillStyle=elC('body',th.body);ctx.textAlign='center';
-  wrapCanvasText(ctx,body||'',cx,bodyY_afei,W-px*2,blh_af);
+  {const _ba=elA('body','center');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body||'',_ba==='left'?px:_ba==='right'?W-px:cx,bodyY_afei,W-px*2,blh_af);}
   ctx.textAlign='left';
   // 底欄
   ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.22)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
@@ -1661,8 +1652,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
   ctx.fillStyle='rgba(42,32,24,0.36)';ctx.textAlign='left';
   ctx.fillText('No.'+num,px,72);
-  ctx.textAlign='right';ctx.fillStyle=elC('acct','rgba(42,32,24,0.30)');
-  ctx.fillText(acct||'@帳號',W-px,72);ctx.textAlign='left';
+  {const _aa=elA('acct','right');ctx.textAlign=_aa;ctx.fillStyle=elC('acct','rgba(42,32,24,0.30)');ctx.fillText(acct||'@帳號',_aa==='left'?px:_aa==='center'?W/2:W-px,72);}ctx.textAlign='left';
   ctx.strokeStyle='rgba(42,32,24,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,90);ctx.lineTo(W-px,90);ctx.stroke();
   // 分類色塊標籤
@@ -1687,7 +1677,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.strokeStyle='rgba(42,32,24,0.08)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(42,32,24,0.38)');ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(42,32,24,0.38)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle='rgba(42,32,24,0.24)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
@@ -1700,10 +1690,8 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.strokeStyle='rgba(58,56,48,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,78);ctx.lineTo(W-px,78);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(58,56,48,0.32)');ctx.textAlign='left';
-  ctx.fillText(acct||'@帳號',px,65);
-  ctx.textAlign='right';ctx.fillStyle=elC('num','rgba(58,56,48,0.26)');
-  ctx.fillText(num+' / '+total,W-px,65);ctx.textAlign='left';
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(58,56,48,0.32)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,65);}
+  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(58,56,48,0.26)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,65);}ctx.textAlign='left';
   // 標題置中（深色 serif，自動換行）
   ctx.font=elFont('title',82,'700');
   ctx.fillStyle=elC('title',th.txt);ctx.textAlign=elA('title',titleAlign||'center');
@@ -1730,22 +1718,20 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
     ctx.arcTo(px,cy,px+r,cy,r);ctx.closePath();
     ctx.fillStyle='rgba(107,124,94,0.09)';ctx.fill();
     ctx.font='400 34px "Noto Serif TC","PingFang TC",serif';
-    ctx.fillStyle=elC('body',th.body);ctx.textAlign='center';
-    ctx.fillText(l.replace(/^[•\-]\s*/,''),cx,cy+48);
+    {const _ba=elA('body','center');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;ctx.fillText(l.replace(/^[•\-]\s*/,''),_ba==='left'?px:_ba==='right'?W-px:cx,cy+48);}
     cy+=cardH+12;
    }
   } else {
    const {fontSize:bfs_rm,lineH:blh_rm}=autoFitFontSize(ctx,body_rm,W-px*2,bodyY_rm,H-140,'400 44px "Noto Serif TC","PingFang TC",serif',44,26);
    ctx.font='400 '+bfs_rm+'px "Noto Serif TC","PingFang TC",serif';
-   ctx.fillStyle=elC('body',th.body);ctx.textAlign='center';
-   wrapCanvasText(ctx,body_rm,cx,bodyY_rm,W-px*2,blh_rm);
+   {const _ba=elA('body','center');ctx.fillStyle=elC('body',th.body);ctx.textAlign=_ba;wrapCanvasText(ctx,body_rm,_ba==='left'?px:_ba==='right'?W-px:cx,bodyY_rm,W-px*2,blh_rm);}
   }
   ctx.textAlign='left';
   // 底欄
   ctx.strokeStyle='rgba(58,56,48,0.08)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(58,56,48,0.36)');ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(58,56,48,0.36)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle='rgba(58,56,48,0.22)';ctx.fillText('往右滑 →',W-px,H-80);
   ctx.textAlign='left';
   return;
@@ -1765,8 +1751,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.fillText('# 感情',px,60);
   // 頁碼右上（小）
   ctx.font=elFont('num',32,'700','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.textAlign='right';
-  ctx.fillText(num+' / '+total,W-px,60);ctx.textAlign='left';
+  {const _na=elA('num','right');ctx.fillStyle=elC('num','rgba(255,255,255,0.30)');ctx.textAlign=_na;ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,60);}ctx.textAlign='left';
   // 分隔線（照片/文字界線）
   ctx.strokeStyle='rgba(232,130,154,0.20)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,splitY);ctx.lineTo(W-px,splitY);ctx.stroke();
@@ -1776,8 +1761,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   const tEndY_by=wrapCanvasText(ctx,title||'',(titleAlign==='center'?W/2:titleAlign==='right'?W-px:px),splitY-210+titleYOff,W-px*2,104);
   // 帳號（小字，在圖片上）
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.40)');ctx.textAlign='right';
-  ctx.fillText(acct||'@帳號',W-px,splitY-14);ctx.textAlign='left';
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.40)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,splitY-14);}ctx.textAlign='left';
   // 下半文字區塊（深色背景）
   const textBoxG=ctx.createLinearGradient(0,splitY,0,H);
   textBoxG.addColorStop(0,'rgba(16,10,14,0.92)');textBoxG.addColorStop(1,'rgba(10,6,10,0.98)');
@@ -1793,7 +1777,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.strokeStyle='rgba(232,130,154,0.18)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+  {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
   ctx.textAlign='right';ctx.fillStyle=th.pink;ctx.globalAlpha=0.55;ctx.fillText('>>> ',W-px,H-80);
   ctx.globalAlpha=1;ctx.textAlign='left';
   return;
@@ -1806,8 +1790,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
   ctx.fillStyle='rgba(255,255,255,0.40)';ctx.textAlign='left';
   ctx.fillText('# 慢熟女子備忘錄',px,60);
   // 頁碼右上
-  ctx.textAlign='right';ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');
-  ctx.fillText(num+' / '+total,W-px,60);ctx.textAlign='left';
+  {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,60);}ctx.textAlign='left';
   // 細線
   ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,76);ctx.lineTo(W-px,76);ctx.stroke();
@@ -1842,14 +1825,11 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  // dinero 內頁：深暗底，左上帳號，大白字靠左，底欄頁碼
  // 頁碼大背景字（電影感）
  ctx.font=elFont('title',220,'900');
- ctx.fillStyle=elC('num','rgba(255,255,255,0.03)');ctx.textAlign='right';
- ctx.fillText(num,W-px,H*0.88);ctx.textAlign='left';
+ {const _na=elA('num','right');ctx.fillStyle=elC('num','rgba(255,255,255,0.03)');ctx.textAlign=_na;ctx.fillText(num,_na==='left'?px:_na==='center'?W/2:W-px,H*0.88);}ctx.textAlign='left';
  // 頂部帳號+橫線
  ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.35)');ctx.textAlign='left';
- ctx.fillText(acct||'@帳號',px,68);
- ctx.textAlign='right';ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');
- ctx.fillText(num+' / '+total,W-px,68);ctx.textAlign='left';
+ {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.35)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,68);}
+ {const _na=elA('num','right');ctx.textAlign=_na;ctx.fillStyle=elC('num','rgba(255,255,255,0.28)');ctx.fillText(num+' / '+total,_na==='left'?px:_na==='center'?W/2:W-px,68);}ctx.textAlign='left';
  ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
  ctx.beginPath();ctx.moveTo(px,84);ctx.lineTo(W-px,84);ctx.stroke();
  // 標題靠左（白色大 serif，自動換行）
@@ -1868,7 +1848,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  ctx.strokeStyle='rgba(255,255,255,0.10)';ctx.lineWidth=1;
  ctx.beginPath();ctx.moveTo(px,H-118);ctx.lineTo(W-px,H-118);ctx.stroke();
  ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.textAlign='left';ctx.fillText(acct||'@帳號',px,H-80);
+ {const _aa=elA('acct','left');ctx.fillStyle=elC('acct','rgba(255,255,255,0.42)');ctx.textAlign=_aa;ctx.fillText(acct||'@帳號',_aa==='right'?W-px:_aa==='center'?W/2:px,H-80);}
  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.26)';ctx.fillText('往右滑 →',W-px,H-80);
  ctx.textAlign='left';
 }
