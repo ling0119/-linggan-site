@@ -3621,15 +3621,15 @@ function render(){
    <!-- 橫滑大卡 -->
    <div class="cstyle-row">
     ${[
-     {k:'d1',label:'斜切文字牆',desc:'深黑・白框',bg:'cbg-d1',dark:true},
-     {k:'d2',label:'左側色帶',desc:'深灰・紅漸層',bg:'cbg-d2',dark:true},
-     {k:'d4',label:'底部橫帶',desc:'淡頂・深底帶',bg:'cbg-d4',dark:false},
-     {k:'c3',label:'超大頁碼',desc:'白底・透明數字',bg:'cbg-c3',dark:false},
-     {k:'c4',label:'橫向三段',desc:'三色橫切',bg:'cbg-c4',dark:true},
-     {k:'a3',label:'焦糖奶茶',desc:'暖棕・毛玻璃卡',bg:'cbg-a3',dark:false},
-     {k:'a6',label:'煤灰磚紅',desc:'深炭・磚紅',bg:'cbg-a6',dark:true},
-     {k:'h2',label:'粉彩水彩',desc:'粉彩暈染・白卡',bg:'cbg-h2',dark:false},
-     {k:'i1',label:'漸層文字',desc:'深底・漸層標題',bg:'cbg-i1',dark:true},
+     {k:'d1',label:'斜切文字牆',desc:'',bg:'cbg-d1',dark:true},
+     {k:'d2',label:'左側色帶',desc:'',bg:'cbg-d2',dark:true},
+     {k:'d4',label:'底部橫帶',desc:'',bg:'cbg-d4',dark:false},
+     {k:'c3',label:'超大頁碼',desc:'',bg:'cbg-c3',dark:false},
+     {k:'c4',label:'三段橫切',desc:'',bg:'cbg-c4',dark:true},
+     {k:'a3',label:'焦糖奶茶',desc:'',bg:'cbg-a3',dark:false},
+     {k:'a6',label:'磚紅側帶',desc:'',bg:'cbg-a6',dark:true},
+     {k:'h2',label:'粉彩水彩',desc:'',bg:'cbg-h2',dark:false},
+     {k:'i1',label:'漸層文字',desc:'',bg:'cbg-i1',dark:true},
     ].map(({k,label,desc,bg,dark})=>{
      const on=(A._canvasStyle||'d1')===k;
      return `<button type="button" class="cstyle-card canvas-style-btn${on?' csc-on':''}" data-cstyle="${k}">
@@ -3642,7 +3642,6 @@ function render(){
       </div>
       <div class="cstyle-foot">
        <div class="cstyle-name">${label}</div>
-       <div class="cstyle-desc">${desc}</div>
       </div>
      </button>`;
     }).join('')}
@@ -3819,13 +3818,16 @@ function render(){
  if(Q[S.i]&&Q[S.i].canvas){
   requestAnimationFrame(()=>{
    renderStyleThumbs();
-   drawStylePreview(A._canvasStyle||'d1');
-   buildTweakPanel(A._canvasStyle||'d1');
   });
   requestAnimationFrame(()=>{
    buildFilmStrip();
    const inp=document.getElementById('bgImgAllInput');
    if(inp&&!inp._bound){inp._bound=true;inp.onchange=(e)=>{if(e.target.files[0])loadBgImgFile(e.target.files[0],-1);};}
+   // 初次進入時畫預覽（延後確保 DOM 穩定）
+   setTimeout(()=>{
+    drawStylePreview(A._canvasStyle||'d1');
+    buildTweakPanel(A._canvasStyle||'d1');
+   },0);
   });
  }
 
@@ -4067,11 +4069,11 @@ app.addEventListener('click',e=>{
  // Canvas 風格選擇
  if(t.classList.contains('canvas-style-btn')){
   A._canvasStyle=t.dataset.cstyle;save();render();
-  // render() 會重建 DOM，之後補畫預覽和微調面板
-  requestAnimationFrame(()=>{
+  // render() 會重建 DOM，用 setTimeout 確保 DOM 穩定後再畫
+  setTimeout(()=>{
    drawStylePreview(A._canvasStyle);
    buildTweakPanel(A._canvasStyle);
-  });
+  },0);
   return;
  }
  // Canvas 出圖
