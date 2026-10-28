@@ -1402,8 +1402,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   // 大標題置中（白色 serif）
   ctx.font='800 108px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  const tlines=(title||'').split('\n');let ty=H*0.40;
-  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=130;}
+  let ty=wrapCanvasText(ctx,title||'',cx,H*0.40,W-px*2,130);
   // 細橫線
   ctx.strokeStyle='rgba(255,255,255,0.22)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(cx-160,ty+8);ctx.lineTo(cx+160,ty+8);ctx.stroke();
@@ -1442,11 +1441,13 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   // 大標題靠左（深色）
   ctx.font='800 104px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.txt;ctx.textAlign='left';
-  const tlines=(title||'').split('\n');let ty=H*0.38;
-  for(const l of tlines){
+  // 先拆行（含自動換行）
+  const _maxTW=W-px*2;const _tRaw=(title||'').split('\n');const tlines=[];
+  for(const _rl of _tRaw){const _chars=_rl.split('');let _cur='';for(const _c of _chars){const _t=_cur+_c;if(ctx.measureText(_t).width>_maxTW&&_cur){tlines.push(_cur);_cur=_c;}else _cur=_t;}if(_cur)tlines.push(_cur);}
+  let ty=H*0.38;
+  for(let _li=0;_li<tlines.length;_li++){const l=tlines[_li];
    // 最後一行加粉色底highlight
-   const nextTy=ty+128;
-   if(tlines.indexOf(l)===tlines.length-1&&l){
+   if(_li===tlines.length-1&&l){
     const tw=ctx.measureText(l).width;
     ctx.fillStyle=th.hl;ctx.globalAlpha=0.25;
     ctx.fillRect(px-8,ty-90,tw+16,108);ctx.globalAlpha=1;
@@ -1481,8 +1482,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   // 大標題置中（深色 serif）
   ctx.font='700 100px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle=th.txt;ctx.textAlign='center';
-  const tlines=(title||'').split('\n');let ty=H*0.38;
-  for(const l of tlines){ctx.fillText(l,cx,ty);ty+=122;}
+  let ty=wrapCanvasText(ctx,title||'',cx,H*0.38,W-px*2,122);
   // 菱形 ◆ 分隔
   ctx.font='28px "Noto Sans TC",sans-serif';
   ctx.fillStyle=th.grn||'#6b7c5e';ctx.fillText('◆',cx,ty+38);
@@ -1522,8 +1522,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   // 大標題（白色超粗 serif，靠左偏下）
   ctx.font='900 108px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='#ffffff';ctx.textAlign='left';
-  const tlines=(title||'').split('\n');let ty=H*0.50;
-  for(const l of tlines){ctx.fillText(l,px,ty);ty+=130;}
+  let ty=wrapCanvasText(ctx,title||'',px,H*0.50,W-px*2,130);
   // 粉紅色副標（小字）
   ctx.font='500 38px "Noto Sans TC","PingFang TC",sans-serif';
   ctx.fillStyle=th.pink;
@@ -1554,8 +1553,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
   // 大標題靠左（白色粗 serif）
   ctx.font='800 104px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='#ffffff';ctx.textAlign='left';
-  const tlines=(title||'').split('\n');let ty=H*0.42;
-  for(const l of tlines){ctx.fillText(l,px,ty);ty+=126;}
+  let ty=wrapCanvasText(ctx,title||'',px,H*0.42,W-px*2,126);
   // 短詩意描述（小字，左對齊，行距寬）
   ctx.font='300 36px "Noto Serif TC","PingFang TC",serif';
   ctx.fillStyle='rgba(255,255,255,0.72)';
@@ -1582,8 +1580,7 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
  // 大標題（靠左下，白色粗 serif）
  ctx.font='900 110px "Noto Serif TC","PingFang TC",serif';
  ctx.fillStyle=th.txt;
- const tlines=(title||'').split('\n');let ty=H*0.44;
- for(const l of tlines){ctx.fillText(l,px,ty);ty+=132;}
+ let ty=wrapCanvasText(ctx,title||'',px,H*0.44,W-px*2,132);
  // 橫線
  ctx.strokeStyle='rgba(255,255,255,0.28)';ctx.lineWidth=1.5;
  ctx.beginPath();ctx.moveTo(px,ty+6);ctx.lineTo(px+380,ty+6);ctx.stroke();
@@ -2255,24 +2252,38 @@ function buildFilmStrip(){
   <div class="film-holes-b">${holes}</div>
   <div class="film-foot">
    <div class="film-foot-l">已上傳 <strong>${cnt} / ${n}</strong> 張</div>
-   <div class="film-foot-r">← 左右滑動</div>
+   <div class="film-foot-r" style="display:flex;gap:8px;align-items:center">
+    ${cnt>0?`<button type="button" id="filmClearAll" style="font-size:11px;padding:3px 9px;border-radius:6px;background:transparent;border:1px solid var(--line);color:var(--muted);cursor:pointer">全部清除</button>`:''}
+    <span>← 左右滑動</span>
+   </div>
   </div>
  </div>`;
+ // 綁「全部清除」
+ const clearAllBtn=wrap.querySelector('#filmClearAll');
+ if(clearAllBtn)clearAllBtn.addEventListener('click',()=>clearBgImg(-1));
  // 綁點擊：每格 → 觸發 file input
  wrap.querySelectorAll('.film-frame').forEach(fr=>{
+  const idx=parseInt(fr.dataset.fidx,10);
+  // 已上傳的格子：顯示 ✕ 清除 overlay
+  if(A._bgImages&&A._bgImages[idx]){
+   const clrO=document.createElement('button');
+   clrO.type='button';clrO.textContent='✕';
+   clrO.title='清除照片';
+   clrO.style.cssText='position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;border:none;background:rgba(0,0,0,0.55);color:#fff;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;padding:0';
+   const fi=fr.querySelector('.frame-img');
+   if(fi){fi.style.position='relative';fi.appendChild(clrO);}
+   clrO.addEventListener('click',(e)=>{e.stopPropagation();clearBgImg(idx);});
+  }
   fr.addEventListener('click',()=>{
-   const idx=parseInt(fr.dataset.fidx,10);
-   // 若已上傳，長按才清除；短按觸發上傳
    const inp=document.createElement('input');
    inp.type='file';inp.accept='image/*';inp.style.display='none';
    inp.onchange=(e)=>{if(e.target.files[0]){loadBgImgFile(e.target.files[0],idx);}inp.remove();};
    document.body.appendChild(inp);
    inp.click();
   });
-  // 右鍵 / 長按 清除
+  // 右鍵 / 長按 清除（保留）
   fr.addEventListener('contextmenu',(e)=>{
    e.preventDefault();
-   const idx=parseInt(fr.dataset.fidx,10);
    if(A._bgImages&&A._bgImages[idx]){clearBgImg(idx);}
   });
  });
