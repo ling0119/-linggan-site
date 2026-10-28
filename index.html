@@ -2381,6 +2381,14 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  if(!A._slideTweak)A._slideTweak={};
  const tw=A._slideTweak[slideIdx]||{};
  const baseTh=getTheme(styleKey);
+ // iOS-safe tap: fires on touchend (no scroll drift) and falls back to click
+ const onTap=(el,fn)=>{
+  let _tStart={x:0,y:0},_moved=false;
+  el.addEventListener('touchstart',e=>{_tStart={x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};_moved=false;},{passive:true});
+  el.addEventListener('touchmove',e=>{const dx=e.changedTouches[0].clientX-_tStart.x,dy=e.changedTouches[0].clientY-_tStart.y;if(Math.abs(dx)>6||Math.abs(dy)>6)_moved=true;},{passive:true});
+  el.addEventListener('touchend',e=>{if(!_moved){e.preventDefault();fn(e);}},{passive:false});
+  el.addEventListener('click',e=>{if(!('ontouchstart' in window))fn(e);});
+ };
  const isDark=['dinero','afei','babyou','faydea'].includes(styleKey);
  const toHex=c=>{if(!c)return'#ffffff';if(c.startsWith('#'))return c;const m=c.match(/[\d.]+/g)||[];return'#'+[m[0],m[1],m[2]].map(n=>parseInt(n).toString(16).padStart(2,'0')).join('');};
  const sldr=(key,val,min,max,step)=>{const isFloat=step<1;const disp=isFloat?parseFloat(val).toFixed(2):Math.round(val);return`<div style="display:flex;align-items:center;gap:5px;flex:1"><input type="range" data-stw="${key}" min="${min}" max="${max}" step="${step}" value="${val}" style="flex:1;accent-color:#9060c8"><span id="stw_lbl_${slideIdx}_${key}" style="font-size:11px;color:#8a7860;min-width:32px;text-align:right">${disp}</span></div>`;};
@@ -2389,7 +2397,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  if(!document.getElementById('stw-panel-style')){
   const s=document.createElement('style');s.id='stw-panel-style';
   s.textContent=`
-   .stw-panel{background:#fff;border:1px solid rgba(100,70,30,.1);border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(80,50,20,.08);display:flex;flex-direction:column}
+   .stw-panel{background:#fff;border:1px solid rgba(100,70,30,.1);border-radius:18px;overflow:visible;box-shadow:0 4px 24px rgba(80,50,20,.08);display:flex;flex-direction:column;isolation:isolate}
    .stw-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;border-bottom:1px solid rgba(100,70,30,.08);background:#fff}
    .stw-panel-title{font-size:13px;font-weight:700;color:#2a1808}
    .stw-panel-reset{font-size:11px;padding:3px 10px;border-radius:20px;border:none;background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;cursor:pointer;font-family:inherit}
@@ -2399,12 +2407,12 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    .stw-el-hint{font-size:11px;color:#a09080;margin-right:4px}
    .stw-el-arr{font-size:10px;color:#b0a090;transition:transform .15s;flex-shrink:0}
    .stw-el-arr.open{transform:rotate(90deg)}
-   .stw-el-body{background:#faf8f5;padding:12px 14px 14px;border-bottom:1px solid rgba(100,70,30,.07);display:flex;flex-direction:column;gap:10px}
-   .stw-ctrl-row{display:flex;align-items:center;gap:8px}
+   .stw-el-body{background:#faf8f5;padding:12px 14px 14px;border-bottom:1px solid rgba(100,70,30,.07);display:flex;flex-direction:column;gap:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+   .stw-ctrl-row{display:flex;align-items:center;gap:8px;touch-action:manipulation}
    .stw-lbl{font-size:11px;color:#8a7860;width:28px;flex-shrink:0}
    .stw-sel{flex:1;font-size:12px;font-family:inherit;background:#f2ede6;color:#2a1808;border:1px solid rgba(100,70,30,.15);border-radius:8px;padding:6px 22px 6px 8px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a7860'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;touch-action:manipulation}
    .stw-sel:focus{outline:none;border-color:#9060c8}
-   .stw-seg{display:flex;background:#f2ede6;border-radius:8px;padding:2px;gap:2px;flex:1}
+   .stw-seg{display:flex;background:#f2ede6;border-radius:8px;padding:2px;gap:2px;flex:1;touch-action:manipulation}
    .stw-seg span,.stw-seg button{flex:1;text-align:center;font-size:11px;padding:6px 0;border-radius:6px;cursor:pointer;color:#8a7860;transition:background .12s,color .12s;user-select:none;-webkit-user-select:none;touch-action:manipulation;border:none;background:transparent;font-family:inherit;-webkit-tap-highlight-color:rgba(144,96,200,.15)}
    .stw-seg span.on,.stw-seg button.on{background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;font-weight:700}
    .stw-color-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -2484,7 +2492,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   layoutBody.appendChild(r3);
  }
  panel.appendChild(layoutBody);
- layoutRow.addEventListener('click',()=>{
+ onTap(layoutRow,()=>{
   const open=layoutBody.style.display!=='none';
   layoutBody.style.display=open?'none':'flex';
   layoutArr.classList.toggle('open',!open);
@@ -2551,7 +2559,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   [['300','細'],['400','常'],['600','中'],['700','粗'],['900','黑']].forEach(([v,t])=>{
    const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
    if(v===curW)sp.classList.add('on');
-   sp.addEventListener('click',()=>{
+   onTap(sp,()=>{
     seg.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
     A._slideTweak[slideIdx][`el_${ek}_weight`]=v;save();redrawCb();updateHint();
@@ -2567,7 +2575,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   [['default','預設'],['left','左'],['center','中'],['right','右']].forEach(([v,t])=>{
    const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
    if(v===curA)sp.classList.add('on');
-   sp.addEventListener('click',()=>{
+   onTap(sp,()=>{
     segA.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
     A._slideTweak[slideIdx][`el_${ek}_align`]=v;save();redrawCb();
@@ -2592,7 +2600,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    sw.style.background=hex;sw.dataset.swVal=hex;
    if(hex==='#ffffff')sw.style.borderColor='#d0c8b8';
    if(hex===toHex(curC))sw.classList.add('on');
-   sw.addEventListener('click',()=>applyColor(hex));
+   onTap(sw,()=>applyColor(hex));
    colorRow.appendChild(sw);
   });
   // custom color
@@ -2643,7 +2651,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    }
   });
 
-  elRow.addEventListener('click',()=>{
+  onTap(elRow,()=>{
    const open=body.style.display!=='none';
    body.style.display=open?'none':'flex';
    arr.classList.toggle('open',!open);
@@ -2664,9 +2672,8 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  });
 
  // reset
- panel.querySelector(`[data-stw-reset="${slideIdx}"]`)?.addEventListener('click',()=>{
-  delete A._slideTweak[slideIdx];save();redrawCb(true);
- });
+ const resetEl=panel.querySelector(`[data-stw-reset="${slideIdx}"]`);
+ if(resetEl)onTap(resetEl,()=>{delete A._slideTweak[slideIdx];save();redrawCb(true);});
 
  return panel;
 }
