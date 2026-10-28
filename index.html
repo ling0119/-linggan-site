@@ -2150,17 +2150,17 @@ function drawStylePreview(styleKey){
   const imgs=A._bgImages||[];
   return imgs[i]||imgs[0]||null;
  };
- // 建立全部張的 draw 描述
+ // 建立全部張的 draw 描述（draw 接受可選 thOv 讓 lightbox 用 getSlideTheme）
  const slides=pages.map((p,i)=>{
   const bg=getBg(i);
   if(i===0){
-   return {label:'封面',draw:(ctx)=>drawCanvasCover(ctx,W,H,th,acct,p.title||'你的標題',p.sub||'探索靈感的方式',p.body||'往右滑，看看怎麼開始 →',bg)};
+   return {label:'封面',draw:(ctx,thOv)=>drawCanvasCover(ctx,W,H,thOv||th,acct,p.title||'你的標題',p.sub||'探索靈感的方式',p.body||'往右滑，看看怎麼開始 →',bg)};
   }
   if(p.isEnd||i===n-1){
-   return {label:'結尾頁',draw:(ctx)=>drawCanvasEndPage(ctx,W,H,th,acct,p.title,p.body,bg)};
+   return {label:'結尾頁',draw:(ctx,thOv)=>drawCanvasEndPage(ctx,W,H,thOv||th,acct,p.title,p.body,bg)};
   }
   const num=String(i).padStart(2,'0');
-  return {label:'第 '+(i+1)+' 張',draw:(ctx)=>drawCanvasPage(ctx,W,H,th,acct,num,p.title,p.body,totalLabel,bg)};
+  return {label:'第 '+(i+1)+' 張',draw:(ctx,thOv)=>drawCanvasPage(ctx,W,H,thOv||th,acct,num,p.title,p.body,totalLabel,bg)};
  });
 
  const buildSlides=()=>{
@@ -2178,14 +2178,54 @@ function drawStylePreview(styleKey){
    canvas.style.cssText=`width:${cw}px;height:${ch}px;border-radius:10px;cursor:zoom-in;box-shadow:0 4px 16px rgba(0,0,0,0.28);display:block`;
    const ctx=canvas.getContext('2d');
    sl.draw(ctx);
-   canvas.title='點擊放大預覽';
+   canvas.title='點擊放大＋微調';
    canvas.onclick=()=>{
-    const url=canvas.toDataURL('image/png');
+    // 取得目前 canvasSlides 對應的 makeSlide slideIdx
+    const lbSlideIdx=idx; // filmstrip idx == slide idx
+    const style=A._canvasStyle||'dinero';
+    // overlay
     const ov=document.createElement('div');
-    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
-    const img=document.createElement('img');
-    img.src=url;img.style.cssText='max-width:92vw;max-height:92vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.6)';
-    ov.appendChild(img);ov.onclick=()=>ov.remove();
+    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:stretch;justify-content:center;overflow:hidden';
+    // 左：大圖
+    const left=document.createElement('div');
+    left.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0;overflow:hidden';
+    const bigCanvas=document.createElement('canvas');
+    bigCanvas.width=1080;bigCanvas.height=1350;
+    const scaleH=window.innerHeight*0.9/1350;
+    const scaleW=(window.innerWidth*0.6)/1080;
+    const sc=Math.min(scaleH,scaleW);
+    bigCanvas.style.cssText=`width:${Math.round(1080*sc)}px;height:${Math.round(1350*sc)}px;border-radius:12px;display:block;box-shadow:0 8px 40px rgba(0,0,0,0.6)`;
+    // draw
+    const drawBig=()=>{
+     const th2=getSlideTheme(lbSlideIdx,style);
+     const c2=bigCanvas.getContext('2d');
+     c2.clearRect(0,0,1080,1350);
+     sl.draw(c2,th2);
+    };
+    drawBig();
+    left.appendChild(bigCanvas);
+    // 右：微調面板
+    const right=document.createElement('div');
+    right.style.cssText='width:260px;flex:0 0 260px;overflow-y:auto;padding:16px 12px;background:var(--bg);display:flex;flex-direction:column;gap:10px;box-shadow:-4px 0 20px rgba(0,0,0,0.3)';
+    const closeBtn=document.createElement('button');
+    closeBtn.textContent='✕ 關閉';
+    closeBtn.style.cssText='font:inherit;font-size:13px;border:none;background:transparent;color:var(--muted);cursor:pointer;text-align:left;padding:0;margin-bottom:4px';
+    closeBtn.onclick=()=>ov.remove();
+    const dlBtn2=document.createElement('button');
+    dlBtn2.textContent='⬇ 下載此頁';
+    dlBtn2.style.cssText='font:inherit;font-size:13px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px;cursor:pointer';
+    dlBtn2.onclick=()=>{const a=document.createElement('a');a.href=bigCanvas.toDataURL('image/png');a.download=`slide_${lbSlideIdx+1}.png`;a.click();};
+    const tweakPanel=buildSlideTweakPanel(lbSlideIdx,style,()=>{
+     drawBig();
+     // 同步更新膠捲縮圖
+     const th3=getSlideTheme(lbSlideIdx,style);
+     const ctx3=canvas.getContext('2d');
+     ctx3.clearRect(0,0,W,H);
+     sl.draw(ctx3,th3);
+    });
+    right.append(closeBtn,dlBtn2,tweakPanel);
+    ov.append(left,right);
+    ov.addEventListener('click',(e)=>{if(e.target===ov)ov.remove();});
     document.body.appendChild(ov);
    };
    const hint=document.createElement('div');
