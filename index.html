@@ -1148,7 +1148,7 @@ ${v('take','請從故事裡幫我提煉一句，要讓人有共鳴、想截圖�
 2. 我挑完後，寫完整文案，共 ${n} 個段落，每段落 2–4 行短句。
    ⚠️ 每一張圖一個段落，段落之間空一行。每段格式如下（請嚴格照用這三個標籤，不要改格式）：
    [標題] 封面標題（一句話，20 字內）
-   [副標] 副標（可省略，省略就不寫這行）
+   [副標] 副標（必填，10 字內，呼應標題或補充說明）
    [內文] 這張圖的內文（2–4 行短句，每行結尾有標點）
 3. 結尾一句互動邀請。`;
 }
@@ -2916,7 +2916,7 @@ function render(){
   <div style="margin:12px 0 8px">
    <p style="font-size:13px;color:var(--muted);margin:0 0 6px">💬 把整份文案貼進來，自動分張 + 即時預覽：</p>
    <div style="position:relative">
-    <textarea id="pasteArea" rows="6" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="[標題] 封面標題&#10;[副標] 副標（可省略）&#10;[內文] 封面引言…&#10;&#10;[標題] 第二張標題&#10;[內文] 第二張內文…">${esc(A._paste||'')}</textarea>
+    <textarea id="pasteArea" rows="6" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="[標題] 封面標題&#10;[副標] 副標（必填）&#10;[內文] 封面引言…&#10;&#10;[標題] 第二張標題&#10;[內文] 第二張內文…">${esc(A._paste||'')}</textarea>
     <div id="pasteParsingIndicator" style="display:none;position:absolute;right:12px;bottom:12px;font-size:12px;color:var(--accent);font-weight:600;pointer-events:none">⚡ 分張中…</div>
    </div>
    <div id="pasteOverwriteWarn" style="display:none;margin-top:6px;padding:6px 12px;background:rgba(220,100,30,0.1);border:1px solid rgba(220,100,30,0.3);border-radius:8px;font-size:12px;color:#c06020">⚠️ 已覆蓋原本手動填寫的內容</div>
