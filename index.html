@@ -1644,9 +1644,9 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  if(layout==='chiao'){
   // chiao 內頁：米白底，頂部分類標籤，標題靠左，正文
   // 頂部分類標籤（小字）
+  ctx.font=elFont('num',26,'700','"Noto Sans TC","PingFang TC",sans-serif');
+  {const _na=elA('num','left');ctx.fillStyle=elC('num','rgba(42,32,24,0.36)');ctx.textAlign=_na;ctx.fillText('No.'+num,_na==='right'?W-px:_na==='center'?W/2:px,72);}
   ctx.font=elFont('acct',26,'400','"Noto Sans TC","PingFang TC",sans-serif');
-  ctx.fillStyle='rgba(42,32,24,0.36)';ctx.textAlign='left';
-  ctx.fillText('No.'+num,px,72);
   {const _aa=elA('acct','right');ctx.textAlign=_aa;ctx.fillStyle=elC('acct','rgba(42,32,24,0.30)');ctx.fillText(acct||'@帳號',_aa==='left'?px:_aa==='center'?W/2:W-px,72);}ctx.textAlign='left';
   ctx.strokeStyle='rgba(42,32,24,0.10)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(px,90);ctx.lineTo(W-px,90);ctx.stroke();
@@ -2463,15 +2463,23 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  // ── 元素列 ──
  const PRESET_COLORS=['#ffffff','#f0c060','#e8829a','#9060c8'];
  const dotColors={title:'linear-gradient(135deg,#9060c8,#c880e8)',sub:'#5890c0',body:'#60a870',acct:'#c07858',num:'#c8a060'};
+ // defA: 該元素在這個版型的預設對齊方向
+ const isLR=['dinero','babyou','faydea'].includes(styleKey);
+ const isCtr=['afei','remind'].includes(styleKey);
+ const titleDefA=isCtr?'center':'left';
+ const subDefA=isCtr?'center':(isLR?'left':'center');
+ const bodyDefA=isCtr?'center':(isLR?'left':'center');
+ const acctDefA=styleKey==='chiao'?'right':(styleKey==='faydea'?'right':'left');
+ const numDefA=styleKey==='chiao'?'left':'right';
  const elements=[
-  {ek:'title',label:'標題',defSize:defTitleSize,defW:defTitleW,defF:'serif',defC:defTitleColor},
-  {ek:'sub',  label:'副標',defSize:defSubSize,  defW:'300',   defF:'serif',defC:defSubColor},
-  {ek:'body', label:'內文',defSize:defBodySize, defW:'400',   defF:'sans', defC:defBodyColor},
-  {ek:'acct', label:'帳號',defSize:defAcctSize, defW:'400',   defF:'sans', defC:defAcctColor},
-  {ek:'num',  label:'小標',defSize:defNumSize,  defW:'700',   defF:'sans', defC:defNumColor},
+  {ek:'title',label:'標題',defSize:defTitleSize,defW:defTitleW,defF:'serif',defC:defTitleColor,defA:titleDefA},
+  {ek:'sub',  label:'副標',defSize:defSubSize,  defW:'300',   defF:'serif',defC:defSubColor,  defA:subDefA},
+  {ek:'body', label:'內文',defSize:defBodySize, defW:'400',   defF:'sans', defC:defBodyColor, defA:bodyDefA},
+  {ek:'acct', label:'帳號',defSize:defAcctSize, defW:'400',   defF:'sans', defC:defAcctColor, defA:acctDefA},
+  {ek:'num',  label:'小標',defSize:defNumSize,  defW:'700',   defF:'sans', defC:defNumColor,  defA:numDefA},
  ];
 
- elements.forEach(({ek,label,defSize,defW,defF,defC})=>{
+ elements.forEach(({ek,label,defSize,defW,defF,defC,defA})=>{
   const curSize=tw[`el_${ek}_size`]!=null?tw[`el_${ek}_size`]:defSize;
   const curW=tw[`el_${ek}_weight`]||defW;
   const curF=tw[`el_${ek}_family`]||defF;
@@ -2534,7 +2542,8 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   const rA=document.createElement('div');rA.className='stw-ctrl-row';
   const lA=document.createElement('span');lA.className='stw-lbl';lA.textContent='對齊';
   const segA=document.createElement('div');segA.className='stw-seg';
-  [['default','預設'],['left','左'],['center','中'],['right','右']].forEach(([v,t])=>{
+  const aLabel={'left':'左','center':'中','right':'右'};
+  [['default',`預設(${aLabel[defA]||defA})`],['left','左'],['center','中'],['right','右']].forEach(([v,t])=>{
    const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
    if(v===curA)sp.classList.add('on');
    onTap(sp,()=>{
