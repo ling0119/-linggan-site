@@ -2241,6 +2241,16 @@ function drawStylePreview(styleKey){
     const slideLabel=document.createElement('div');
     slideLabel.style.cssText='font-size:40px;font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:2px';
 
+    // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
+    const drawBig=()=>{
+     const curSlide=canvasSlides[lbSlideIdx];
+     const th2=getSlideTheme(lbSlideIdx,style);
+     const c2=bigCanvas.getContext('2d');
+     c2.clearRect(0,0,1080,1350);
+     curSlide.draw(c2,th2);
+    };
+    drawBig();
+
     // 重新渲染面板函式（供 prev/next 使用）
     const renderPanel=(newIdx)=>{
      lbSlideIdx=newIdx;
@@ -2262,16 +2272,6 @@ function drawStylePreview(styleKey){
      if(existBg2&&existBg2.src){bgThumb.src=existBg2.src;bgThumb.style.display='block';bgClearBtn.style.display='';}
      else{bgThumb.style.display='none';bgClearBtn.style.display='none';}
     };
-
-    // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
-    const drawBig=()=>{
-     const curSlide=canvasSlides[lbSlideIdx];
-     const th2=getSlideTheme(lbSlideIdx,style);
-     const c2=bigCanvas.getContext('2d');
-     c2.clearRect(0,0,1080,1350);
-     curSlide.draw(c2,th2);
-    };
-    drawBig();
 
     // 左右箭頭 — fixed 在畫面上，不受任何容器 overflow 影響
     const arrowBase=`position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:none;color:#fff;font-size:28px;line-height:1;width:44px;height:64px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10001;transition:background .15s,opacity .15s;user-select:none;-webkit-user-select:none;touch-action:manipulation`;
@@ -2334,10 +2334,11 @@ function drawStylePreview(styleKey){
     bgThumb.style.cssText='width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:none';
     const redrawAll=()=>{
      drawBig();
+     // 同步更新膠捲縮圖（用目前 lbSlideIdx 對應的 slide）
      const th3=getSlideTheme(lbSlideIdx,style);
      const ctx3=canvas.getContext('2d');
      ctx3.clearRect(0,0,W,H);
-     sl.draw(ctx3,th3);
+     canvasSlides[lbSlideIdx].draw(ctx3,th3);
     };
     bgBtn.onclick=()=>bgFileInput.click();
     bgFileInput.onchange=(e)=>{
@@ -2374,7 +2375,7 @@ function drawStylePreview(styleKey){
      const th3=getSlideTheme(lbSlideIdx,style);
      const ctx3=canvas.getContext('2d');
      ctx3.clearRect(0,0,W,H);
-     sl.draw(ctx3,th3);
+     canvasSlides[lbSlideIdx].draw(ctx3,th3);
     },sl.type||'page');
     tweakHolder.appendChild(tweakPanel);
     slideLabel.textContent=String(lbSlideIdx+1).padStart(2,'0');
