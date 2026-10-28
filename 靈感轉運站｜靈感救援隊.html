@@ -2393,7 +2393,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    .stw-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;border-bottom:1px solid rgba(100,70,30,.08);background:#fff}
    .stw-panel-title{font-size:13px;font-weight:700;color:#2a1808}
    .stw-panel-reset{font-size:11px;padding:3px 10px;border-radius:20px;border:none;background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;cursor:pointer;font-family:inherit}
-   .stw-el-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid rgba(100,70,30,.06);cursor:pointer;background:#fff;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+   .stw-el-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid rgba(100,70,30,.06);cursor:pointer;background:#fff;user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:rgba(144,96,200,.15);border-left:none;border-right:none;border-top:none;border-radius:0;font-family:inherit;width:100%;text-align:left}
    .stw-el-dot{width:7px;height:7px;border-radius:50%;margin-right:9px;flex-shrink:0}
    .stw-el-name{font-size:13px;color:#2a1808;flex:1;font-weight:500}
    .stw-el-hint{font-size:11px;color:#a09080;margin-right:4px}
@@ -2405,10 +2405,10 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    .stw-sel{flex:1;font-size:12px;font-family:inherit;background:#f2ede6;color:#2a1808;border:1px solid rgba(100,70,30,.15);border-radius:8px;padding:6px 22px 6px 8px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a7860'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;touch-action:manipulation}
    .stw-sel:focus{outline:none;border-color:#9060c8}
    .stw-seg{display:flex;background:#f2ede6;border-radius:8px;padding:2px;gap:2px;flex:1}
-   .stw-seg span{flex:1;text-align:center;font-size:11px;padding:6px 0;border-radius:6px;cursor:pointer;color:#8a7860;transition:background .12s,color .12s;user-select:none;-webkit-user-select:none;touch-action:manipulation}
-   .stw-seg span.on{background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;font-weight:700}
+   .stw-seg span,.stw-seg button{flex:1;text-align:center;font-size:11px;padding:6px 0;border-radius:6px;cursor:pointer;color:#8a7860;transition:background .12s,color .12s;user-select:none;-webkit-user-select:none;touch-action:manipulation;border:none;background:transparent;font-family:inherit;-webkit-tap-highlight-color:rgba(144,96,200,.15)}
+   .stw-seg span.on,.stw-seg button.on{background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;font-weight:700}
    .stw-color-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-   .stw-sw{width:26px;height:26px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .1s;flex-shrink:0;touch-action:manipulation}
+   .stw-sw{width:26px;height:26px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .1s;flex-shrink:0;touch-action:manipulation;padding:0;font-family:inherit;-webkit-tap-highlight-color:rgba(144,96,200,.15)}
    .stw-sw:hover{transform:scale(1.15)}
    .stw-sw.on{box-shadow:0 0 0 2px #fff,0 0 0 4px #9060c8}
    .stw-sw-custom{width:26px;height:26px;border-radius:50%;border:2px dashed #b0a090;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#b0a090;flex-shrink:0;position:relative;overflow:hidden;transition:transform .1s;touch-action:manipulation}
@@ -2455,7 +2455,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  panel.appendChild(head);
 
  // ── 版面設定列（titleY / px / overlay）──
- const layoutRow=document.createElement('div');
+ const layoutRow=document.createElement('button');layoutRow.type='button';
  layoutRow.className='stw-el-row';
  const layoutDot=document.createElement('div');layoutDot.className='stw-el-dot';layoutDot.style.background='#b0a090';
  const layoutName=document.createElement('span');layoutName.className='stw-el-name';layoutName.textContent='版面';
@@ -2513,7 +2513,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   const wMap={'300':'細','400':'常','600':'中','700':'粗','800':'粗','900':'黑'};
   const hintText=`${fLabel} ${curSize}`;
 
-  const elRow=document.createElement('div');elRow.className='stw-el-row';
+  const elRow=document.createElement('button');elRow.type='button';elRow.className='stw-el-row';
   const dot=document.createElement('div');dot.className='stw-el-dot';dot.style.background=dotColors[ek]||'#aaa';
   const name=document.createElement('span');name.className='stw-el-name';name.textContent=label;
   const hint=document.createElement('span');hint.className='stw-el-hint';hint.textContent=hintText;
@@ -2549,10 +2549,10 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   const lW=document.createElement('span');lW.className='stw-lbl';lW.textContent='粗細';
   const seg=document.createElement('div');seg.className='stw-seg';
   [['300','細'],['400','常'],['600','中'],['700','粗'],['900','黑']].forEach(([v,t])=>{
-   const sp=document.createElement('span');sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
+   const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
    if(v===curW)sp.classList.add('on');
    sp.addEventListener('click',()=>{
-    seg.querySelectorAll('span').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+    seg.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
     A._slideTweak[slideIdx][`el_${ek}_weight`]=v;save();redrawCb();updateHint();
    });
@@ -2565,10 +2565,10 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   const lA=document.createElement('span');lA.className='stw-lbl';lA.textContent='對齊';
   const segA=document.createElement('div');segA.className='stw-seg';
   [['default','預設'],['left','左'],['center','中'],['right','右']].forEach(([v,t])=>{
-   const sp=document.createElement('span');sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
+   const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
    if(v===curA)sp.classList.add('on');
    sp.addEventListener('click',()=>{
-    segA.querySelectorAll('span').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+    segA.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
     A._slideTweak[slideIdx][`el_${ek}_align`]=v;save();redrawCb();
    });
@@ -2588,7 +2588,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    save();redrawCb();
   };
   PRESET_COLORS.forEach(hex=>{
-   const sw=document.createElement('div');sw.className='stw-sw';
+   const sw=document.createElement('button');sw.type='button';sw.className='stw-sw';
    sw.style.background=hex;sw.dataset.swVal=hex;
    if(hex==='#ffffff')sw.style.borderColor='#d0c8b8';
    if(hex===toHex(curC))sw.classList.add('on');
