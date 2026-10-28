@@ -574,33 +574,15 @@ pre{background:var(--code);color:var(--code-ink);border:1.5px solid #7A5AB0;bord
 /* ── 風格橫滑大卡 ── */
 .cstyle-row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .cstyle-row::-webkit-scrollbar{display:none}
-.cstyle-card{flex:none;width:110px;border-radius:12px;overflow:hidden;cursor:pointer;border:2.5px solid var(--line);transition:border-color .15s,transform .12s;background:var(--surface)}
-.cstyle-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
-.cstyle-card.csc-on{border-color:var(--accent)}
-.cstyle-bg{height:84px;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:8px 8px 7px;gap:3px}
-.cstyle-canvas-wrap{height:100px;padding:0;overflow:hidden;background:#111}
-.cstyle-line{border-radius:2px;display:block}
-.cstyle-line.cl-h{height:5px;width:62%}
-.cstyle-line.cl-s{height:3px;width:40%;margin-top:1px}
-.cstyle-line.cl-b{height:3px;width:82%;margin-top:3px;opacity:.6}
-.cstyle-line.cl-b2{height:3px;width:65%;opacity:.4}
-.cstyle-dark .cstyle-line{background:#fff}
-.cstyle-light .cstyle-line{background:rgba(0,0,0,.55)}
-.cstyle-check{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.cstyle-card{flex:none;width:100px;border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .2s,transform .15s,box-shadow .2s;background:var(--surface);box-shadow:0 2px 12px rgba(0,0,0,.10)}
+.cstyle-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.16)}
+.cstyle-card.csc-on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent),0 6px 20px rgba(0,0,0,.18)}
+.cstyle-bg{height:110px;position:relative;overflow:hidden}
+.cstyle-bg svg{position:absolute;inset:0;width:100%;height:100%}
+.cstyle-check{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;z-index:2;box-shadow:0 1px 6px rgba(0,0,0,.3)}
 .cstyle-card.csc-on .cstyle-check{opacity:1}
-.cstyle-foot{background:var(--surface);padding:7px 8px 8px;border-top:1px solid var(--line)}
-.cstyle-name{font-size:12px;font-weight:800;line-height:1.2}
-.cstyle-desc{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.3}
-/* 各風格背景 */
-.cbg-d1{background:#0e0e10}
-.cbg-d2{background:linear-gradient(90deg,#c0302a 18px,#1e1e22 18px)}
-.cbg-d4{background:linear-gradient(180deg,#f2f2f0 55%,#1e1e22 55%)}
-.cbg-c3{background:#f8f8f6}
-.cbg-c4{background:linear-gradient(180deg,#1a1a1e 33%,#f2f2f0 33%,#f2f2f0 66%,#1a1a1e 66%)}
-.cbg-a3{background:linear-gradient(135deg,#d4a96a,#e8c88a)}
-.cbg-a6{background:linear-gradient(90deg,#7a2e1a 22px,#1c1c1c 22px)}
-.cbg-h2{background:linear-gradient(135deg,#fbd5e8,#e8d0f8,#d0e8f8)}
-.cbg-i1{background:#0c0c18}
+.cstyle-foot{background:var(--surface);padding:7px 8px 9px}
+.cstyle-name{font-size:11px;font-weight:800;line-height:1.2;letter-spacing:.02em}
 
 /* ── 底片格背景上傳 ── */
 .film-wrap{background:#0f0f0f;border-radius:14px;padding:10px 8px 8px;width:100%}
@@ -3622,25 +3604,20 @@ function render(){
    <!-- 橫滑大卡 -->
    <div class="cstyle-row">
     ${[
-     {k:'d1',label:'斜切文字牆',desc:'',bg:'cbg-d1',dark:true},
-     {k:'d2',label:'左側色帶',desc:'',bg:'cbg-d2',dark:true},
-     {k:'d4',label:'底部橫帶',desc:'',bg:'cbg-d4',dark:false},
-     {k:'c3',label:'超大頁碼',desc:'',bg:'cbg-c3',dark:false},
-     {k:'c4',label:'三段橫切',desc:'',bg:'cbg-c4',dark:true},
-     {k:'a3',label:'焦糖奶茶',desc:'',bg:'cbg-a3',dark:false},
-     {k:'a6',label:'磚紅側帶',desc:'',bg:'cbg-a6',dark:true},
-     {k:'h2',label:'粉彩水彩',desc:'',bg:'cbg-h2',dark:false},
-     {k:'i1',label:'漸層文字',desc:'',bg:'cbg-i1',dark:true},
-    ].map(({k,label})=>{
+     {k:'d1',label:'斜切文字牆',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="110" fill="#0e0e10"/><polygon points="0,110 100,55 100,110" fill="#1a1a1f"/><rect x="14" y="62" width="44" height="6" rx="3" fill="#fff" opacity=".9"/><rect x="14" y="73" width="30" height="4" rx="2" fill="#fff" opacity=".5"/><rect x="14" y="82" width="52" height="3" rx="1.5" fill="#fff" opacity=".3"/><rect x="14" y="89" width="40" height="3" rx="1.5" fill="#fff" opacity=".2"/></svg>`},
+     {k:'d2',label:'左側色帶',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="110" fill="#1e1e22"/><rect width="16" height="110" fill="#c0302a"/><rect x="26" y="50" width="50" height="7" rx="3" fill="#fff" opacity=".9"/><rect x="26" y="62" width="34" height="4" rx="2" fill="#fff" opacity=".5"/><rect x="26" y="72" width="55" height="3" rx="1.5" fill="#fff" opacity=".3"/><rect x="26" y="79" width="42" height="3" rx="1.5" fill="#fff" opacity=".2"/></svg>`},
+     {k:'d4',label:'底部橫帶',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="110" fill="#f2f2f0"/><rect y="70" width="100" height="40" fill="#1e1e22"/><rect x="12" y="28" width="48" height="7" rx="3" fill="#1a1a1a" opacity=".85"/><rect x="12" y="40" width="32" height="4" rx="2" fill="#1a1a1a" opacity=".4"/><rect x="12" y="76" width="50" height="4" rx="2" fill="#fff" opacity=".7"/><rect x="12" y="85" width="36" height="3" rx="1.5" fill="#fff" opacity=".4"/></svg>`},
+     {k:'c3',label:'超大頁碼',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="110" fill="#f8f8f6"/><text x="52" y="80" font-size="72" font-weight="900" fill="#e8e8e4" text-anchor="middle" font-family="serif">01</text><rect x="12" y="52" width="46" height="6" rx="3" fill="#1a1a1a" opacity=".8"/><rect x="12" y="63" width="30" height="4" rx="2" fill="#1a1a1a" opacity=".4"/></svg>`},
+     {k:'c4',label:'三段橫切',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="110" fill="#1a1a1e"/><rect y="36" width="100" height="38" fill="#f2f2f0"/><rect x="14" y="46" width="44" height="6" rx="3" fill="#1a1a1a" opacity=".85"/><rect x="14" y="57" width="28" height="4" rx="2" fill="#1a1a1a" opacity=".4"/><rect x="14" y="8" width="36" height="4" rx="2" fill="#fff" opacity=".3"/><rect x="14" y="92" width="40" height="4" rx="2" fill="#fff" opacity=".3"/></svg>`},
+     {k:'a3',label:'焦糖奶茶',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ag3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c8895a"/><stop offset="100%" stop-color="#e8c88a"/></linearGradient></defs><rect width="100" height="110" fill="url(#ag3)"/><rect x="10" y="16" width="80" height="1" fill="#fff" opacity=".25"/><rect x="10" y="93" width="80" height="1" fill="#fff" opacity=".25"/><rect x="14" y="50" width="48" height="7" rx="3" fill="#fff" opacity=".88"/><rect x="14" y="62" width="32" height="4" rx="2" fill="#fff" opacity=".5"/><rect x="14" y="72" width="55" height="3" rx="1.5" fill="#fff" opacity=".3"/></svg>`},
+     {k:'a6',label:'磚紅側帶',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="110" fill="#1c1c1c"/><rect width="18" height="110" fill="#7a2e1a"/><rect x="28" y="48" width="50" height="7" rx="3" fill="#fff" opacity=".9"/><rect x="28" y="60" width="34" height="4" rx="2" fill="#fff" opacity=".5"/><rect x="28" y="70" width="48" height="3" rx="1.5" fill="#fff" opacity=".3"/><rect x="28" y="77" width="36" height="3" rx="1.5" fill="#fff" opacity=".2"/></svg>`},
+     {k:'h2',label:'粉彩水彩',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbd5e8"/><stop offset="50%" stop-color="#e8d0f8"/><stop offset="100%" stop-color="#d0e8f8"/></linearGradient></defs><rect width="100" height="110" fill="url(#hg2)"/><rect x="14" y="22" width="72" height="44" rx="8" fill="#fff" opacity=".55"/><rect x="22" y="32" width="44" height="6" rx="3" fill="#5a4a6a" opacity=".7"/><rect x="22" y="43" width="30" height="4" rx="2" fill="#5a4a6a" opacity=".4"/><rect x="22" y="52" width="50" height="3" rx="1.5" fill="#5a4a6a" opacity=".25"/></svg>`},
+     {k:'i1',label:'漸層文字',svg:`<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ig1" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#0c0c18"/><stop offset="100%" stop-color="#1a1030"/></linearGradient><linearGradient id="ig2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#60a5fa"/></linearGradient></defs><rect width="100" height="110" fill="url(#ig1)"/><rect x="14" y="50" width="52" height="8" rx="4" fill="url(#ig2)" opacity=".95"/><rect x="14" y="63" width="34" height="4" rx="2" fill="#fff" opacity=".4"/><rect x="14" y="73" width="56" height="3" rx="1.5" fill="#fff" opacity=".2"/><circle cx="80" cy="22" r="14" fill="#7c3aed" opacity=".15"/><circle cx="80" cy="22" r="7" fill="#7c3aed" opacity=".2"/></svg>`},
+    ].map(({k,label,svg})=>{
      const on=(A._canvasStyle||'d1')===k;
      return `<button type="button" class="cstyle-card canvas-style-btn${on?' csc-on':''}" data-cstyle="${k}">
-      <div class="cstyle-bg cstyle-canvas-wrap">
-       <canvas id="cstyle-thumb-${k}" width="1080" height="1350" style="width:100%;display:block;border-radius:8px 8px 0 0;transform:translateY(-30%)"></canvas>
-       <div class="cstyle-check">✓</div>
-      </div>
-      <div class="cstyle-foot">
-       <div class="cstyle-name">${label}</div>
-      </div>
+      <div class="cstyle-bg">${svg}<div class="cstyle-check">✓</div></div>
+      <div class="cstyle-foot"><div class="cstyle-name">${label}</div></div>
      </button>`;
     }).join('')}
    </div>
