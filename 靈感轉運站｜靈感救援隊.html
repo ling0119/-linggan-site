@@ -3220,19 +3220,43 @@ app.addEventListener('input',e=>{
      }
      return out;
     }
-    const blocks=raw.trim().split(/\n{2,}/);
     // 如果已有手動填過的欄位，先警告再覆蓋
     const hasManual=A._slides&&A._slides.some(s=>s&&(s.title||s.body));
     if(hasManual){
      const warn=document.getElementById('pasteOverwriteWarn');
      if(warn){warn.style.display='block';clearTimeout(window._warnDbt);window._warnDbt=setTimeout(()=>{warn.style.display='none';},3000);}
     }
+    // 用 [標題] 為分張依據（新格式），跳過 ✦ 裝飾行與 hashtag 行
+    const slideBlocks2=[];
+    let cur2=null;
+    const hasTagFmt=/\[標題\]|\[內文\]/.test(raw);
+    if(hasTagFmt){
+     for(const rawLn of raw.split('\n')){
+      const ln=rawLn.trim();
+      if(!ln||/^✦/.test(ln)||/^#[\w一-鿿]/.test(ln))continue;
+      const tM=ln.match(/^\[標題\]\s*(.*)/);
+      if(tM){if(cur2)slideBlocks2.push(cur2);cur2={title:tM[1].trim(),sub:'',body:''};}
+      else if(cur2){
+       const sM=ln.match(/^\[副標\]\s*(.*)/);
+       const bM=ln.match(/^\[內文\]\s*(.*)/);
+       if(sM)cur2.sub=sM[1].trim();
+       else if(bM)cur2.body=bM[1].trim();
+       else if(cur2.body!==undefined)cur2.body=cur2.body?(cur2.body+'\n'+ln):ln;
+      }
+     }
+     if(cur2)slideBlocks2.push(cur2);
+    } else {
+     // 舊格式：空行分張
+     const blocks=raw.trim().split(/\n{2,}/);
+     for(let i=0;i<n;i++){
+      const blk=(blocks[i]||'').trim();
+      slideBlocks2.push(blk?parseBlock(blk):{title:'',sub:'',body:''});
+     }
+    }
     if(!A._slides)A._slides=[];
     for(let i=0;i<n;i++){
      if(!A._slides[i])A._slides[i]={};
-     const blk=(blocks[i]||'').trim();
-     if(!blk)continue;
-     const parsed=parseBlock(blk);
+     const parsed=slideBlocks2[i]||{title:'',sub:'',body:''};
      A._slides[i].title=parsed.title;A._slides[i].sub=parsed.sub;A._slides[i].body=parsed.body;
     }
     save();
