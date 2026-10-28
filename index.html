@@ -2533,7 +2533,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    const sp=document.createElement('span');sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
    if(v===curW)sp.classList.add('on');
    sp.addEventListener('click',()=>{
-    seg.querySelectorAll('[data-stw-seg]').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+    seg.querySelectorAll('span').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
     A._slideTweak[slideIdx][`el_${ek}_weight`]=v;save();redrawCb();updateHint();
    });
@@ -2549,7 +2549,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
    const sp=document.createElement('span');sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
    if(v===curA)sp.classList.add('on');
    sp.addEventListener('click',()=>{
-    segA.querySelectorAll('[data-stw-seg]').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+    segA.querySelectorAll('span').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
     A._slideTweak[slideIdx][`el_${ek}_align`]=v;save();redrawCb();
    });
@@ -2562,9 +2562,10 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   const lC=document.createElement('span');lC.className='stw-lbl';lC.textContent='顏色';
   const colorRow=document.createElement('div');colorRow.className='stw-color-row';
   const applyColor=(hex)=>{
+   const h=hex.toLowerCase();
    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
-   A._slideTweak[slideIdx][`el_${ek}_color`]=hex;
-   colorRow.querySelectorAll('.stw-sw').forEach(s=>s.classList.toggle('on',s.dataset.swVal===hex));
+   A._slideTweak[slideIdx][`el_${ek}_color`]=h;
+   colorRow.querySelectorAll('.stw-sw').forEach(s=>s.classList.toggle('on',s.dataset.swVal.toLowerCase()===h));
    save();redrawCb();
   };
   PRESET_COLORS.forEach(hex=>{
