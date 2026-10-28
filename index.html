@@ -2336,10 +2336,7 @@ function drawCarouselCanvas(){
   };
   adjBtn.addEventListener('click',togglePanel);
   canvas.addEventListener('click',togglePanel);
-  // 預設展開每頁微調面板
-  panelEl=buildSlideTweakPanel(slideIdx,style,redrawSlide);
-  adjBtn.textContent='✕ 收合';
-  wrap.append(hdr,canvas,btnRow,panelEl);
+  wrap.append(hdr,canvas,btnRow);
   return wrap;
  };
 
