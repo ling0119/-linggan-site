@@ -2363,78 +2363,291 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
  const tw=A._slideTweak[slideIdx]||{};
  const baseTh=getTheme(styleKey);
  const isDark=['dinero','afei','babyou','faydea'].includes(styleKey);
- // helpers
  const toHex=c=>{if(!c)return'#ffffff';if(c.startsWith('#'))return c;const m=c.match(/[\d.]+/g)||[];return'#'+[m[0],m[1],m[2]].map(n=>parseInt(n).toString(16).padStart(2,'0')).join('');};
- const sldr=(key,val,min,max,step)=>{const isFloat=step<1;const disp=isFloat?parseFloat(val).toFixed(2):Math.round(val);return`<div style="display:flex;align-items:center;gap:5px;flex:1"><input type="range" data-stw="${key}" min="${min}" max="${max}" step="${step}" value="${val}" style="flex:1;accent-color:var(--accent)"><span id="stw_lbl_${slideIdx}_${key}" style="font-size:11px;color:var(--muted);min-width:32px;text-align:right">${disp}</span></div>`;};
- const radios=(key,val,opts)=>`<div style="display:flex;gap:4px;flex-wrap:wrap">${opts.map(o=>`<label style="display:flex;align-items:center;gap:2px;font-size:11px;cursor:pointer;white-space:nowrap"><input type="radio" name="stw_${slideIdx}_${key}" data-stw="${key}" value="${o.v}"${val===o.v?' checked':''}> ${o.l}</label>`).join('')}</div>`;
- const colorP=(key,val)=>`<input type="color" data-stw="${key}" value="${toHex(val)}" style="width:36px;height:28px;border:none;border-radius:6px;cursor:pointer;background:none">`;
- const row=(label,ctrl)=>`<div style="display:flex;align-items:center;gap:8px;min-height:32px"><span style="font-size:12px;color:var(--muted);flex:0 0 52px;line-height:1.3">${label}</span><div style="flex:1;display:flex;align-items:center;gap:6px">${ctrl}</div></div>`;
- // element section builder
- const elSection=(ek,label,defSize,defWeight,defFamily,defColor,defAlign)=>{
-  const e=tw[`el_${ek}_size`];const ev=e!=null?e:defSize;
-  const ew=tw[`el_${ek}_weight`]||defWeight;
-  const ef=tw[`el_${ek}_family`]||defFamily;
-  const ec=tw[`el_${ek}_color`]||defColor;
-  const ea=tw[`el_${ek}_align`]||defAlign;
-  return `<details style="border:1px solid var(--line);border-radius:8px;overflow:hidden" open>
-   <summary style="font-size:12px;font-weight:700;padding:8px 10px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;background:var(--surface)">${label} <span style="font-size:10px;color:var(--muted);font-weight:400">▾</span></summary>
-   <div style="padding:8px 10px;display:flex;flex-direction:column;gap:6px;background:var(--bg)">
-    ${row('字級',sldr(`el_${ek}_size`,ev,16,160,2))}
-    ${row('字重',radios(`el_${ek}_weight`,ew,[{v:'300',l:'細'},{v:'400',l:'常'},{v:'600',l:'中'},{v:'700',l:'粗'},{v:'900',l:'黑'}]))}
-    ${row('字型',radios(`el_${ek}_family`,ef,[{v:'serif',l:'明體'},{v:'sans',l:'黑體'}]))}
-    ${row('對齊',radios(`el_${ek}_align`,ea,[{v:'default',l:'預設'},{v:'left',l:'左'},{v:'center',l:'中'},{v:'right',l:'右'}]))}
-    ${row('顏色',colorP(`el_${ek}_color`,ec))}
-   </div>
-  </details>`;
- };
+ const sldr=(key,val,min,max,step)=>{const isFloat=step<1;const disp=isFloat?parseFloat(val).toFixed(2):Math.round(val);return`<div style="display:flex;align-items:center;gap:5px;flex:1"><input type="range" data-stw="${key}" min="${min}" max="${max}" step="${step}" value="${val}" style="flex:1;accent-color:#9060c8"><span id="stw_lbl_${slideIdx}_${key}" style="font-size:11px;color:#8a7860;min-width:32px;text-align:right">${disp}</span></div>`;};
+
+ // B款面板 CSS（只注入一次）
+ if(!document.getElementById('stw-panel-style')){
+  const s=document.createElement('style');s.id='stw-panel-style';
+  s.textContent=`
+   .stw-panel{background:#fff;border:1px solid rgba(100,70,30,.1);border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(80,50,20,.08);display:flex;flex-direction:column}
+   .stw-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;border-bottom:1px solid rgba(100,70,30,.08);background:#fff}
+   .stw-panel-title{font-size:13px;font-weight:700;color:#2a1808}
+   .stw-panel-reset{font-size:11px;padding:3px 10px;border-radius:20px;border:none;background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;cursor:pointer;font-family:inherit}
+   .stw-el-row{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(100,70,30,.06);cursor:pointer;background:#fff;user-select:none}
+   .stw-el-dot{width:7px;height:7px;border-radius:50%;margin-right:9px;flex-shrink:0}
+   .stw-el-name{font-size:13px;color:#2a1808;flex:1;font-weight:500}
+   .stw-el-hint{font-size:11px;color:#a09080;margin-right:4px}
+   .stw-el-arr{font-size:10px;color:#b0a090;transition:transform .15s;flex-shrink:0}
+   .stw-el-arr.open{transform:rotate(90deg)}
+   .stw-el-body{background:#faf8f5;padding:10px 14px 12px;border-bottom:1px solid rgba(100,70,30,.07);display:flex;flex-direction:column;gap:8px}
+   .stw-ctrl-row{display:flex;align-items:center;gap:8px}
+   .stw-lbl{font-size:11px;color:#8a7860;width:28px;flex-shrink:0}
+   .stw-sel{flex:1;font-size:12px;font-family:inherit;background:#f2ede6;color:#2a1808;border:1px solid rgba(100,70,30,.15);border-radius:8px;padding:4px 22px 4px 8px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a7860'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
+   .stw-sel:focus{outline:none;border-color:#9060c8}
+   .stw-seg{display:flex;background:#f2ede6;border-radius:8px;padding:2px;gap:2px;flex:1}
+   .stw-seg span{flex:1;text-align:center;font-size:11px;padding:3px 0;border-radius:6px;cursor:pointer;color:#8a7860;transition:background .12s,color .12s}
+   .stw-seg span.on{background:linear-gradient(135deg,#9060c8,#c880e8);color:#fff;font-weight:700}
+   .stw-color-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+   .stw-sw{width:20px;height:20px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .1s;flex-shrink:0}
+   .stw-sw:hover{transform:scale(1.15)}
+   .stw-sw.on{box-shadow:0 0 0 2px #fff,0 0 0 4px #9060c8}
+   .stw-sw-custom{width:20px;height:20px;border-radius:50%;border:2px dashed #b0a090;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#b0a090;flex-shrink:0;position:relative;overflow:hidden;transition:transform .1s}
+   .stw-sw-custom:hover{transform:scale(1.15)}
+   .stw-sw-custom input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+   .stw-sw-custom.has-color{border-style:solid;border-color:transparent}
+   .stw-layout-box{background:#faf8f5;padding:10px 14px 12px;border-bottom:1px solid rgba(100,70,30,.07);display:flex;flex-direction:column;gap:8px}
+  `;
+  document.head.appendChild(s);
+ }
+
  // defaults per element
  const defTitleSize=isDark?108:100;
  const defTitleW=isDark?'800':'700';
- const defBodySize=34;
- const defSubSize=44;
- const defAcctSize=28;
- const defNumSize=32;
+ const defBodySize=34;const defSubSize=44;const defAcctSize=28;const defNumSize=32;
  const defTitleColor=toHex(baseTh.txt||'#1a1a2e');
  const defSubColor=toHex(baseTh.sub||baseTh.txt||'#555');
  const defBodyColor=toHex(baseTh.body||baseTh.txt||'#333');
  const defAcctColor=toHex(baseTh.sub||'#888');
  const defNumColor=toHex(baseTh.acc||baseTh.txt||'#888');
  const hasTw=Object.keys(tw).length>0;
+
+ // size options 12~80 plus common large sizes
+ const sizeOpts=[12,14,16,18,20,22,24,28,32,36,40,44,48,52,56,60,64,72,80,90,100,108,120,140,160];
+
  const panel=document.createElement('div');
+ panel.className='stw-panel';
  panel.dataset.stwPanel=slideIdx;
- panel.style.cssText='display:flex;flex-direction:column;gap:8px';
- panel.innerHTML=[
-  `<div style="font-size:11px;font-weight:700;color:var(--muted)">── 版面 ──</div>`,
-  `<div style="display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px">`,
-  row('標題Y',sldr('titleY',tw.titleY||0,-300,300,10)),
-  row('邊距',sldr('px',tw.px!=null?tw.px:72,40,120,4)),
-  isDark?row('蒙版',sldr('overlayAlpha',tw.overlayAlpha!=null?tw.overlayAlpha:0.45,0,0.85,0.05)):'',
-  `</div>`,
-  `<div style="font-size:11px;font-weight:700;color:var(--muted)">── 文字元素 ──</div>`,
-  elSection('title','標題',defTitleSize,defTitleW,'serif',defTitleColor,'default'),
-  elSection('sub','副標',defSubSize,'300','serif',defSubColor,'default'),
-  elSection('body','內文',defBodySize,'400','sans',defBodyColor,'default'),
-  elSection('acct','帳號',defAcctSize,'400','sans',defAcctColor,'default'),
-  elSection('num','小標/頁碼',defNumSize,'700','sans',defNumColor,'default'),
-  hasTw?`<button type="button" data-stw-reset="${slideIdx}" style="font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;align-self:flex-start">↩ 還原此頁</button>`:'',
- ].join('');
- // 事件綁定
- panel.querySelectorAll('[data-stw]').forEach(el=>{
-  const key=el.dataset.stw;
-  const upd=()=>{
+
+ // ── 頂部 ──
+ const head=document.createElement('div');
+ head.className='stw-panel-head';
+ const titleEl=document.createElement('span');
+ titleEl.className='stw-panel-title';
+ titleEl.textContent=`第 ${slideIdx+1} 張`;
+ head.appendChild(titleEl);
+ if(hasTw){
+  const resetBtn=document.createElement('button');
+  resetBtn.className='stw-panel-reset';
+  resetBtn.textContent='↩ 還原';
+  resetBtn.dataset.stwReset=slideIdx;
+  head.appendChild(resetBtn);
+ }
+ panel.appendChild(head);
+
+ // ── 版面設定列（titleY / px / overlay）──
+ const layoutRow=document.createElement('div');
+ layoutRow.className='stw-el-row';
+ const layoutDot=document.createElement('div');layoutDot.className='stw-el-dot';layoutDot.style.background='#b0a090';
+ const layoutName=document.createElement('span');layoutName.className='stw-el-name';layoutName.textContent='版面';
+ const layoutArr=document.createElement('span');layoutArr.className='stw-el-arr';layoutArr.textContent='▸';
+ layoutRow.append(layoutDot,layoutName,layoutArr);
+ panel.appendChild(layoutRow);
+
+ const layoutBody=document.createElement('div');
+ layoutBody.className='stw-layout-box';
+ layoutBody.style.display='none';
+ // titleY
+ const r1=document.createElement('div');r1.className='stw-ctrl-row';
+ const l1=document.createElement('span');l1.className='stw-lbl';l1.textContent='標Y';
+ r1.append(l1);r1.innerHTML+=sldr('titleY',tw.titleY||0,-300,300,10);
+ layoutBody.appendChild(r1);
+ // px
+ const r2=document.createElement('div');r2.className='stw-ctrl-row';
+ const l2=document.createElement('span');l2.className='stw-lbl';l2.textContent='邊距';
+ r2.append(l2);r2.innerHTML+=sldr('px',tw.px!=null?tw.px:72,40,120,4);
+ layoutBody.appendChild(r2);
+ // overlay (dark only)
+ if(isDark){
+  const r3=document.createElement('div');r3.className='stw-ctrl-row';
+  const l3=document.createElement('span');l3.className='stw-lbl';l3.textContent='蒙版';
+  r3.append(l3);r3.innerHTML+=sldr('overlayAlpha',tw.overlayAlpha!=null?tw.overlayAlpha:0.45,0,0.85,0.05);
+  layoutBody.appendChild(r3);
+ }
+ panel.appendChild(layoutBody);
+ layoutRow.addEventListener('click',()=>{
+  const open=layoutBody.style.display!=='none';
+  layoutBody.style.display=open?'none':'flex';
+  layoutArr.classList.toggle('open',!open);
+ });
+
+ // ── 元素列 ──
+ const PRESET_COLORS=['#ffffff','#f0c060','#e8829a','#9060c8'];
+ const dotColors={title:'linear-gradient(135deg,#9060c8,#c880e8)',sub:'#5890c0',body:'#60a870',acct:'#c07858',num:'#c8a060'};
+ const elements=[
+  {ek:'title',label:'標題',defSize:defTitleSize,defW:defTitleW,defF:'serif',defC:defTitleColor},
+  {ek:'sub',  label:'副標',defSize:defSubSize,  defW:'300',   defF:'serif',defC:defSubColor},
+  {ek:'body', label:'內文',defSize:defBodySize, defW:'400',   defF:'sans', defC:defBodyColor},
+  {ek:'acct', label:'帳號',defSize:defAcctSize, defW:'400',   defF:'sans', defC:defAcctColor},
+  {ek:'num',  label:'小標',defSize:defNumSize,  defW:'700',   defF:'sans', defC:defNumColor},
+ ];
+
+ elements.forEach(({ek,label,defSize,defW,defF,defC})=>{
+  const curSize=tw[`el_${ek}_size`]!=null?tw[`el_${ek}_size`]:defSize;
+  const curW=tw[`el_${ek}_weight`]||defW;
+  const curF=tw[`el_${ek}_family`]||defF;
+  const curC=tw[`el_${ek}_color`]||defC;
+  const curA=tw[`el_${ek}_align`]||'default';
+
+  // hint text
+  const fLabel=curF==='serif'?'明':'黑';
+  const wMap={'300':'細','400':'常','600':'中','700':'粗','800':'粗','900':'黑'};
+  const hintText=`${fLabel} ${curSize}`;
+
+  const elRow=document.createElement('div');elRow.className='stw-el-row';
+  const dot=document.createElement('div');dot.className='stw-el-dot';dot.style.background=dotColors[ek]||'#aaa';
+  const name=document.createElement('span');name.className='stw-el-name';name.textContent=label;
+  const hint=document.createElement('span');hint.className='stw-el-hint';hint.textContent=hintText;
+  hint.dataset.stwHint=`${slideIdx}_${ek}`;
+  const arr=document.createElement('span');arr.className='stw-el-arr';arr.textContent='▸';
+  elRow.append(dot,name,hint,arr);
+  panel.appendChild(elRow);
+
+  const body=document.createElement('div');body.className='stw-el-body';body.style.display='none';
+
+  // 字體 select
+  const rFont=document.createElement('div');rFont.className='stw-ctrl-row';
+  const lFont=document.createElement('span');lFont.className='stw-lbl';lFont.textContent='字體';
+  const selFont=document.createElement('select');selFont.className='stw-sel';
+  selFont.dataset.stw=`el_${ek}_family`;
+  [['serif','明體（Noto Serif TC）'],['sans','黑體（Noto Sans TC）']].forEach(([v,t])=>{
+   const o=document.createElement('option');o.value=v;o.textContent=t;if(v===curF)o.selected=true;selFont.appendChild(o);
+  });
+  rFont.append(lFont,selFont);body.appendChild(rFont);
+
+  // 大小 select
+  const rSize=document.createElement('div');rSize.className='stw-ctrl-row';
+  const lSize=document.createElement('span');lSize.className='stw-lbl';lSize.textContent='大小';
+  const selSize=document.createElement('select');selSize.className='stw-sel';
+  selSize.dataset.stw=`el_${ek}_size`;
+  sizeOpts.forEach(v=>{
+   const o=document.createElement('option');o.value=v;o.textContent=v;if(v===curSize)o.selected=true;selSize.appendChild(o);
+  });
+  rSize.append(lSize,selSize);body.appendChild(rSize);
+
+  // 粗細 seg
+  const rW=document.createElement('div');rW.className='stw-ctrl-row';
+  const lW=document.createElement('span');lW.className='stw-lbl';lW.textContent='粗細';
+  const seg=document.createElement('div');seg.className='stw-seg';
+  [['300','細'],['400','常'],['600','中'],['700','粗'],['900','黑']].forEach(([v,t])=>{
+   const sp=document.createElement('span');sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_weight`;sp.dataset.stwVal=v;
+   if(v===curW)sp.classList.add('on');
+   sp.addEventListener('click',()=>{
+    seg.querySelectorAll('[data-stw-seg]').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+    A._slideTweak[slideIdx][`el_${ek}_weight`]=v;save();redrawCb();updateHint();
+   });
+   seg.appendChild(sp);
+  });
+  rW.append(lW,seg);body.appendChild(rW);
+
+  // 對齊 seg
+  const rA=document.createElement('div');rA.className='stw-ctrl-row';
+  const lA=document.createElement('span');lA.className='stw-lbl';lA.textContent='對齊';
+  const segA=document.createElement('div');segA.className='stw-seg';
+  [['default','預設'],['left','左'],['center','中'],['right','右']].forEach(([v,t])=>{
+   const sp=document.createElement('span');sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
+   if(v===curA)sp.classList.add('on');
+   sp.addEventListener('click',()=>{
+    segA.querySelectorAll('[data-stw-seg]').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
+    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+    A._slideTweak[slideIdx][`el_${ek}_align`]=v;save();redrawCb();
+   });
+   segA.appendChild(sp);
+  });
+  rA.append(lA,segA);body.appendChild(rA);
+
+  // 顏色 swatches + custom
+  const rC=document.createElement('div');rC.className='stw-ctrl-row';
+  const lC=document.createElement('span');lC.className='stw-lbl';lC.textContent='顏色';
+  const colorRow=document.createElement('div');colorRow.className='stw-color-row';
+  const applyColor=(hex)=>{
    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
-   const v=el.type==='range'?parseFloat(el.value):el.value;
-   A._slideTweak[slideIdx][key]=v;
-   const lbl=document.getElementById(`stw_lbl_${slideIdx}_${key}`);
-   if(lbl){const isFloat=parseFloat(el.getAttribute('step'))<1;lbl.textContent=isFloat?v.toFixed(2):Math.round(v);}
+   A._slideTweak[slideIdx][`el_${ek}_color`]=hex;
+   colorRow.querySelectorAll('.stw-sw').forEach(s=>s.classList.toggle('on',s.dataset.swVal===hex));
    save();redrawCb();
   };
-  el.addEventListener('input',upd);el.addEventListener('change',upd);
+  PRESET_COLORS.forEach(hex=>{
+   const sw=document.createElement('div');sw.className='stw-sw';
+   sw.style.background=hex;sw.dataset.swVal=hex;
+   if(hex==='#ffffff')sw.style.borderColor='#d0c8b8';
+   if(hex===toHex(curC))sw.classList.add('on');
+   sw.addEventListener('click',()=>applyColor(hex));
+   colorRow.appendChild(sw);
+  });
+  // custom color
+  const swC=document.createElement('div');swC.className='stw-sw-custom';
+  swC.title='自訂顏色';
+  const customHex=PRESET_COLORS.includes(toHex(curC))?'#ff8800':toHex(curC);
+  swC.innerHTML=`<span>＋</span><input type="color" data-stw="el_${ek}_color" value="${customHex}">`;
+  // if current color is custom (not in presets), show it
+  if(!PRESET_COLORS.includes(toHex(curC))){
+   swC.classList.add('has-color');swC.style.background=toHex(curC);swC.querySelector('span').style.display='none';
+  }
+  swC.querySelector('input').addEventListener('input',e=>{
+   const h=e.target.value;swC.classList.add('has-color');swC.style.background=h;swC.querySelector('span').style.display='none';
+   colorRow.querySelectorAll('.stw-sw').forEach(s=>s.classList.remove('on'));
+   applyColor(h);
+  });
+  colorRow.appendChild(swC);
+  rC.append(lC,colorRow);body.appendChild(rC);
+
+  panel.appendChild(body);
+
+  const updateHint=()=>{
+   const sz=A._slideTweak[slideIdx]?.[`el_${ek}_size`]??defSize;
+   const ff=A._slideTweak[slideIdx]?.[`el_${ek}_family`]??defF;
+   document.querySelectorAll(`[data-stw-hint="${slideIdx}_${ek}"]`).forEach(h=>{h.textContent=`${ff==='serif'?'明':'黑'} ${sz}`;});
+  };
+
+  // select change handlers
+  [selFont,selSize].forEach(sel=>{
+   sel.addEventListener('change',()=>{
+    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+    const key=sel.dataset.stw;
+    const v=key.includes('size')?parseInt(sel.value):sel.value;
+    A._slideTweak[slideIdx][key]=v;save();redrawCb();updateHint();
+   });
+  });
+
+  // slider handlers inside layout body
+  body.querySelectorAll('[data-stw]').forEach(el=>{
+   if(el.type==='range'){
+    el.addEventListener('input',()=>{
+     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+     A._slideTweak[slideIdx][el.dataset.stw]=parseFloat(el.value);
+     const lbl=document.getElementById(`stw_lbl_${slideIdx}_${el.dataset.stw}`);
+     if(lbl){const isF=parseFloat(el.getAttribute('step'))<1;lbl.textContent=isF?parseFloat(el.value).toFixed(2):Math.round(el.value);}
+     save();redrawCb();
+    });
+   }
+  });
+
+  elRow.addEventListener('click',()=>{
+   const open=body.style.display!=='none';
+   body.style.display=open?'none':'flex';
+   arr.classList.toggle('open',!open);
+  });
  });
+
+ // slider handlers in layout body
+ layoutBody.querySelectorAll('[data-stw]').forEach(el=>{
+  if(el.type==='range'){
+   el.addEventListener('input',()=>{
+    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
+    A._slideTweak[slideIdx][el.dataset.stw]=parseFloat(el.value);
+    const lbl=document.getElementById(`stw_lbl_${slideIdx}_${el.dataset.stw}`);
+    if(lbl){const isF=parseFloat(el.getAttribute('step'))<1;lbl.textContent=isF?parseFloat(el.value).toFixed(2):Math.round(el.value);}
+    save();redrawCb();
+   });
+  }
+ });
+
+ // reset
  panel.querySelector(`[data-stw-reset="${slideIdx}"]`)?.addEventListener('click',()=>{
-  delete A._slideTweak[slideIdx];
-  save();redrawCb(true);
+  delete A._slideTweak[slideIdx];save();redrawCb(true);
  });
+
  return panel;
 }
 
