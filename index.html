@@ -2296,7 +2296,7 @@ function drawCarouselCanvas(){
   // Canvas
   const canvas=document.createElement('canvas');
   canvas.width=W;canvas.height=H;
-  canvas.style.cssText='width:100%;border-radius:10px 10px 0 0;cursor:pointer;display:block';
+  canvas.style.cssText='width:100%;border-radius:10px 10px 0 0;cursor:pointer;display:block;outline:none';
   const th=getSlideTheme(slideIdx,style);
   const ctx=canvas.getContext('2d');
   drawFn(ctx,W,H,th,acct);
@@ -2326,12 +2326,16 @@ function drawCarouselCanvas(){
     panelEl.replaceWith(newPanel);panelEl=newPanel;
    }
   };
-  adjBtn.addEventListener('click',()=>{
-   if(panelEl){panelEl.remove();panelEl=null;adjBtn.textContent='⚙ 微調';return;}
+  const togglePanel=()=>{
+   if(panelEl){panelEl.remove();panelEl=null;adjBtn.textContent='⚙ 微調';canvas.style.outline='none';return;}
    panelEl=buildSlideTweakPanel(slideIdx,style,redrawSlide);
    wrap.appendChild(panelEl);
    adjBtn.textContent='✕ 收合';
-  });
+   canvas.style.outline='2px solid var(--accent)';
+   panelEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  adjBtn.addEventListener('click',togglePanel);
+  canvas.addEventListener('click',togglePanel);
   wrap.append(hdr,canvas,btnRow);
   return wrap;
  };
