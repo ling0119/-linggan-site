@@ -2196,7 +2196,8 @@ function drawStylePreview(styleKey){
    canvas.title='點擊放大＋微調';
    canvas.onclick=()=>{
     // 取得目前 canvasSlides 對應的 makeSlide slideIdx
-    const lbSlideIdx=idx; // filmstrip idx == slide idx
+    let lbSlideIdx=idx; // filmstrip idx == slide idx（mutable for prev/next）
+    const totalSlides=canvasSlides.length;
     const style=A._canvasStyle||'dinero';
     // overlay
     const ov=document.createElement('div');
@@ -2206,12 +2207,12 @@ function drawStylePreview(styleKey){
     }else{
      ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:stretch;justify-content:center;overflow:hidden';
     }
-    // 左/上：大圖
+    // 左/上：大圖 + 左右箭頭
     const left=document.createElement('div');
     if(isMobile){
-     left.style.cssText='display:flex;align-items:center;justify-content:center;padding:12px 16px 8px;flex-shrink:0';
+     left.style.cssText='display:flex;align-items:center;justify-content:center;padding:12px 16px 8px;flex-shrink:0;position:relative';
     }else{
-     left.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0;overflow:hidden';
+     left.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0;overflow:hidden;position:relative';
     }
     const bigCanvas=document.createElement('canvas');
     bigCanvas.width=1080;bigCanvas.height=1350;
@@ -2226,15 +2227,7 @@ function drawStylePreview(styleKey){
      sc=Math.min(scaleH,scaleW);
     }
     bigCanvas.style.cssText=`width:${Math.round(1080*sc)}px;height:${Math.round(1350*sc)}px;border-radius:10px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.6)`;
-    // draw
-    const drawBig=()=>{
-     const th2=getSlideTheme(lbSlideIdx,style);
-     const c2=bigCanvas.getContext('2d');
-     c2.clearRect(0,0,1080,1350);
-     sl.draw(c2,th2);
-    };
-    drawBig();
-    left.appendChild(bigCanvas);
+
     // 右/下：微調面板
     const right=document.createElement('div');
     if(isMobile){
@@ -2247,7 +2240,70 @@ function drawStylePreview(styleKey){
     rightInner.style.cssText='padding:8px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1';
     const slideLabel=document.createElement('div');
     slideLabel.style.cssText='font-size:40px;font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:2px';
-    slideLabel.textContent=String(lbSlideIdx+1).padStart(2,'0');
+
+    // 重新渲染面板函式（供 prev/next 使用）
+    const renderPanel=(newIdx)=>{
+     lbSlideIdx=newIdx;
+     const curSl=canvasSlides[lbSlideIdx];
+     slideLabel.textContent=String(lbSlideIdx+1).padStart(2,'0');
+     // 更新箭頭狀態
+     prevBtn.style.opacity=lbSlideIdx>0?'1':'0.25';
+     prevBtn.style.pointerEvents=lbSlideIdx>0?'':'none';
+     nextBtn.style.opacity=lbSlideIdx<totalSlides-1?'1':'0.25';
+     nextBtn.style.pointerEvents=lbSlideIdx<totalSlides-1?'':'none';
+     // 重繪大圖
+     const th2=getSlideTheme(lbSlideIdx,style);
+     const c2=bigCanvas.getContext('2d');
+     c2.clearRect(0,0,1080,1350);
+     curSl.draw(c2,th2);
+     // 重建 tweakPanel
+     const newTweak=buildSlideTweakPanel(lbSlideIdx,style,()=>{
+      const th4=getSlideTheme(lbSlideIdx,style);
+      const c4=bigCanvas.getContext('2d');
+      c4.clearRect(0,0,1080,1350);
+      curSl.draw(c4,th4);
+     },curSl.type||'page');
+     if(tweakHolder.firstChild)tweakHolder.replaceChild(newTweak,tweakHolder.firstChild);
+     else tweakHolder.appendChild(newTweak);
+     // 背景圖縮圖
+     const existBg2=getBg(lbSlideIdx);
+     if(existBg2&&existBg2.src){bgThumb.src=existBg2.src;bgThumb.style.display='block';bgClearBtn.style.display='';}
+     else{bgThumb.style.display='none';bgClearBtn.style.display='none';}
+    };
+
+    // draw
+    const drawBig=()=>{
+     const th2=getSlideTheme(lbSlideIdx,style);
+     const c2=bigCanvas.getContext('2d');
+     c2.clearRect(0,0,1080,1350);
+     sl.draw(c2,th2);
+    };
+    drawBig();
+
+    // 左右箭頭
+    const arrowStyle=`position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border:none;color:#fff;font-size:22px;width:40px;height:56px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;transition:background .15s;user-select:none;-webkit-user-select:none`;
+    const prevBtn=document.createElement('button');prevBtn.type='button';prevBtn.innerHTML='&#8249;';prevBtn.style.cssText=arrowStyle+';left:8px';
+    const nextBtn=document.createElement('button');nextBtn.type='button';nextBtn.innerHTML='&#8250;';nextBtn.style.cssText=arrowStyle+';right:8px';
+    prevBtn.style.opacity=idx>0?'1':'0.25';prevBtn.style.pointerEvents=idx>0?'':'none';
+    nextBtn.style.opacity=idx<totalSlides-1?'1':'0.25';nextBtn.style.pointerEvents=idx<totalSlides-1?'':'none';
+    prevBtn.onmouseenter=()=>{if(lbSlideIdx>0)prevBtn.style.background='rgba(255,255,255,0.28)';};
+    prevBtn.onmouseleave=()=>{prevBtn.style.background='rgba(255,255,255,0.15)';};
+    nextBtn.onmouseenter=()=>{if(lbSlideIdx<totalSlides-1)nextBtn.style.background='rgba(255,255,255,0.28)';};
+    nextBtn.onmouseleave=()=>{nextBtn.style.background='rgba(255,255,255,0.15)';};
+    prevBtn.onclick=(e)=>{e.stopPropagation();if(lbSlideIdx>0)renderPanel(lbSlideIdx-1);};
+    nextBtn.onclick=(e)=>{e.stopPropagation();if(lbSlideIdx<totalSlides-1)renderPanel(lbSlideIdx+1);};
+
+    // 鍵盤左右鍵
+    const keyHandler=(e)=>{
+     if(e.key==='ArrowLeft'&&lbSlideIdx>0)renderPanel(lbSlideIdx-1);
+     if(e.key==='ArrowRight'&&lbSlideIdx<totalSlides-1)renderPanel(lbSlideIdx+1);
+     if(e.key==='Escape')ov.remove();
+    };
+    document.addEventListener('keydown',keyHandler);
+    ov.addEventListener('remove',()=>document.removeEventListener('keydown',keyHandler),{once:true});
+
+    left.append(prevBtn,bigCanvas,nextBtn);
+
     // 背景圖上傳區
     const bgSection=document.createElement('div');
     bgSection.style.cssText='display:flex;align-items:center;gap:8px;flex-wrap:wrap';
@@ -2299,6 +2355,8 @@ function drawStylePreview(styleKey){
     const existBg=getBg(lbSlideIdx);
     if(existBg&&existBg.src){bgThumb.src=existBg.src;bgThumb.style.display='block';}else{bgClearBtn.style.display='none';}
     bgSection.append(bgLabel,bgBtn,bgFileInput,bgThumb,bgClearBtn);
+    // tweakPanel 容器（prev/next 時會換內容）
+    const tweakHolder=document.createElement('div');
     const tweakPanel=buildSlideTweakPanel(lbSlideIdx,style,()=>{
      drawBig();
      // 同步更新膠捲縮圖
@@ -2307,6 +2365,8 @@ function drawStylePreview(styleKey){
      ctx3.clearRect(0,0,W,H);
      sl.draw(ctx3,th3);
     },sl.type||'page');
+    tweakHolder.appendChild(tweakPanel);
+    slideLabel.textContent=String(lbSlideIdx+1).padStart(2,'0');
     const dlBtn2=document.createElement('button');
     dlBtn2.textContent='儲存↓';
     dlBtn2.style.cssText='font:inherit;font-size:13px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 18px;cursor:pointer;margin-top:4px;flex:1';
@@ -2315,14 +2375,14 @@ function drawStylePreview(styleKey){
     closeBtn.textContent='✕';
     closeBtn.title='關閉';
     closeBtn.style.cssText='font:inherit;font-size:13px;font-weight:600;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);border-radius:10px;padding:10px 14px;cursor:pointer;margin-top:4px;flex-shrink:0';
-    closeBtn.onclick=()=>ov.remove();
+    closeBtn.onclick=()=>{document.removeEventListener('keydown',keyHandler);ov.remove();};
     const btnRow2=document.createElement('div');
     btnRow2.style.cssText='display:flex;gap:8px;align-items:stretch';
     btnRow2.append(dlBtn2,closeBtn);
-    rightInner.append(slideLabel,bgSection,tweakPanel,btnRow2);
+    rightInner.append(slideLabel,bgSection,tweakHolder,btnRow2);
     right.append(rightInner);
     ov.append(left,right);
-    ov.addEventListener('click',(e)=>{if(e.target===ov)ov.remove();});
+    ov.addEventListener('click',(e)=>{if(e.target===ov){document.removeEventListener('keydown',keyHandler);ov.remove();}});
     document.body.appendChild(ov);
    };
    const hint=document.createElement('div');
