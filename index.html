@@ -2197,7 +2197,7 @@ function drawStylePreview(styleKey){
    canvas.onclick=()=>{
     // 取得目前 canvasSlides 對應的 makeSlide slideIdx
     let lbSlideIdx=idx; // filmstrip idx == slide idx（mutable for prev/next）
-    const totalSlides=canvasSlides.length;
+    const totalSlides=slides.length;
     const style=A._canvasStyle||'dinero';
     // overlay
     const ov=document.createElement('div');
@@ -2243,7 +2243,7 @@ function drawStylePreview(styleKey){
 
     // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
-     const curSlide=canvasSlides[lbSlideIdx];
+     const curSlide=slides[lbSlideIdx];
      const th2=getSlideTheme(lbSlideIdx,style);
      const c2=bigCanvas.getContext('2d');
      c2.clearRect(0,0,1080,1350);
@@ -2254,7 +2254,7 @@ function drawStylePreview(styleKey){
     // 重新渲染面板函式（供 prev/next 使用）
     const renderPanel=(newIdx)=>{
      lbSlideIdx=newIdx;
-     const curSl=canvasSlides[lbSlideIdx];
+     const curSl=slides[lbSlideIdx];
      slideLabel.textContent=String(lbSlideIdx+1).padStart(2,'0');
      // 更新箭頭狀態
      prevBtn.style.opacity=lbSlideIdx>0?'1':'0.25';
@@ -2338,7 +2338,7 @@ function drawStylePreview(styleKey){
      const th3=getSlideTheme(lbSlideIdx,style);
      const ctx3=canvas.getContext('2d');
      ctx3.clearRect(0,0,W,H);
-     canvasSlides[lbSlideIdx].draw(ctx3,th3);
+     slides[lbSlideIdx].draw(ctx3,th3);
     };
     bgBtn.onclick=()=>bgFileInput.click();
     bgFileInput.onchange=(e)=>{
@@ -2375,7 +2375,7 @@ function drawStylePreview(styleKey){
      const th3=getSlideTheme(lbSlideIdx,style);
      const ctx3=canvas.getContext('2d');
      ctx3.clearRect(0,0,W,H);
-     canvasSlides[lbSlideIdx].draw(ctx3,th3);
+     slides[lbSlideIdx].draw(ctx3,th3);
     },sl.type||'page');
     tweakHolder.appendChild(tweakPanel);
     slideLabel.textContent=String(lbSlideIdx+1).padStart(2,'0');
