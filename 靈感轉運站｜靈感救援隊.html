@@ -2387,8 +2387,8 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb){
   let _tStart={x:0,y:0},_moved=false;
   el.addEventListener('touchstart',e=>{_tStart={x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};_moved=false;},{passive:true});
   el.addEventListener('touchmove',e=>{const dx=e.changedTouches[0].clientX-_tStart.x,dy=e.changedTouches[0].clientY-_tStart.y;if(Math.abs(dx)>6||Math.abs(dy)>6)_moved=true;},{passive:true});
-  el.addEventListener('touchend',e=>{_dbg('touchend seg='+el.dataset.stwSeg+' val='+el.dataset.stwVal+' moved='+_moved);if(!_moved){e.preventDefault();fn(e);}},{passive:false});
-  el.addEventListener('click',e=>{_dbg('click seg='+el.dataset.stwSeg+' touch='+(!!('ontouchstart' in window)));if(!('ontouchstart' in window))fn(e);});
+  el.addEventListener('touchend',e=>{_dbg('touchend seg='+el.dataset.stwSeg+' val='+el.dataset.stwVal+' moved='+_moved);if(!_moved){e.preventDefault();e._stwHandled=true;fn(e);}},{passive:false});
+  el.addEventListener('click',e=>{_dbg('click seg='+el.dataset.stwSeg+' handled='+!!e._stwHandled);if(!e._stwHandled)fn(e);});
  };
  const isDark=['dinero','afei','babyou','faydea'].includes(styleKey);
  const toHex=c=>{if(!c)return'#ffffff';if(c.startsWith('#'))return c;const m=c.match(/[\d.]+/g)||[];return'#'+[m[0],m[1],m[2]].map(n=>parseInt(n).toString(16).padStart(2,'0')).join('');};
