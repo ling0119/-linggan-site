@@ -1379,7 +1379,7 @@ function drawD1Page(ctx,W,H,acct,num,title,body){
  ctx.fillStyle='rgba(255,255,255,0.45)';ctx.textAlign='right';
  ctx.fillText(num||'02',W-px,H-60);ctx.textAlign='left';
  // 白色框
- const bx=px,by=100,bw=W-px*2,bh=Math.round(H*0.60);
+ const bx=px,by=250,bw=W-px*2,bh=Math.round(H*0.60);
  roundRect(ctx,bx,by,bw,bh,16);
  ctx.fillStyle='rgba(255,255,255,0.96)';ctx.fill();
  // 標題（置中）
