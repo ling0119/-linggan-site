@@ -841,7 +841,7 @@ function curStyle(){if(STYLES[A.style])return STYLES[A.style];if(A.style==='cust
 const STEPN=['你是誰','故事素材','文字稿指令','設計排版','出圖','微調指令','完成了'];
 const Q=[
  {q:'先說說你是誰',hint:'填一次就好，後面的指令會自動帶入這些資訊，讓 AI 說話更像你。',
-  f:[['role','你是什麼類型的創作者？','例如：塔羅師、占星師、靈氣療癒師',1],['aud','你的受眾跟讀者是？','例如：在感情裡反覆內耗的女生',1],['acct','IG 帳號','例如：@yourname（會放在輪播圖上）',1]],
+  f:[['role','你是什麼類型的創作者？','例如：塔羅師、占星師、靈氣療癒師',1],['aud','你的受眾跟讀者是？','例如：在感情裡反覆內耗的女生',1],['acct','IG 帳號','例如：@yourname（會放在輪播圖上）',1],['lineId','LINE ID（選填）','例如：@yourlineId（結尾頁膠囊會顯示）',1]],
   picks:{
    aud:['在感情裡反覆內耗的女生','剛分手、還放不下的人','對工作方向迷惘的上班族','總是討好別人、忘了自己的人','想重新認識自己的 30 歲女生','常常焦慮、睡不好的人','想開始靈性成長的新手']}},
  {q:'用這個架構，說你的故事',hint:'根據你的主題，AI 幫你整理了一個故事骨架，照表格填入你有的素材就好。<br><span style="color:var(--accent);font-weight:700">✦ 越具體越好</span>——直接寫當時的場景、對話原文、細節，文案才有真實感。',
@@ -1559,29 +1559,64 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body){
 }
 function drawD4Page(ctx,W,H,acct,num,title,body){
  ctx.fillStyle='#f8f6f2';ctx.fillRect(0,0,W,H);
- const px=88;const bt=Math.round(H*0.68);
+ const px=88;const bt=Math.round(H*0.60);
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
- // 頂部
- ctx.font='300 36px "Noto Sans TC",sans-serif';
+ // 頂部：帳號 + 頁碼
+ ctx.font='300 30px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,26,20,0.35)';ctx.textAlign='left';
  ctx.fillText(acct||'@靈感救援隊',px,80);
  ctx.textAlign='right';ctx.fillStyle='rgba(28,26,20,0.28)';ctx.fillText(num||'02',W-px,80);ctx.textAlign='left';
- // 標題
- ctx.font='700 64px "Noto Serif TC",serif';
- ctx.fillStyle='#1c1a14';
- let ty=wrapCanvasText(ctx,title||'',px,140,W-px*2,76);
- // 細線
- ctx.strokeStyle='rgba(28,26,20,0.12)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(px,ty+14);ctx.lineTo(W-px,ty+14);ctx.stroke();
- // 正文
+ // 標題（置中，Y=200）
+ ctx.font='700 60px "Noto Serif TC",serif';
+ ctx.fillStyle='#1c1a14';ctx.textAlign='center';
+ let ty=wrapCanvasTextCenter(ctx,title||'',W/2,200,W-px*2,76);
+ // 正文（左對齊，40px lineH 60px）
  ctx.font='300 40px "Noto Serif TC",serif';
- ctx.fillStyle='rgba(28,26,20,0.70)';
- wrapCanvasText(ctx,body||'',px,ty+58,W-px*2,60);
- // 底部帶：往右滑
- ctx.font='300 40px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(248,246,242,0.70)';ctx.textAlign='center';
- ctx.fillText('往右滑 →',W/2,bt+(H-bt)/2+14);
+ ctx.fillStyle='rgba(28,26,20,0.70)';ctx.textAlign='left';
+ wrapCanvasText(ctx,body||'',px,ty+60,W-px*2,60);
+ // 底部帶：膠囊靠右下
+ const capText='往右滑 →';
+ ctx.font='300 32px "Noto Sans TC",sans-serif';
+ const capW=ctx.measureText(capText).width+48;const capH=56;
+ const capX=W-px-capW;const capY=bt+(H-bt)/2-capH/2;
+ ctx.fillStyle='rgba(248,246,242,0.18)';
+ roundRect(ctx,capX,capY,capW,capH,28);ctx.fill();
+ ctx.fillStyle='rgba(248,246,242,0.85)';ctx.textAlign='center';
+ ctx.fillText(capText,capX+capW/2,capY+capH/2+11);
  ctx.textAlign='left';
+}
+
+function drawD4End(ctx,W,H,acct,title,body){
+ ctx.fillStyle='#f8f6f2';ctx.fillRect(0,0,W,H);
+ const px=88;const bt=Math.round(H*0.62);
+ ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
+ // 帳號 + VLOG
+ ctx.font='300 30px "Noto Sans TC",sans-serif';
+ ctx.fillStyle='rgba(28,26,20,0.38)';ctx.textAlign='left';
+ ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
+ // 上半：body（CTA 文字）
+ ctx.font='300 40px "Noto Serif TC",serif';
+ ctx.fillStyle='rgba(28,26,20,0.65)';ctx.textAlign='left';
+ wrapCanvasText(ctx,body||'',px,200,W-px*2,62);
+ // 色帶：大標題（反白置中）
+ ctx.font='900 60px "Noto Serif TC",serif';
+ ctx.fillStyle='#f8f6f2';ctx.textAlign='center';
+ const bandH=H-bt;
+ wrapCanvasTextCenter(ctx,title||'謝謝你滑到最後 ✨',W/2,bt+bandH*0.3,W-px*2,84);
+ // LINE 膠囊（靠右下）
+ const lineId=(A.lineId&&A.lineId.trim())?A.lineId.trim():'';
+ if(lineId){
+  const capText='歡迎預約 LINE：'+lineId;
+  ctx.font='500 28px "Noto Sans TC",sans-serif';
+  const capW=ctx.measureText(capText).width+52;const capH=58;
+  const capX=W-px-capW;const capY=bt+bandH-capH-40;
+  ctx.fillStyle='rgba(248,246,242,0.18)';
+  roundRect(ctx,capX,capY,capW,capH,29);ctx.fill();
+  ctx.fillStyle='rgba(248,246,242,0.90)';ctx.textAlign='center';
+  ctx.fillText(capText,capX+capW/2,capY+capH/2+10);
+  ctx.textAlign='left';
+ }
 }
 
 // ── C3 超大頁碼底層 ──
@@ -1944,7 +1979,7 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
  // 結尾頁：用各主題的封面樣式重繪，並疊加結尾提示文字
  if(layout==='d1'){drawD1End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
  if(layout==='d2'){drawD2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
- if(layout==='d4'){drawD4Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨','',body);return;}
+ if(layout==='d4'){drawD4End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
  if(layout==='c3'){drawC3Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
  if(layout==='c4'){drawC4Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
  if(layout==='a3'){drawA3Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
