@@ -1542,15 +1542,14 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body){
  ctx.fillStyle='rgba(28,26,20,0.38)';ctx.textAlign='left';
  ctx.fillText(acct||'@靈感救援隊',px,80);
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
- // 副標（往下移）
+ // 副標（往下移，左對齊）
  ctx.font='400 40px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(28,26,20,0.48)';
+ ctx.fillStyle='rgba(28,26,20,0.48)';ctx.textAlign='left';
  ctx.fillText(sub||'',px,200);
- // 正文（上半，右對齊）
+ // 正文（上半，左對齊）
  ctx.font='300 40px "Noto Serif TC",serif';
- ctx.fillStyle='rgba(28,26,20,0.65)';ctx.textAlign='right';
+ ctx.fillStyle='rgba(28,26,20,0.65)';ctx.textAlign='left';
  wrapCanvasText(ctx,body||'',px,280,W-px*2,60);
- ctx.textAlign='left';
  // 色帶：大標題（反白）
  ctx.font='900 60px "Noto Serif TC",serif';
  ctx.fillStyle='#f8f6f2';ctx.textAlign='center';
