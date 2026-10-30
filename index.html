@@ -1574,15 +1574,15 @@ function drawD4Page(ctx,W,H,acct,num,title,body){
  ctx.font='300 40px "Noto Serif TC",serif';
  ctx.fillStyle='rgba(28,26,20,0.70)';ctx.textAlign='left';
  wrapCanvasText(ctx,body||'',px,ty+60,W-px*2,60);
- // 底部帶：膠囊靠右下
+ // 底部帶：膠囊靠右下貼底
  const capText='往右滑 →';
- ctx.font='300 32px "Noto Sans TC",sans-serif';
- const capW=ctx.measureText(capText).width+48;const capH=56;
- const capX=W-px-capW;const capY=bt+(H-bt)/2-capH/2;
- ctx.fillStyle='rgba(248,246,242,0.18)';
- roundRect(ctx,capX,capY,capW,capH,28);ctx.fill();
- ctx.fillStyle='rgba(248,246,242,0.85)';ctx.textAlign='center';
- ctx.fillText(capText,capX+capW/2,capY+capH/2+11);
+ ctx.font='500 36px "Noto Sans TC",sans-serif';
+ const capW=ctx.measureText(capText).width+60;const capH=68;
+ const capX=W-px-capW;const capY=H-48-capH;
+ ctx.fillStyle='rgba(248,246,242,0.20)';
+ roundRect(ctx,capX,capY,capW,capH,34);ctx.fill();
+ ctx.fillStyle='rgba(248,246,242,0.92)';ctx.textAlign='center';
+ ctx.fillText(capText,capX+capW/2,capY+capH/2+13);
  ctx.textAlign='left';
 }
 
