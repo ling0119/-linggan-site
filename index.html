@@ -1531,40 +1531,37 @@ function drawD2End(ctx,W,H,acct,title,body){
 }
 
 // ── D4 底部橫帶反白 ──
+const D4_BAND='#6b7355';
 function drawD4Cover(ctx,W,H,acct,title,sub,body){
  ctx.fillStyle='#f8f6f2';ctx.fillRect(0,0,W,H);
  const px=88;const bt=Math.round(H*0.62);
- // 底部深色帶
- ctx.fillStyle='#1c1a14';ctx.fillRect(0,bt,W,H-bt);
+ // 底部莫蘭迪色帶
+ ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
  // 上半：帳號
- ctx.font='300 36px "Noto Sans TC",sans-serif';
+ ctx.font='300 30px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,26,20,0.38)';ctx.textAlign='left';
  ctx.fillText(acct||'@靈感救援隊',px,80);
- ctx.textAlign='right';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
- // 細線
- ctx.strokeStyle='rgba(28,26,20,0.12)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(px,108);ctx.lineTo(W-px,108);ctx.stroke();
- // 副標
+ ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
+ // 副標（往下移）
  ctx.font='400 40px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,26,20,0.48)';
- ctx.fillText(sub||'',px,160);
- // 正文（上半）
+ ctx.fillText(sub||'',px,200);
+ // 正文（上半，右對齊）
  ctx.font='300 40px "Noto Serif TC",serif';
- ctx.fillStyle='rgba(28,26,20,0.65)';
- wrapCanvasText(ctx,body||'',px,220,W-px*2,60);
- // 深色帶：大標題（反白）
- const tl=(title||'').split('\n');
- ctx.font='900 104px "Noto Serif TC",serif';
+ ctx.fillStyle='rgba(28,26,20,0.65)';ctx.textAlign='right';
+ wrapCanvasText(ctx,body||'',px,280,W-px*2,60);
+ ctx.textAlign='left';
+ // 色帶：大標題（反白）
+ ctx.font='900 60px "Noto Serif TC",serif';
  ctx.fillStyle='#f8f6f2';ctx.textAlign='center';
  const bandH=H-bt;const lineH=124;
- const startY=bt+bandH/2-((tl.length-1)*lineH)/2+50;
- tl.forEach((line,i)=>ctx.fillText(line,W/2,startY+i*lineH));
+ let ty=wrapCanvasTextCenter(ctx,title||'',W/2,bt+bandH/2-60,W-px*2,lineH);
  ctx.textAlign='left';
 }
 function drawD4Page(ctx,W,H,acct,num,title,body){
  ctx.fillStyle='#f8f6f2';ctx.fillRect(0,0,W,H);
  const px=88;const bt=Math.round(H*0.68);
- ctx.fillStyle='#1c1a14';ctx.fillRect(0,bt,W,H-bt);
+ ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
  // 頂部
  ctx.font='300 36px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,26,20,0.35)';ctx.textAlign='left';
