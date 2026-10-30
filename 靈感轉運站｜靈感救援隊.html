@@ -4543,7 +4543,7 @@ document.addEventListener('input',e=>{
 sp.addEventListener('scroll',e=>{const c=e.target;if(c.classList&&c.classList.contains('spc-car')){const img=c.querySelector('.pv-img');const w=img?(img.offsetWidth+8):c.clientWidth;const i=Math.round(c.scrollLeft/Math.max(1,w));const wrap=c.parentNode;wrap.querySelectorAll('.cdots button').forEach((b,j)=>b.setAttribute('aria-current',j===i))}},true);
 document.addEventListener('keydown',e=>{if(!sp.hidden&&e.key==='Escape')closeSP();});
 function slideDoc(slideHtml,fontUrl){return`<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="${fontUrl}" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{overflow:hidden}</style></head><body>${slideHtml}</body></html>`;}
-const DEMO_DATA={cover:{title:'你值得被好好愛',sub:'關於那些說不出口的委屈'},inner:[{title:'你習慣先照顧別人',body:'卻忘了問自己\n我現在需要什麼？\n\n這不是你的錯\n只是你學會了太早長大'},{title:'委屈不是愛的代價',body:'真正適合你的人\n不會讓你覺得開口要求\n是一件難事'}],end:{title:'你已經足夠好了',sub:'只是還沒遇到懂得珍惜你的人',cta:'留言告訴我你的感受 💛'}};
+const DEMO_DATA={cover:{title:'你值得被好好愛',sub:'關於那些說不出口的委屈'},inner:[{title:'你習慣先照顧別人',body:'卻忘了問自己\n我現在需要什麼？\n\n總是把別人的感受排在前面\n深怕自己開口\n會造成別人的麻煩\n\n這不是你的錯\n只是你學會了太早長大'},{title:'委屈不是愛的代價',body:'真正適合你的人\n不會讓你覺得開口要求\n是一件很難的事\n\n你不應該在一段關係裡\n反覆猜測自己夠不夠好\n反覆壓下那些想說的話\n\n那種安靜\n有時候比吵架更傷'}],end:{title:'你已經足夠好了',sub:'只是還沒遇到懂得珍惜你的人',cta:'留言告訴我你的感受 💛'}};
 const DEMO_PHOTOS=['https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1080&h=1350&fit=crop','https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=1080&h=1350&fit=crop','https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=1080&h=1350&fit=crop'];
 function openPrevLB(k){
  lbKey=k;const t=STYLES[k],acct=esc(A.acct&&A.acct.trim()?A.acct.trim():'@yourname');
