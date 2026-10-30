@@ -1566,14 +1566,14 @@ function drawD4Page(ctx,W,H,acct,num,title,body){
  ctx.fillStyle='rgba(28,26,20,0.35)';ctx.textAlign='left';
  ctx.fillText(acct||'@靈感救援隊',px,80);
  ctx.textAlign='right';ctx.fillStyle='rgba(28,26,20,0.28)';ctx.fillText(num||'02',W-px,80);ctx.textAlign='left';
- // 標題（置中，Y=200）
+ // 標題（左對齊，Y=250）
  ctx.font='700 60px "Noto Serif TC",serif';
- ctx.fillStyle='#1c1a14';ctx.textAlign='center';
- let ty=wrapCanvasTextCenter(ctx,title||'',W/2,200,W-px*2,76);
+ ctx.fillStyle='#1c1a14';ctx.textAlign='left';
+ let ty=wrapCanvasText(ctx,title||'',px,250,W-px*2,76);
  // 正文（左對齊，40px lineH 60px）
  ctx.font='300 40px "Noto Serif TC",serif';
- ctx.fillStyle='rgba(28,26,20,0.70)';ctx.textAlign='left';
- wrapCanvasText(ctx,body||'',px,ty+60,W-px*2,60);
+ ctx.fillStyle='rgba(28,26,20,0.70)';
+ wrapCanvasText(ctx,body||'',px,ty+80,W-px*2,60);
  // 底部帶：膠囊靠右下貼底
  const capText='往右滑 →';
  ctx.font='500 36px "Noto Sans TC",sans-serif';
