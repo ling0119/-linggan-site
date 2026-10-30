@@ -1457,15 +1457,15 @@ function drawD2Cover(ctx,W,H,acct,title,sub){
  ctx.font='900 60px "Noto Serif TC",serif';
  ctx.fillStyle='#1c140e';
  let ty=wrapCanvasText(ctx,title||'',rx,H*0.38,W-rx-px,80);
- // 副標（標題下方）
+ // 副標（標題緊接下方）
  ctx.font='400 38px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,20,14,0.48)';
- ctx.fillText(sub||'',rx,ty+50);
- ty=ty+50+(sub?48:0);
+ ctx.fillText(sub||'',rx,ty+16);
+ ty=ty+16+(sub?48:0);
  // 裝飾線
- ctx.font='400 40px "Noto Sans TC",sans-serif';
+ ctx.font='400 44px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#6a8baa';
- ctx.fillText('☛☛☛',rx,ty+50);
+ ctx.fillText('〰〰〰',rx,ty+50);
  ctx.textAlign='left';
 }
 function drawD2Page(ctx,W,H,acct,num,title,body){
@@ -1520,9 +1520,9 @@ function drawD2End(ctx,W,H,acct,title,body){
  ctx.fillStyle='#1c140e';
  let ty=wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',rx,H*0.35,W-rx-px,80);
  // 裝飾線
- ctx.font='400 40px "Noto Sans TC",sans-serif';
+ ctx.font='400 44px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#6a8baa';
- ctx.fillText('☛☛☛',rx,ty+50);
+ ctx.fillText('〰〰〰',rx,ty+50);
  // 正文
  ctx.font='300 35px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,20,14,0.65)';
