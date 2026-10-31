@@ -2200,13 +2200,19 @@ function drawStylePreview(styleKey){
  // 建立全部張的 draw 描述（draw 接受可選 thOv 讓 lightbox 用 getSlideTheme）
  const slides=pages.map((p,i)=>{
   if(i===0){
-   return {label:'封面',type:'cover',title:p.title||'你的標題',body:p.sub||'探索靈感的方式',draw:(ctx,thOv)=>drawCanvasCover(ctx,W,H,thOv||th,acct,p.title||'你的標題',p.sub||'探索靈感的方式',p.body||'往右滑，看看怎麼開始 →',getBg(i))};
+   const s={label:'封面',type:'cover',title:p.title||'你的標題',body:p.sub||'探索靈感的方式'};
+   s.draw=(ctx,thOv)=>drawCanvasCover(ctx,W,H,thOv||th,acct,s.title,s.body,p.body||'往右滑，看看怎麼開始 →',getBg(i));
+   return s;
   }
   if(p.isEnd||i===n-1){
-   return {label:'結尾頁',type:'end',title:p.title||'',body:p.body||'',draw:(ctx,thOv)=>drawCanvasEndPage(ctx,W,H,thOv||th,acct,p.title,p.body,getBg(i))};
+   const s={label:'結尾頁',type:'end',title:p.title||'',body:p.body||''};
+   s.draw=(ctx,thOv)=>drawCanvasEndPage(ctx,W,H,thOv||th,acct,s.title,s.body,getBg(i));
+   return s;
   }
   const num=String(i).padStart(2,'0');
-  return {label:'第 '+(i+1)+' 張',type:'page',title:p.title||'',body:p.body||'',draw:(ctx,thOv)=>drawCanvasPage(ctx,W,H,thOv||th,acct,num,p.title,p.body,totalLabel,getBg(i))};
+  const s={label:'第 '+(i+1)+' 張',type:'page',title:p.title||'',body:p.body||''};
+  s.draw=(ctx,thOv)=>drawCanvasPage(ctx,W,H,thOv||th,acct,num,s.title,s.body,totalLabel,getBg(i));
+  return s;
  });
 
  const buildSlides=()=>{
@@ -2271,16 +2277,32 @@ function drawStylePreview(styleKey){
     rightInner.style.cssText='padding:8px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1';
     const slideLabel=document.createElement('div');
     slideLabel.style.cssText='font-size:40px;font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:2px';
-    // 文案顯示區
-    const slideText=document.createElement('div');
-    slideText.style.cssText='background:var(--surface,#f8f6f2);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.6;color:var(--ink);border:1px solid rgba(0,0,0,0.06)';
+    // 文案編輯區
+    const slideTextWrap=document.createElement('div');
+    slideTextWrap.style.cssText='display:flex;flex-direction:column;gap:6px';
+    const titleInput=document.createElement('input');
+    titleInput.type='text';
+    titleInput.placeholder='標題';
+    titleInput.style.cssText='font:inherit;font-size:14px;font-weight:700;padding:8px 12px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.12);background:var(--surface,#f8f6f2);color:var(--ink);width:100%;box-sizing:border-box;outline:none';
+    const bodyInput=document.createElement('textarea');
+    bodyInput.placeholder='內文（換行用 Enter）';
+    bodyInput.rows=5;
+    bodyInput.style.cssText='font:inherit;font-size:12px;padding:8px 12px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.12);background:var(--surface,#f8f6f2);color:var(--ink);width:100%;box-sizing:border-box;resize:vertical;line-height:1.7;outline:none';
     const updateSlideText=(idx)=>{
-     const s=slides[idx];
-     const titleLine=s.title?`<div style="font-weight:700;font-size:14px;color:var(--ink);margin-bottom:2px">${esc(s.title)}</div>`:'';
-     const bodyLine=s.body?`<div style="color:rgba(0,0,0,0.55);white-space:pre-wrap;font-size:12px;line-height:1.7">${esc(s.body)}</div>`:'';
-     slideText.innerHTML=titleLine+bodyLine||(titleLine||bodyLine?titleLine+bodyLine:'<div style="color:#aaa;font-size:12px">（無文案）</div>');
+     titleInput.value=slides[idx].title||'';
+     bodyInput.value=slides[idx].body||'';
     };
     updateSlideText(lbSlideIdx);
+    // 編輯後即時更新 slides 資料並重繪
+    titleInput.addEventListener('input',()=>{
+     slides[lbSlideIdx].title=titleInput.value;
+     drawBig();
+    });
+    bodyInput.addEventListener('input',()=>{
+     slides[lbSlideIdx].body=bodyInput.value;
+     drawBig();
+    });
+    slideTextWrap.append(titleInput,bodyInput);
 
     // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
@@ -2434,7 +2456,7 @@ function drawStylePreview(styleKey){
     const btnRow2=document.createElement('div');
     btnRow2.style.cssText='display:flex;gap:8px;align-items:stretch';
     btnRow2.append(dlBtn2,closeBtn);
-    rightInner.append(slideLabel,slideText,bgSection,tweakHolder,btnRow2);
+    rightInner.append(slideLabel,slideTextWrap,bgSection,tweakHolder,btnRow2);
     right.append(rightInner);
     ov.append(left,right);
     document.body.appendChild(ov);
