@@ -4064,6 +4064,7 @@ app.addEventListener('input',e=>{
   const k=e.target.dataset.k;if(k){A[k]=e.target.value;save();
    // 帳號改動即時更新 canvas 預覽
    if(k==='acct'){clearTimeout(window._acctDbt);window._acctDbt=setTimeout(()=>{requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'d1'));},300);}
+   if(k==='lineId'){clearTimeout(window._lineDbt);window._lineDbt=setTimeout(()=>{requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'d1'));},300);}
   }
 });
 app.addEventListener('click',e=>{
