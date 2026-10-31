@@ -2298,6 +2298,9 @@ function drawStylePreview(styleKey){
      slides[lbSlideIdx].title=titleInput.value;
      drawBig();
     });
+    bodyInput.addEventListener('keydown',(e)=>{
+     if(e.key==='Enter'){e.stopPropagation();}// 防止被外層攔截
+    });
     bodyInput.addEventListener('input',()=>{
      slides[lbSlideIdx].body=bodyInput.value;
      drawBig();
@@ -2372,10 +2375,11 @@ function drawStylePreview(styleKey){
      document.removeEventListener('keydown',keyHandler);
      prevBtn.remove();nextBtn.remove();ov.remove();
     };
-    // 鍵盤左右鍵
+    // 鍵盤左右鍵（焦點在輸入框時不觸發切換）
     const keyHandler=(e)=>{
-     if(e.key==='ArrowLeft'&&lbSlideIdx>0)renderPanel(lbSlideIdx-1);
-     if(e.key==='ArrowRight'&&lbSlideIdx<totalSlides-1)renderPanel(lbSlideIdx+1);
+     const inInput=e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable;
+     if(e.key==='ArrowLeft'&&!inInput&&lbSlideIdx>0)renderPanel(lbSlideIdx-1);
+     if(e.key==='ArrowRight'&&!inInput&&lbSlideIdx<totalSlides-1)renderPanel(lbSlideIdx+1);
      if(e.key==='Escape')removeLB();
     };
     document.addEventListener('keydown',keyHandler);
