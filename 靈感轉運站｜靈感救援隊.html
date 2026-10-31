@@ -2299,13 +2299,25 @@ function drawStylePreview(styleKey){
      drawBig();
     });
     bodyInput.addEventListener('keydown',(e)=>{
-     if(e.key==='Enter'){e.stopPropagation();}// 防止被外層攔截
+     if(e.key==='Enter'){e.stopPropagation();}
     });
     bodyInput.addEventListener('input',()=>{
      slides[lbSlideIdx].body=bodyInput.value;
      drawBig();
     });
-    slideTextWrap.append(titleInput,bodyInput);
+    const brBtn=document.createElement('button');
+    brBtn.type='button';brBtn.textContent='↵ 換行';
+    brBtn.style.cssText='font:inherit;font-size:11px;padding:4px 12px;border-radius:20px;border:1.5px solid rgba(0,0,0,0.15);background:var(--surface,#f8f6f2);color:var(--ink);cursor:pointer;align-self:flex-start';
+    brBtn.onclick=()=>{
+     const s=bodyInput.selectionStart,e2=bodyInput.selectionEnd;
+     const v=bodyInput.value;
+     bodyInput.value=v.slice(0,s)+'\n'+v.slice(e2);
+     bodyInput.selectionStart=bodyInput.selectionEnd=s+1;
+     bodyInput.focus();
+     slides[lbSlideIdx].body=bodyInput.value;
+     drawBig();
+    };
+    slideTextWrap.append(titleInput,bodyInput,brBtn);
 
     // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
