@@ -2280,10 +2280,11 @@ function drawStylePreview(styleKey){
     // 文案編輯區
     const slideTextWrap=document.createElement('div');
     slideTextWrap.style.cssText='display:flex;flex-direction:column;gap:6px';
-    const titleInput=document.createElement('input');
-    titleInput.type='text';
+    const titleInput=document.createElement('textarea');
     titleInput.placeholder='標題';
-    titleInput.style.cssText='font:inherit;font-size:14px;font-weight:700;padding:8px 12px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.12);background:var(--surface,#f8f6f2);color:var(--ink);width:100%;box-sizing:border-box;outline:none';
+    titleInput.rows=2;
+    titleInput.style.cssText='font:inherit;font-size:14px;font-weight:700;padding:8px 12px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.12);background:var(--surface,#f8f6f2);color:var(--ink);width:100%;box-sizing:border-box;outline:none;resize:none;line-height:1.5';
+    titleInput.addEventListener('keydown',(e)=>{if(e.key==='Enter')e.stopPropagation();});
     const bodyInput=document.createElement('textarea');
     bodyInput.placeholder='內文（換行用 Enter）';
     bodyInput.rows=5;
@@ -2298,6 +2299,7 @@ function drawStylePreview(styleKey){
      slides[lbSlideIdx].title=titleInput.value;
      drawBig();
     });
+
     bodyInput.addEventListener('keydown',(e)=>{
      if(e.key==='Enter'){e.stopPropagation();}
     });
@@ -2305,19 +2307,27 @@ function drawStylePreview(styleKey){
      slides[lbSlideIdx].body=bodyInput.value;
      drawBig();
     });
-    const brBtn=document.createElement('button');
-    brBtn.type='button';brBtn.textContent='↵ 換行';
-    brBtn.style.cssText='font:inherit;font-size:11px;padding:4px 12px;border-radius:20px;border:1.5px solid rgba(0,0,0,0.15);background:var(--surface,#f8f6f2);color:var(--ink);cursor:pointer;align-self:flex-start';
-    brBtn.onclick=()=>{
-     const s=bodyInput.selectionStart,e2=bodyInput.selectionEnd;
-     const v=bodyInput.value;
-     bodyInput.value=v.slice(0,s)+'\n'+v.slice(e2);
-     bodyInput.selectionStart=bodyInput.selectionEnd=s+1;
-     bodyInput.focus();
-     slides[lbSlideIdx].body=bodyInput.value;
-     drawBig();
+    const makeBrBtn=(targetInput,getVal,setVal)=>{
+     const btn=document.createElement('button');
+     btn.type='button';btn.textContent='↵ 換行';
+     btn.style.cssText='font:inherit;font-size:11px;padding:3px 10px;border-radius:20px;border:1.5px solid rgba(0,0,0,0.15);background:var(--surface,#f8f6f2);color:var(--ink);cursor:pointer';
+     btn.onclick=()=>{
+      const s=targetInput.selectionStart,e2=targetInput.selectionEnd;
+      const v=targetInput.value;
+      targetInput.value=v.slice(0,s)+'\n'+v.slice(e2);
+      targetInput.selectionStart=targetInput.selectionEnd=s+1;
+      targetInput.focus();
+      setVal(targetInput.value);
+      drawBig();
+     };
+     return btn;
     };
-    slideTextWrap.append(titleInput,bodyInput,brBtn);
+    const titleBrBtn=makeBrBtn(titleInput,()=>slides[lbSlideIdx].title,(v)=>{slides[lbSlideIdx].title=v;});
+    const bodyBrBtn=makeBrBtn(bodyInput,()=>slides[lbSlideIdx].body,(v)=>{slides[lbSlideIdx].body=v;});
+    const brRow=document.createElement('div');
+    brRow.style.cssText='display:flex;gap:6px';
+    brRow.append(titleBrBtn,bodyBrBtn);
+    slideTextWrap.append(titleInput,bodyInput,brRow);
 
     // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
