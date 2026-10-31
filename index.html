@@ -1187,6 +1187,7 @@ function wrapCanvasText(ctx,text,x,y,maxW,lineH){
 }
 function wrapCanvasTextCenter(ctx,text,cx,y,maxW,lineH){
  const prevAlign=ctx.textAlign;ctx.textAlign='center';
+ console.log('[wrapCenter] text JSON:', JSON.stringify(text));
  const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');let cy=y;
  for(const line of lines){
   if(!line){cy+=lineH*0.55;continue;}
@@ -2297,6 +2298,7 @@ function drawStylePreview(styleKey){
     // 編輯後即時更新 slides 資料並重繪
     titleInput.addEventListener('input',()=>{
      slides[lbSlideIdx].title=titleInput.value;
+     console.log('[titleInput] title JSON:', JSON.stringify(slides[lbSlideIdx].title));
      drawBig();
     });
 
