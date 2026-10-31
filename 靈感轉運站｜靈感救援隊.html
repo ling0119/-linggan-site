@@ -1661,16 +1661,16 @@ function drawC3Page(ctx,W,H,acct,num,title,body){
  ctx.fillText(acct||'@靈感救援隊',px,80);
  ctx.textAlign='right';ctx.fillStyle='rgba(20,18,14,0.28)';ctx.fillText(num||'02',W-px,80);ctx.textAlign='left';
  // 標題
- ctx.font='800 72px "Noto Serif TC",serif';
+ ctx.font='800 58px "Noto Serif TC",serif';
  ctx.fillStyle='#1c140e';
- let ty=wrapCanvasText(ctx,title||'',px,140,W-px*2,88);
+ let ty=wrapCanvasText(ctx,title||'',px,140,W-px*2,76);
  // 粗底線
- ctx.strokeStyle='#1c140e';ctx.lineWidth=10;
- ctx.beginPath();ctx.moveTo(px,ty+10);ctx.lineTo(px+100,ty+10);ctx.stroke();
+ ctx.strokeStyle='#1c140e';ctx.lineWidth=8;
+ ctx.beginPath();ctx.moveTo(px,ty+10);ctx.lineTo(px+90,ty+10);ctx.stroke();
  // 正文
- ctx.font='300 40px "Noto Serif TC",serif';
+ ctx.font='300 36px "Noto Serif TC",serif';
  ctx.fillStyle='rgba(20,18,14,0.72)';
- wrapCanvasText(ctx,body||'',px,ty+54,W-px*2,60);
+ wrapCanvasText(ctx,body||'',px,ty+52,W-px*2,56);
 }
 
 // ── C4 橫向三段切 ──
