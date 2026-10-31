@@ -1172,7 +1172,7 @@ function normalizeBodyText(text){
   .trim();
 }
 function wrapCanvasText(ctx,text,x,y,maxW,lineH){
- const lines=text.split('\n');let cy=y;
+ const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');let cy=y;
  for(const line of lines){
   if(!line){cy+=lineH*0.55;continue;}
   const chars=line.split('');let cur='';
@@ -1187,7 +1187,7 @@ function wrapCanvasText(ctx,text,x,y,maxW,lineH){
 }
 function wrapCanvasTextCenter(ctx,text,cx,y,maxW,lineH){
  const prevAlign=ctx.textAlign;ctx.textAlign='center';
- const lines=text.split('\n');let cy=y;
+ const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');let cy=y;
  for(const line of lines){
   if(!line){cy+=lineH*0.55;continue;}
   const chars=line.split('');let cur='';
@@ -2307,27 +2307,7 @@ function drawStylePreview(styleKey){
      slides[lbSlideIdx].body=bodyInput.value;
      drawBig();
     });
-    const makeBrBtn=(targetInput,getVal,setVal)=>{
-     const btn=document.createElement('button');
-     btn.type='button';btn.textContent='↵ 換行';
-     btn.style.cssText='font:inherit;font-size:11px;padding:3px 10px;border-radius:20px;border:1.5px solid rgba(0,0,0,0.15);background:var(--surface,#f8f6f2);color:var(--ink);cursor:pointer';
-     btn.onclick=()=>{
-      const s=targetInput.selectionStart,e2=targetInput.selectionEnd;
-      const v=targetInput.value;
-      targetInput.value=v.slice(0,s)+'\n'+v.slice(e2);
-      targetInput.selectionStart=targetInput.selectionEnd=s+1;
-      targetInput.focus();
-      setVal(targetInput.value);
-      drawBig();
-     };
-     return btn;
-    };
-    const titleBrBtn=makeBrBtn(titleInput,()=>slides[lbSlideIdx].title,(v)=>{slides[lbSlideIdx].title=v;});
-    const bodyBrBtn=makeBrBtn(bodyInput,()=>slides[lbSlideIdx].body,(v)=>{slides[lbSlideIdx].body=v;});
-    const brRow=document.createElement('div');
-    brRow.style.cssText='display:flex;gap:6px';
-    brRow.append(titleBrBtn,bodyBrBtn);
-    slideTextWrap.append(titleInput,bodyInput,brRow);
+    slideTextWrap.append(titleInput,bodyInput);
 
     // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
