@@ -1162,13 +1162,12 @@ const CANVAS_THEMES={
  i1:{layout:'i1'}
 };
 
-// 標點後自動換行（。！？…「」等句末標點後插 \n，避免連成一行）
+// 標點後自動換行（句末標點後插 \n，但右引號」之前不加，讓引號留在同行）
 function normalizeBodyText(text){
  if(!text)return text;
- // 在句末標點後加換行，但不重複加（已有 \n 就不加）
  return text
-  .replace(/([。！？…]{1,2})(?!\n)/g,'$1\n')
-  .replace(/\n{3,}/g,'\n\n') // 最多兩個空行
+  .replace(/([。！？…]{1,2})(?![」\n])/g,'$1\n')
+  .replace(/\n{3,}/g,'\n\n')
   .trim();
 }
 function wrapCanvasText(ctx,text,x,y,maxW,lineH){
