@@ -1343,21 +1343,25 @@ function drawD1Cover(ctx,W,H,acct,title,sub){
  const bx=px,by=Math.round(H*0.34),bw=W-px*2,bh=Math.round(H*0.38);
  roundRect(ctx,bx,by,bw,bh,16);
  ctx.fillStyle='rgba(255,255,255,0.95)';ctx.fill();
- // 標題（框內，自動斷行，行距80px）
+ // 標題（框內，自動斷行，支援 \n，行距120px）
  ctx.font='900 104px "Noto Serif TC",serif';
  ctx.fillStyle='#0e0e10';ctx.textAlign='center';
  const cx=W/2;
  const lineH=120;
+ // 先 split \n，再對每段自動 wrap，收集所有行
  const titleLines=[];
- if(title){
+ const rawLines=(title||'').replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+ for(const rawLine of rawLines){
+  if(!rawLine){titleLines.push('');continue;}
   let line='';
-  for(const ch of title){
+  for(const ch of rawLine){
    const test=line+ch;
    if(ctx.measureText(test).width>bw-80&&line){titleLines.push(line);line=ch;}
    else line=test;
   }
   if(line)titleLines.push(line);
- } else {titleLines.push('');}
+ }
+ if(!titleLines.length)titleLines.push('');
  const totalTH=titleLines.length*lineH;
  const startY=by+bh/2-totalTH/2+lineH;
  titleLines.forEach((ln,i)=>ctx.fillText(ln,cx,startY+i*lineH));
