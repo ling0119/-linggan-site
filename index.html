@@ -2773,7 +2773,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   const curW=tw[`el_${ek}_weight`]||defW;
   const curF=tw[`el_${ek}_family`]||defF;
   const curC=tw[`el_${ek}_color`]||defC;
-  const curA=tw[`el_${ek}_align`]||'default';
+  const curA=tw[`el_${ek}_align`]||defA;
 
   // hint text
   const fLabel=curF==='serif'?'明':'黑';
@@ -2853,11 +2853,11 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   const rA=document.createElement('div');rA.className='stw-ctrl-row';
   const lA=document.createElement('span');lA.className='stw-lbl';lA.textContent='對齊';
   const segA=document.createElement('div');segA.className='stw-seg';
-  const aLabel={'left':'左','center':'中','right':'右'};
-  const alignOpts=[['default',`預設(${aLabel[defA]||defA})`],['left','左'],['center','中'],['right','右']].filter(([v])=>v==='default'||v!==defA);
+  const alignOpts=[['left','左'],['center','中'],['right','右']];
   alignOpts.forEach(([v,t])=>{
    const sp=document.createElement('button');sp.type='button';sp.textContent=t;sp.dataset.stwSeg=`el_${ek}_align`;sp.dataset.stwVal=v;
-   if(v===curA)sp.classList.add('on');
+   const curAlignEff=curA==='default'?defA:curA;
+   if(v===curAlignEff)sp.classList.add('on');
    onTap(sp,()=>{
     segA.querySelectorAll('button').forEach(s=>s.classList.remove('on'));sp.classList.add('on');
     if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
