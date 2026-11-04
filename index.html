@@ -2718,42 +2718,6 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
  }
  panel.appendChild(head);
 
- // ── 版面設定列（titleY / px / overlay）──
- const layoutRow=document.createElement('button');layoutRow.type='button';
- layoutRow.className='stw-el-row';
- const layoutDot=document.createElement('div');layoutDot.className='stw-el-dot';layoutDot.style.background='#b0a090';
- const layoutName=document.createElement('span');layoutName.className='stw-el-name';layoutName.textContent='版面';
- const layoutArr=document.createElement('span');layoutArr.className='stw-el-arr';layoutArr.textContent='▸';
- layoutRow.append(layoutDot,layoutName,layoutArr);
- panel.appendChild(layoutRow);
-
- const layoutBody=document.createElement('div');
- layoutBody.className='stw-layout-box';
- layoutBody.style.display='none';
- // titleY
- const r1=document.createElement('div');r1.className='stw-ctrl-row';
- const l1=document.createElement('span');l1.className='stw-lbl';l1.textContent='標Y';
- r1.append(l1);r1.innerHTML+=sldr('titleY',tw.titleY||0,-300,300,10);
- layoutBody.appendChild(r1);
- // px
- const r2=document.createElement('div');r2.className='stw-ctrl-row';
- const l2=document.createElement('span');l2.className='stw-lbl';l2.textContent='邊距';
- r2.append(l2);r2.innerHTML+=sldr('px',tw.px!=null?tw.px:72,40,120,4);
- layoutBody.appendChild(r2);
- // overlay (dark only)
- if(isDark){
-  const r3=document.createElement('div');r3.className='stw-ctrl-row';
-  const l3=document.createElement('span');l3.className='stw-lbl';l3.textContent='蒙版';
-  r3.append(l3);r3.innerHTML+=sldr('overlayAlpha',tw.overlayAlpha!=null?tw.overlayAlpha:0.45,0,0.85,0.05);
-  layoutBody.appendChild(r3);
- }
- panel.appendChild(layoutBody);
- onTap(layoutRow,()=>{
-  const open=layoutBody.style.display!=='none';
-  layoutBody.style.display=open?'none':'flex';
-  layoutArr.classList.toggle('open',!open);
- });
-
  // ── 元素列 ──
  const PRESET_COLORS=['#ffffff','#f0c060','#e8829a','#9060c8'];
  const dotColors={title:'linear-gradient(135deg,#9060c8,#c880e8)',sub:'#5890c0',body:'#60a870',acct:'#c07858',num:'#c8a060'};
