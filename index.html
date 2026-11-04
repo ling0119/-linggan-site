@@ -1307,16 +1307,20 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
 
- // ── 新主題 dispatch ──
- if(layout==='d1'){drawD1Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='d2'){drawD2Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='d4'){drawD4Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='c3'){drawC3Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='c4'){drawC4Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='a3'){drawA3Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='a6'){drawA6Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='h2'){drawH2Page(ctx,W,H,acct,num,title,body,th);return;}
- if(layout==='i1'){drawI1Page(ctx,W,H,acct,num,title,body,th);return;}
+ // ── 格式化頁碼後再 dispatch ──
+ // 各版型的「預設格式」不同，用 fmtNum/fmtNumSlash/fmtNumBare 套用
+ const numMap={d1:fmtNumBare,d2:fmtNumBare,d4:fmtNumSlash,c3:fmtNumBare,c4:fmtNumBare,a3:fmtNumSlash,a6:fmtNumNo,h2:fmtNumSlash,i1:fmtNumSlash};
+ const fmtFn=numMap[layout]||fmtNumBare;
+ const numStr=fmtFn();
+ if(layout==='d1'){drawD1Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='d2'){drawD2Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='d4'){drawD4Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='c3'){drawC3Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='c4'){drawC4Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='a3'){drawA3Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='a6'){drawA6Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='h2'){drawH2Page(ctx,W,H,acct,numStr,title,body,th);return;}
+ if(layout==='i1'){drawI1Page(ctx,W,H,acct,numStr,title,body,th);return;}
 }
 
 // ════════════════════════════════════════
