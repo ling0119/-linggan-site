@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=LXGW+WenKai+TC:wght@400;700&family=Huninn&family=Iansui&family=Zen+Old+Mincho:wght@400;700;900&family=DM+Serif+Display&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700;900&family=Noto+Sans+SC:wght@300;400;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Shippori+Mincho:wght@400;700;800&family=Kaisei+Decol:wght@400;700&display=swap">
 <style>
 /* Layout: one question per screen, nothing else on it */
 :root{
@@ -1304,7 +1304,7 @@ function drawCanvasPage(ctx,W,H,th,acct,num,title,body,totalN,bgImg){
  const _el=th._el||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
 
@@ -1334,7 +1334,7 @@ function drawD1Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const px=88;
@@ -1392,7 +1392,7 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const px=90;
@@ -1477,7 +1477,7 @@ function drawD2Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const px=88;const bandW=160;
  _d2Band(ctx,W,H,bandW);
@@ -1514,7 +1514,7 @@ function drawD2Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const px=88;const bandW=160;
  _d2Band(ctx,W,H,bandW);
@@ -1585,7 +1585,7 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const px=88;const bt=Math.round(H*0.62);
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
@@ -1613,7 +1613,7 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const px=88;const bt=Math.round(H*0.60);
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
@@ -1684,7 +1684,7 @@ function drawC3Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const px=88;
  ctx.font='900 800px "Noto Serif TC",serif';
@@ -1712,7 +1712,7 @@ function drawC3Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const px=88;
@@ -1746,7 +1746,7 @@ function drawC4Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const t1=Math.round(H*0.22),t2=Math.round(H*0.65);
  ctx.fillStyle='#16203a';ctx.fillRect(0,0,W,t1);
@@ -1777,7 +1777,7 @@ function drawC4Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const t1=Math.round(H*0.18),t2=Math.round(H*0.60);
@@ -1813,7 +1813,7 @@ function drawA3Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const g=ctx.createLinearGradient(0,0,W,H);
  g.addColorStop(0,'#c8956a');g.addColorStop(0.5,'#a0673a');g.addColorStop(1,'#7a4020');
@@ -1847,7 +1847,7 @@ function drawA3Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const g=ctx.createLinearGradient(0,0,W,H);
@@ -1886,7 +1886,7 @@ function drawA6Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  ctx.fillStyle='#1c1a18';ctx.fillRect(0,0,W,H);
  const px=80;
@@ -1915,7 +1915,7 @@ function drawA6Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  ctx.fillStyle='#1c1a18';ctx.fillRect(0,0,W,H);
@@ -1946,7 +1946,7 @@ function drawH2Cover(ctx,W,H,acct,title,sub,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  ctx.fillStyle='#fdfbf8';ctx.fillRect(0,0,W,H);
  const blobs=[
@@ -1989,7 +1989,7 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const blobs=[
@@ -2036,7 +2036,7 @@ function drawI1Cover(ctx,W,H,acct,title,sub,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  ctx.fillStyle='#fdf9fc';ctx.fillRect(0,0,W,H);
  const gl=ctx.createRadialGradient(W*0.85,H*0.08,0,W*0.85,H*0.08,W*0.60);
@@ -2072,7 +2072,7 @@ function drawI1Page(ctx,W,H,acct,num,title,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
- const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif'};return m[_el[ek].family]||def;};
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
  const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
  const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const gl=ctx.createRadialGradient(W*0.15,H*0.85,0,W*0.15,H*0.85,W*0.50);
@@ -2750,7 +2750,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   const curA=tw[`el_${ek}_align`]||defA;
 
   // hint text
-  const fLabel={serif:'明體',sans:'黑體',lxgw:'文楷',huninn:'粉圓',iansui:'書體',zenold:'禪明朝',serifsc:'宋體簡',sanssc:'黑體簡'}[curF]||curF;
+  const fLabel={serif:'明體',sans:'黑體',lxgw:'文楷',huninn:'粉圓',iansui:'書體',zenold:'禪明朝',serifsc:'宋體簡',sanssc:'黑體簡','ma-shan':'馬善政楷',zcool:'文藝宋',shippori:'新明朝',kaisei:'海星'}[curF]||curF;
   const wMap={'300':'細','400':'常','600':'中','700':'粗','800':'粗','900':'黑'};
   const wLabel=wMap[String(curW)]||curW;
   const hintText=`${fLabel} ${curSize} ${wLabel}`;
@@ -2774,7 +2774,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   const lFont=document.createElement('span');lFont.className='stw-lbl';lFont.textContent='字體';
   const selFont=document.createElement('select');selFont.className='stw-sel';
   selFont.dataset.stw=`el_${ek}_family`;
-  [['serif','明體（Noto Serif TC）'],['sans','黑體（Noto Sans TC）'],['lxgw','文楷（LXGW WenKai）'],['huninn','粉圓（Huninn）'],['iansui','台灣書體（Iansui）'],['zenold','禪明朝（Zen Old Mincho）'],['serifsc','宋體簡（Noto Serif SC）'],['sanssc','黑體簡（Noto Sans SC）']].forEach(([v,t])=>{
+  [['serif','明體（Noto Serif TC）'],['sans','黑體（Noto Sans TC）'],['lxgw','文楷（LXGW WenKai）'],['huninn','粉圓（Huninn）'],['iansui','台灣書體（Iansui）'],['zenold','禪明朝（Zen Old Mincho）'],['serifsc','宋體簡（Noto Serif SC）'],['sanssc','黑體簡（Noto Sans SC）'],['ma-shan','馬善政楷（Ma Shan Zheng）'],['zcool','站酷文藝宋（ZCOOL XiaoWei）'],['shippori','新明朝（Shippori Mincho）'],['kaisei','海星（Kaisei Decol）']].forEach(([v,t])=>{
    const o=document.createElement('option');o.value=v;o.textContent=t;if(v===curF)o.selected=true;selFont.appendChild(o);
   });
   rFont.append(lFont,selFont);body.appendChild(rFont);
