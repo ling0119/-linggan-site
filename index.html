@@ -1399,8 +1399,8 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
  ctx.restore();
  // 帳號
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign=elA('acct','left');
- ctx.fillText(acct||'@靈感救援隊',px,80);ctx.textAlign='left';
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');
+ {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80);ctx.textAlign='left';}
  // 頁碼（右下角）
  ctx.font=`${elW('num','300')} ${elS('num',30)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('num','rgba(255,255,255,0.45)');
@@ -2000,7 +2000,7 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const px=88;
  // 帳號 + 頁碼
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');ctx.textAlign=elA('acct','left');ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80);}
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(180,140,200,0.55)');
  ctx.font=`${elW('num','300')} ${elS('num',36)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
  const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
@@ -2075,7 +2075,7 @@ function drawI1Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle=gl;ctx.fillRect(0,0,W,H);
  const px=88;
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(120,80,140,0.40)');ctx.textAlign=elA('acct','left');ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(120,80,140,0.40)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80);}
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(200,140,180,0.48)');
  ctx.font=`${elW('num','300')} ${elS('num',36)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
  const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
