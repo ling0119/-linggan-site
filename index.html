@@ -2364,6 +2364,11 @@ function drawStylePreview(styleKey){
    const ctx=canvas.getContext('2d');
    sl.draw(ctx);
    canvas.title='點擊放大＋微調';
+   // 手機 touchend 也觸發（防止 scroll 容器吞掉 click）
+   let _touchMoved=false;
+   canvas.addEventListener('touchstart',()=>{_touchMoved=false;},{passive:true});
+   canvas.addEventListener('touchmove',()=>{_touchMoved=true;},{passive:true});
+   canvas.addEventListener('touchend',(e)=>{if(!_touchMoved){e.preventDefault();canvas.onclick();}},{passive:false});
    canvas.onclick=()=>{
     // 取得目前 canvasSlides 對應的 makeSlide slideIdx
     let lbSlideIdx=idx; // filmstrip idx == slide idx（mutable for prev/next）
