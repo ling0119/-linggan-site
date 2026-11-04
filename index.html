@@ -2774,7 +2774,7 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   const lFont=document.createElement('span');lFont.className='stw-lbl';lFont.textContent='字體';
   const selFont=document.createElement('select');selFont.className='stw-sel';
   selFont.dataset.stw=`el_${ek}_family`;
-  [['serif','明體（Noto Serif TC）'],['sans','黑體（Noto Sans TC）'],['lxgw','文楷（LXGW WenKai）'],['huninn','粉圓（Huninn）'],['iansui','台灣書體（Iansui）'],['zenold','禪明朝（Zen Old Mincho）'],['serifsc','宋體簡（Noto Serif SC）'],['sanssc','黑體簡（Noto Sans SC）'],['ma-shan','馬善政楷（Ma Shan Zheng）'],['zcool','站酷文藝宋（ZCOOL XiaoWei）'],['shippori','新明朝（Shippori Mincho）'],['kaisei','海星（Kaisei Decol）']].forEach(([v,t])=>{
+  [['serif','明體'],['sans','黑體'],['lxgw','文楷'],['huninn','粉圓'],['iansui','台灣書體'],['zenold','禪明朝'],['serifsc','宋體簡'],['sanssc','黑體簡'],['ma-shan','馬善政楷'],['zcool','文藝宋'],['shippori','新明朝'],['kaisei','海星']].forEach(([v,t])=>{
    const o=document.createElement('option');o.value=v;o.textContent=t;if(v===curF)o.selected=true;selFont.appendChild(o);
   });
   rFont.append(lFont,selFont);body.appendChild(rFont);
