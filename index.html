@@ -1493,7 +1493,7 @@ function drawD1End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='rgba(14,14,16,0.72)';
  if(body){const bl=[];let bl_='';for(const ch of body){const t=bl_+ch;if(ctx.measureText(t).width>bw-112&&bl_){bl.push(bl_);bl_=ch;}else bl_=t;}if(bl_)bl.push(bl_);bl.forEach(ln=>{ctx.fillText(ln,cx,ty);ty+=70;});}
  ctx.textAlign='left';
- _drawCTA(ctx,W,by+bh,px,null,{x:10,w:1060});
+ _drawCTA(ctx,W,ty,px,null,{x:248,w:744});
 }
 
 // ── D2 左側色帶標號 ──
