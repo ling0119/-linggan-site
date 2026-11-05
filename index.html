@@ -2419,6 +2419,8 @@ function drawStylePreview(styleKey){
     const updateSlideText=(idx)=>{
      titleInput.value=slides[idx].title||'';
      bodyInput.value=slides[idx].body||'';
+     // 封面隱藏內文欄
+     bodyInput.style.display=slides[idx].type==='cover'?'none':'';
     };
     updateSlideText(lbSlideIdx);
     // 編輯後即時更新 slides 資料並重繪
@@ -2434,7 +2436,9 @@ function drawStylePreview(styleKey){
      slides[lbSlideIdx].body=bodyInput.value;
      drawBig();
     });
-    slideTextWrap.append(titleInput,bodyInput);
+    // 封面不顯示內文欄位
+    if(slides[lbSlideIdx].type==='cover'){slideTextWrap.append(titleInput);}
+    else{slideTextWrap.append(titleInput,bodyInput);}
 
     // draw（永遠用目前的 lbSlideIdx，不鎖在初始的 sl）
     const drawBig=()=>{
