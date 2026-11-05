@@ -1442,9 +1442,11 @@ function _drawCTA(ctx,W,afterY,px,elF,opts){
  const ctaH=ctaLH*2+50;
  const ctaY=afterY+30;
  ctx.save();
- ctx.strokeStyle=(opts&&opts.strokeStyle)||'rgba(20,18,14,0.18)';ctx.lineWidth=2;
+ ctx.strokeStyle=(opts&&opts.strokeStyle)||'rgba(20,18,14,0.28)';ctx.lineWidth=2;
+ ctx.setLineDash([8,6]);
  roundRect(ctx,ctaX,ctaY,ctaW,ctaH,16);
- ctx.fillStyle=(opts&&opts.fillStyle)||'rgba(255,255,255,0.45)';ctx.fill();ctx.stroke();
+ ctx.fillStyle=(opts&&opts.fillStyle)||'rgba(255,255,255,0.30)';ctx.fill();ctx.stroke();
+ ctx.setLineDash([]);
  ctx.restore();
  const ctaCx=ctaX+ctaW/2;
  const totalTextH=ctaLH*2;
