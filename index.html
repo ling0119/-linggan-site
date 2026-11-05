@@ -2341,7 +2341,7 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
  if(layout==='a6'){drawA6Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,H*0.70,80,null,{fillStyle:'rgba(255,255,255,0.08)',strokeStyle:'rgba(210,190,170,0.35)',line1Color:'rgba(240,232,220,0.92)',line2Color:'rgba(210,190,170,0.65)'});return;}
  if(layout==='h2'){drawH2Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
-  _drawCTA(ctx,W,H*0.76,88,null,{fillStyle:'rgba(80,50,110,0.75)',strokeStyle:'rgba(80,50,110,0)',line1Color:'rgba(255,255,255,0.95)',line2Color:'rgba(255,255,255,0.70)'});return;}
+  _drawCTA(ctx,W,H*0.76,88,null,{x:144,w:W-288,fillStyle:'rgba(255,255,255,0.90)',strokeStyle:'rgba(180,150,210,0.50)',lineWidth:2,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
  if(layout==='i1'){drawI1Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,body,th);
   _drawCTA(ctx,W,H*0.74,88,null);return;}
 }
