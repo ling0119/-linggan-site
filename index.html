@@ -1431,6 +1431,28 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
  const bodyX=bodyAlign==='left'?bx+56:bodyAlign==='right'?bx+bw-56:W/2;
  wrapCanvasTextCenter(ctx,body||'',bodyX,ty+60,bw-112,bodyLH);
 }
+function _drawCTA(ctx,W,afterY,px,elF){
+ const ctaSz=34;const ctaLH=Math.round(ctaSz*1.6);
+ ctx.font=`400 ${ctaSz}px ${elF?elF('body','"Noto Sans TC",sans-serif'):'"Noto Sans TC",sans-serif'}`;
+ const ctaLine1='💬 留言告訴我：「放手」';
+ const ctaLine2='我私訊你，帶你看看該放下的是什麼。';
+ const ctaW=W-px*2;const ctaH=ctaLH*2+50;
+ const ctaX=px;const ctaY=afterY+30;
+ ctx.save();
+ ctx.strokeStyle='rgba(20,18,14,0.18)';ctx.lineWidth=2;
+ roundRect(ctx,ctaX,ctaY,ctaW,ctaH,16);
+ ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fill();ctx.stroke();
+ ctx.restore();
+ const ctaCx=ctaX+ctaW/2;
+ const totalTextH=ctaLH*2;
+ const textStartY=ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
+ ctx.textAlign='center';
+ ctx.fillStyle='rgba(20,18,14,0.75)';
+ ctx.fillText(ctaLine1,ctaCx,textStartY);
+ ctx.fillStyle='rgba(20,18,14,0.52)';
+ ctx.fillText(ctaLine2,ctaCx,textStartY+ctaLH);
+ ctx.textAlign='left';
+}
 function drawD1End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='#0e0e10';ctx.fillRect(0,0,W,H); const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
@@ -1468,6 +1490,7 @@ function drawD1End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='rgba(14,14,16,0.72)';
  if(body){const bl=[];let bl_='';for(const ch of body){const t=bl_+ch;if(ctx.measureText(t).width>bw-112&&bl_){bl.push(bl_);bl_=ch;}else bl_=t;}if(bl_)bl.push(bl_);bl.forEach(ln=>{ctx.fillText(ln,cx,ty);ty+=70;});}
  ctx.textAlign='left';
+ _drawCTA(ctx,W,ty,px,null);
 }
 
 // ── D2 左側色帶標號 ──
@@ -1585,8 +1608,9 @@ function drawD2End(ctx,W,H,acct,title,body,th){
  // 正文
  ctx.font='300 35px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(28,20,14,0.65)';
- wrapCanvasText(ctx,body||'',rx,ty+110,W-rx-px,58);
+ let bodyEndY=wrapCanvasText(ctx,body||'',rx,ty+110,W-rx-px,58);
  ctx.textAlign='left';
+ _drawCTA(ctx,W,bodyEndY,px,null);
 }
 
 // ── D4 底部橫帶反白 ──
@@ -1799,28 +1823,7 @@ function drawC3End(ctx,W,H,acct,title,body,th){
   ctx.fillStyle=elC('body','rgba(20,18,14,0.70)');
   afterBodyY=wrapCanvasText(ctx,body,px,titleEndY+50,W-px*2,bodyLH);
  }
- // CTA 透明框（固定文字）
- {const ctaSz=34;const ctaLH=Math.round(ctaSz*1.6);
-  ctx.font=`400 ${ctaSz}px ${elF('body','"Noto Sans TC",sans-serif')}`;
-  const ctaLine1='💬 留言告訴我：「放手」';
-  const ctaLine2='我私訊你，帶你看看該放下的是什麼。';
-  const ctaW=W-px*2;const ctaH=ctaLH*2+50;
-  const ctaX=px;const ctaY=afterBodyY+30;
-  ctx.save();
-  ctx.strokeStyle='rgba(20,18,14,0.18)';ctx.lineWidth=2;
-  roundRect(ctx,ctaX,ctaY,ctaW,ctaH,16);
-  ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fill();ctx.stroke();
-  ctx.restore();
-  const ctaCx=ctaX+ctaW/2;
-  const totalTextH=ctaLH*2;
-  const textStartY=ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
-  ctx.textAlign='center';
-  ctx.fillStyle='rgba(20,18,14,0.75)';
-  ctx.fillText(ctaLine1,ctaCx,textStartY);
-  ctx.fillStyle='rgba(20,18,14,0.52)';
-  ctx.fillText(ctaLine2,ctaCx,textStartY+ctaLH);
-  ctx.textAlign='left';
- }
+ _drawCTA(ctx,W,afterBodyY,px,elF);
 }
 function drawC3Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
