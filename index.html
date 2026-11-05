@@ -2197,8 +2197,9 @@ function drawH2End(ctx,W,H,acct,title,sub,th){
  let ty=wrapCanvasText(ctx,title||'',px+56,startY,W-px*2-112,titleLH);
  ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(80,60,100,0.55)');ctx.textAlign='left';
- wrapCanvasText(ctx,sub||'',px+56,ty+20,W-px*2-112,subLH);
+ const subEndY=wrapCanvasText(ctx,sub||'',px+56,ty+20,W-px*2-112,subLH);
  ctx.textAlign='left';
+ return subEndY;
 }
 function drawH2Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle='#fdfbf8';ctx.fillRect(0,0,W,H);
@@ -2372,8 +2373,8 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
   _drawCTA(ctx,W,H*0.68-50,88,null,{fillStyle:'rgba(100,130,180,0.10)',gradientStroke:['rgba(180,205,245,0.75)','rgba(160,185,225,0.30)','rgba(140,165,210,0.05)'],lineWidth:1.5,line1Color:'rgba(220,230,248,0.92)',line2Color:'rgba(180,200,235,0.65)'});return;}
  if(layout==='a6'){drawA6Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,H*0.70,80,null,{fillStyle:'rgba(255,255,255,0.08)',strokeStyle:'rgba(210,190,170,0.35)',line1Color:'rgba(240,232,220,0.92)',line2Color:'rgba(210,190,170,0.65)'});return;}
- if(layout==='h2'){drawH2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
-  _drawCTA(ctx,W,H*0.76,88,null,{x:144,w:W-288,fillStyle:'rgba(255,255,255,0.90)',strokeStyle:'rgba(180,150,210,0.50)',solid:true,lineWidth:2,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
+ if(layout==='h2'){const _h2ey=drawH2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
+  _drawCTA(ctx,W,(_h2ey||H*0.76)+30,88,null,{x:144,w:W-288,fillStyle:'rgba(255,255,255,0.90)',strokeStyle:'rgba(180,150,210,0.50)',solid:true,lineWidth:2,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
  if(layout==='i1'){drawI1Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,body,th);
   _drawCTA(ctx,W,H*0.74,88,null);return;}
 }
