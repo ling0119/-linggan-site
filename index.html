@@ -1792,11 +1792,12 @@ function drawC3End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle=elC('title','#1c140e');
  const titleEndY=wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',px,280,W-px*2,titleLH);
  // 正文
+ let afterBodyY=titleEndY+50;
  if(body&&body.trim()){
   const bodySz=elS('body',36);const bodyLH=Math.round(bodySz*1.56);
   ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
   ctx.fillStyle=elC('body','rgba(20,18,14,0.70)');
-  wrapCanvasText(ctx,body,px,titleEndY+50,W-px*2,bodyLH);
+  afterBodyY=wrapCanvasText(ctx,body,px,titleEndY+50,W-px*2,bodyLH);
  }
  // CTA 透明框（固定文字）
  {const ctaSz=34;const ctaLH=Math.round(ctaSz*1.6);
@@ -1804,7 +1805,7 @@ function drawC3End(ctx,W,H,acct,title,body,th){
   const ctaLine1='💬 留言告訴我：「放手」';
   const ctaLine2='我私訊你，帶你看看該放下的是什麼。';
   const ctaW=W-px*2;const ctaH=ctaLH*2+50;
-  const ctaX=px;const ctaY=H-ctaH-120;
+  const ctaX=px;const ctaY=afterBodyY+30;
   ctx.save();
   ctx.strokeStyle='rgba(20,18,14,0.18)';ctx.lineWidth=2;
   roundRect(ctx,ctaX,ctaY,ctaW,ctaH,16);
