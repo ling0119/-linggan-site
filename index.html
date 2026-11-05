@@ -2155,16 +2155,17 @@ function drawH2Cover(ctx,W,H,acct,title,sub,th){
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
  ctx.fillText(acct||'@靈感救援隊',W/2,cardY+cardH+48);
+ // 標題＋副標：靠左，整塊垂直置中於卡片
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.21);
+ const subSz=elS('sub',40);const subLH=Math.round(subSz*1.5);
+ const totalH=titleLH+20+subLH;
+ const startY=cardY+Math.round((cardH-totalH)/2)+titleLH*0.85;
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
- ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='center';
- const tl=(title||'').split('\n');
- const startY=cardY+cardH/2-((tl.length-1)*titleLH)/2+18-30;
- tl.forEach((line,i)=>ctx.fillText(line,W/2,startY+i*titleLH));
- const subSz=elS('sub',40);
+ ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='left';
+ let ty=wrapCanvasText(ctx,title||'',px+56,startY,W-px*2-112,titleLH);
  ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('sub','rgba(80,60,100,0.55)');
- ctx.fillText(sub||'',W/2,startY+tl.length*titleLH+30);
+ ctx.fillStyle=elC('sub','rgba(80,60,100,0.55)');ctx.textAlign='left';
+ wrapCanvasText(ctx,sub||'',px+56,ty+20,W-px*2-112,subLH);
  ctx.textAlign='left';
 }
 function drawH2Page(ctx,W,H,acct,num,title,body,th){
