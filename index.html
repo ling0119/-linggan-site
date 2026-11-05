@@ -2196,16 +2196,19 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('num','300')} ${elS('num',36)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
  const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
  // 白卡
- const cardY=100,cardH=Math.round(H*0.1);
- roundRect(ctx,px,cardY,W-px*2,cardH,32);
- ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
- // 先估算內容總高，再垂直置中
+ // 先算內容總高，再垂直置中
  const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.2);
  const bodySz=elS('body',35);const bodyLH=Math.round(bodySz*1.5);
  const titleLines=Math.max(1,Math.ceil(ctx.measureText(title||'').width/(W-px*2-112))||1);
  const bodyLines=Math.max(1,Math.ceil(ctx.measureText(body||'').width/(W-px*2-112))||1);
  const totalH=titleLines*titleLH+20+bodyLines*bodyLH;
  const startY=Math.round((H-totalH)/2)+titleLH*0.85;
+ // 白卡包住內容（上下 padding 60）
+ const pad=60;
+ const cardY=Math.round(startY-titleLH*0.85-pad);
+ const cardH=totalH+pad*2;
+ roundRect(ctx,px,cardY,W-px*2,cardH,32);
+ ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
  // 標題（靠左）
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='left';
