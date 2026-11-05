@@ -1699,14 +1699,14 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  // 上半：body 正文
  ctx.font='300 40px "Noto Serif TC",serif';
  ctx.fillStyle='rgba(28,26,20,0.65)';ctx.textAlign='left';
- let d4BodyEndY=wrapCanvasText(ctx,body||'',px,200,W-px*2,62);
- // CTA 框（深色字搭淺色背景）
- _drawCTA(ctx,W,d4BodyEndY,px,null,{fillStyle:'rgba(255,255,255,0.60)',strokeStyle:'rgba(28,26,20,0.15)'});
- // 色帶：大標題（反白置中）
+ wrapCanvasText(ctx,body||'',px,200,W-px*2,62);
+ // 上半：大標題
  ctx.font='900 60px "Noto Serif TC",serif';
- ctx.fillStyle='#f8f6f2';ctx.textAlign='center';
+ ctx.fillStyle='#1c1a14';ctx.textAlign='left';
+ wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',px,Math.round(bt*0.62),W-px*2,84);
+ // 色帶：CTA 框（白字搭深色帶）
  const bandH=H-bt;
- wrapCanvasTextCenter(ctx,title||'謝謝你滑到最後 ✨',W/2,bt+bandH*0.3,W-px*2,84);
+ _drawCTA(ctx,W,bt,px,null,{x:px,w:W-px*2,fillStyle:'rgba(255,255,255,0.15)',strokeStyle:'rgba(248,246,242,0.35)',line1Color:'rgba(248,246,242,0.90)',line2Color:'rgba(248,246,242,0.60)'});
  // LINE 膠囊（靠右下）
  const lineId=(A.lineId&&A.lineId.trim())?A.lineId.trim():'';
  if(lineId){
