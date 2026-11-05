@@ -1785,18 +1785,18 @@ function drawC3Page(ctx,W,H,acct,num,title,body,th){
  // 帳號
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(20,18,14,0.35)');
- {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)};
- {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(20,18,14,0.28)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
+ {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,100)};
+ {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(20,18,14,0.28)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,100);ctx.textAlign='left';}
  // 標題
  const titleSz=elS('title',58);const titleLH=Math.round(titleSz*1.31);
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#1c140e');
- let ty=wrapCanvasText(ctx,title||'',px,140,W-px*2,titleLH);
+ let ty=wrapCanvasText(ctx,title||'',px,200,W-px*2,titleLH);
  // 正文
  const bodySz=elS('body',36);const bodyLH=Math.round(bodySz*1.56);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(20,18,14,0.72)');
- wrapCanvasText(ctx,body||'',px,ty+52,W-px*2,bodyLH);
+ wrapCanvasText(ctx,body||'',px,ty+50,W-px*2,bodyLH);
 }
 
 // ── C4 橫向三段切 ──
