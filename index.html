@@ -1812,11 +1812,13 @@ function drawC3End(ctx,W,H,acct,title,body,th){
   ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fill();ctx.stroke();
   ctx.restore();
   const ctaCx=ctaX+ctaW/2;
+  const totalTextH=ctaLH*2;
+  const textStartY=ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
   ctx.textAlign='center';
   ctx.fillStyle='rgba(20,18,14,0.75)';
-  ctx.fillText(ctaLine1,ctaCx,ctaY+ctaLH*0.85+10);
+  ctx.fillText(ctaLine1,ctaCx,textStartY);
   ctx.fillStyle='rgba(20,18,14,0.52)';
-  ctx.fillText(ctaLine2,ctaCx,ctaY+ctaLH*1.85+10);
+  ctx.fillText(ctaLine2,ctaCx,textStartY+ctaLH);
   ctx.textAlign='left';
  }
 }
