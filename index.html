@@ -1791,20 +1791,29 @@ function drawC3End(ctx,W,H,acct,title,body,th){
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#1c140e');
  const titleEndY=wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',px,280,W-px*2,titleLH);
- // CTA 透明框（body 文字）
+ // 正文
  if(body&&body.trim()){
-  const ctaSz=34;const ctaLH=Math.round(ctaSz*1.6);
+  const bodySz=elS('body',36);const bodyLH=Math.round(bodySz*1.56);
+  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+  ctx.fillStyle=elC('body','rgba(20,18,14,0.70)');
+  wrapCanvasText(ctx,body,px,titleEndY+50,W-px*2,bodyLH);
+ }
+ // CTA 透明框（固定文字）
+ {const ctaSz=34;const ctaLH=Math.round(ctaSz*1.6);
   ctx.font=`400 ${ctaSz}px ${elF('body','"Noto Sans TC",sans-serif')}`;
-  const ctaLines=(body||'').split('\n').filter(l=>l.trim());
-  const ctaW=W-px*2;const ctaH=ctaLines.length*ctaLH+50;
-  const ctaX=px;const ctaY=titleEndY+60;
+  const ctaLine1='💬 留言告訴我：「放手」';
+  const ctaLine2='我私訊你，帶你看看該放下的是什麼。';
+  const ctaW=W-px*2;const ctaH=ctaLH*2+50;
+  const ctaX=px;const ctaY=H-ctaH-120;
   ctx.save();
   ctx.strokeStyle='rgba(20,18,14,0.18)';ctx.lineWidth=2;
   roundRect(ctx,ctaX,ctaY,ctaW,ctaH,16);
   ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fill();ctx.stroke();
   ctx.restore();
-  ctx.fillStyle='rgba(20,18,14,0.70)';
-  ctaLines.forEach((line,i)=>ctx.fillText(line,ctaX+30,ctaY+30+ctaLH*(i+0.7)));
+  ctx.fillStyle='rgba(20,18,14,0.75)';
+  ctx.fillText(ctaLine1,ctaX+30,ctaY+ctaLH*0.85+10);
+  ctx.fillStyle='rgba(20,18,14,0.52)';
+  ctx.fillText(ctaLine2,ctaX+30,ctaY+ctaLH*1.85+10);
  }
 }
 function drawC3Page(ctx,W,H,acct,num,title,body,th){
