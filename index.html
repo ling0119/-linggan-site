@@ -2187,10 +2187,6 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  });
  const px=88;
  // 帳號 + 頁碼
- // 帳號（下方置中 Y=1100）
- ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');ctx.textAlign='center';
- ctx.fillText(acct||'@靈感救援隊',W/2,1100);ctx.textAlign='left';
  // 頁碼（靠右 Y=110）
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(180,140,200,0.55)');
  ctx.font=`${elW('num','300')} ${elS('num',36)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
@@ -2204,11 +2200,15 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const totalH=titleLines*titleLH+20+bodyLines*bodyLH;
  const startY=Math.round((H-totalH)/2)+titleLH*0.85;
  // 白卡＋邊線
- const cardY=250,cardH=900;
+ const cardY=250,cardH=820;
  roundRect(ctx,px,cardY,W-px*2,cardH,30);
  ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
  roundRect(ctx,px,cardY,W-px*2,cardH,30);
  ctx.strokeStyle='rgba(180,150,210,0.50)';ctx.lineWidth=3;ctx.stroke();
+ // 帳號（卡片下方）
+ ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');ctx.textAlign='center';
+ ctx.fillText(acct||'@靈感救援隊',W/2,cardY+cardH+48);ctx.textAlign='left';
  // 標題（靠左）
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='left';
