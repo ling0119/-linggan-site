@@ -1431,8 +1431,13 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
  const bodyX=bodyAlign==='left'?bx+56:bodyAlign==='right'?bx+bw-56:W/2;
  wrapCanvasTextCenter(ctx,body||'',bodyX,ty+60,bw-112,bodyLH);
 }
-function drawD1End(ctx,W,H,acct,title,body){
- ctx.fillStyle='#0e0e10';ctx.fillRect(0,0,W,H);
+function drawD1End(ctx,W,H,acct,title,body,th){
+ ctx.fillStyle='#0e0e10';ctx.fillRect(0,0,W,H); const _el=(th&&th._el)||{};
+ const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
+ const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
+ const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
+ const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const px=88;
  // 斜向文字牆
  ctx.save();ctx.globalAlpha=0.06;ctx.font='700 52px "Noto Sans TC",sans-serif';
@@ -1544,8 +1549,13 @@ function drawD2Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle=elC('body','rgba(28,20,14,0.72)');
  wrapCanvasText(ctx,body||'',rx,ty+80,W-rx-px,bodyLH);
 }
-function drawD2End(ctx,W,H,acct,title,body){
- ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H);
+function drawD2End(ctx,W,H,acct,title,body,th){
+ ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H); const _el=(th&&th._el)||{};
+ const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
+ const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
+ const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
+ const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const px=88;const bandW=160;
  _d2Band(ctx,W,H,bandW);
  // 色帶文字
@@ -1645,13 +1655,19 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  ctx.textAlign='left';
 }
 
-function drawD4End(ctx,W,H,acct,title,body){
+function drawD4End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='#f8f6f2';ctx.fillRect(0,0,W,H);
+ const _el=(th&&th._el)||{};
+ const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
+ const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
+ const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
+ const elA=(ek,def)=>(_el[ek]&&_el[ek].align&&_el[ek].align!=='default')?_el[ek].align:def;
  const px=88;const bt=Math.round(H*0.62);
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
  // 帳號 + VLOG
- ctx.font='300 30px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(28,26,20,0.38)';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
+ ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('acct','rgba(28,26,20,0.38)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
  // 上半：CTA 文字（固定，不從 body 來）
  const ctaText='有些東西放開了，反而會自己回來。\n不是你不在乎，是你學會了給它空間。\n\n想更了解自己嗎？';
@@ -2114,9 +2130,9 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
  const layout=th.layout||'d1';
  body=normalizeBodyText(body);
  // 結尾頁：用各主題的封面樣式重繪，並疊加結尾提示文字
- if(layout==='d1'){drawD1End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
- if(layout==='d2'){drawD2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
- if(layout==='d4'){drawD4End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body);return;}
+ if(layout==='d1'){drawD1End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);return;}
+ if(layout==='d2'){drawD2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);return;}
+ if(layout==='d4'){drawD4End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);return;}
  if(layout==='c3'){drawC3Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);return;}
  if(layout==='c4'){drawC4Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);return;}
  if(layout==='a3'){drawA3Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);return;}
