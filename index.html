@@ -1887,9 +1887,9 @@ function drawC4Cover(ctx,W,H,acct,title,sub,th){
  ctx.fillStyle='#16203a';ctx.fillRect(0,t2,W,H-t2);
  const px=88;
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,1200)}
  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.45)';
- ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
+ ctx.fillText('COVER',W-px,1200);ctx.textAlign='left';
  ctx.strokeStyle='rgba(22,32,58,0.15)';ctx.lineWidth=2;
  ctx.beginPath();ctx.moveTo(px,t1+108);ctx.lineTo(W-px,t1+108);ctx.stroke();
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.20);
@@ -1914,10 +1914,10 @@ function drawC4Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle='#f5f2ec';ctx.fillRect(0,t1,W,t2-t1);
  ctx.fillStyle='#16203a';ctx.fillRect(0,t2,W,H-t2);
  const px=88;
- // 頂段：帳號 + 頁碼
+ // 底部：帳號 + 頁碼
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.70)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,t1/2+12)}
- {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(255,255,255,0.42)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,t1/2+12);ctx.textAlign='left';}
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.70)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,1200)}
+ {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(255,255,255,0.42)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,1200);ctx.textAlign='left';}
  // 中段：標題+細線+正文
  const titleSz=elS('title',68);const titleLH=Math.round(titleSz*1.21);
  ctx.font=`${elW('title','700')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
