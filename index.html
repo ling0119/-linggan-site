@@ -2154,7 +2154,7 @@ function drawH2Cover(ctx,W,H,acct,title,sub,th){
  roundRect(ctx,px,cardY,W-px*2,cardH,40);ctx.stroke();
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
- ctx.fillText(acct||'@靈感救援隊',W/2,cardY-24);
+ ctx.fillText(acct||'@靈感救援隊',W/2,cardY+cardH+48);
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.21);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='center';
