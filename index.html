@@ -1707,7 +1707,7 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  // 色帶：CTA 框垂直置中（白字搭深色帶）
  const bandH=H-bt;
  const ctaHh=Math.round(34*1.6)*2+50;
- const ctaAfterY=bt+(bandH-ctaHh)/2-30;
+ const ctaAfterY=bt+(bandH-ctaHh)/2-60;
  _drawCTA(ctx,W,ctaAfterY,px,null,{x:px,w:W-px*2,fillStyle:'rgba(255,255,255,0.15)',strokeStyle:'rgba(248,246,242,0.35)',line1Color:'rgba(248,246,242,0.90)',line2Color:'rgba(248,246,242,0.60)'});
  // LINE 膠囊（靠右下）
  const lineId=(A.lineId&&A.lineId.trim())?A.lineId.trim():'';
