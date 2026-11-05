@@ -1727,20 +1727,24 @@ function drawC3Cover(ctx,W,H,acct,title,sub,th){
   ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
   ctx.fillStyle=w2;ctx.fill();
  }
+ // 帳號
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(20,18,14,0.38)');
- {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)};
- ctx.textAlign='right';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
+ {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,100)};
+ ctx.textAlign='right';ctx.fillText('COVER',W-px,100);ctx.textAlign='left';
+ // 分隔線
  ctx.strokeStyle='rgba(20,18,14,0.12)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(px,108);ctx.lineTo(W-px,108);ctx.stroke();
- const subSz=elS('sub',40);
- ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('sub','rgba(20,18,14,0.45)');
- ctx.fillText(sub||'',px,160);
- const titleSz=elS('title',104);const titleLH=Math.round(titleSz*1.21);
+ ctx.beginPath();ctx.moveTo(px,112);ctx.lineTo(W-px,112);ctx.stroke();
+ // 主標
+ const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.3);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#1c140e');
- wrapCanvasText(ctx,title||'',px,280,W-px*2,titleLH);
+ const titleEndY=wrapCanvasText(ctx,title||'',px,350,W-px*2,titleLH);
+ // 副標（標題下方）
+ const subSz=elS('sub',36);
+ ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('sub','rgba(20,18,14,0.45)');
+ wrapCanvasText(ctx,sub||'',px,titleEndY+50,W-px*2,Math.round(subSz*1.6));
 }
 function drawC3Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
