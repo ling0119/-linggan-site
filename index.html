@@ -2155,7 +2155,39 @@ function drawH2Cover(ctx,W,H,acct,title,sub,th){
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
  ctx.fillText(acct||'@靈感救援隊',W/2,cardY+cardH+48);
- // 標題＋副標：靠左，整塊垂直置中於卡片
+ // 標題＋副標：置中，垂直置中於卡片
+ const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.21);
+ const subSz=elS('sub',40);const subLH=Math.round(subSz*1.5);
+ const totalH=titleLH+20+subLH;
+ const startY=cardY+Math.round((cardH-totalH)/2)+titleLH*0.85;
+ ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
+ ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='center';
+ const tl=(title||'').split('\n');
+ tl.forEach((line,i)=>ctx.fillText(line,W/2,startY+i*titleLH));
+ ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('sub','rgba(80,60,100,0.55)');
+ ctx.fillText(sub||'',W/2,startY+tl.length*titleLH+20);
+ ctx.textAlign='left';
+}
+function drawH2End(ctx,W,H,acct,title,sub,th){
+ const _el=(th&&th._el)||{};
+ const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
+ const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
+ const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
+ ctx.fillStyle='#fdfbf8';ctx.fillRect(0,0,W,H);
+ const blobs=[[W*0.15,H*0.15,W*0.45,'#d4b8e8','#e8c8f8'],[W*0.85,H*0.28,W*0.40,'#b8d0e8','#c8e0f8'],[W*0.20,H*0.72,W*0.38,'#e8b8c8','#f8c8d8'],[W*0.80,H*0.80,W*0.36,'#e8d4a0','#f8e4b0']];
+ blobs.forEach(([bx,by,br,c1,c2])=>{const rg=ctx.createRadialGradient(bx,by,0,bx,by,br);rg.addColorStop(0,c1+'55');rg.addColorStop(0.6,c2+'22');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.fill();});
+ const px=88;
+ const cardY=Math.round(H*0.22),cardH=Math.round(H*0.52);
+ roundRect(ctx,px,cardY,W-px*2,cardH,40);
+ ctx.fillStyle='rgba(255,255,255,0.88)';ctx.fill();
+ ctx.strokeStyle='rgba(180,150,210,0.50)';ctx.lineWidth=3;
+ roundRect(ctx,px,cardY,W-px*2,cardH,40);ctx.stroke();
+ ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
+ ctx.fillText(acct||'@靈感救援隊',W/2,cardY+cardH+48);
+ // 標題＋副標：靠左，垂直置中於卡片
  const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.21);
  const subSz=elS('sub',40);const subLH=Math.round(subSz*1.5);
  const totalH=titleLH+20+subLH;
@@ -2340,7 +2372,7 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
   _drawCTA(ctx,W,H*0.68-50,88,null,{fillStyle:'rgba(100,130,180,0.10)',gradientStroke:['rgba(180,205,245,0.75)','rgba(160,185,225,0.30)','rgba(140,165,210,0.05)'],lineWidth:1.5,line1Color:'rgba(220,230,248,0.92)',line2Color:'rgba(180,200,235,0.65)'});return;}
  if(layout==='a6'){drawA6Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,H*0.70,80,null,{fillStyle:'rgba(255,255,255,0.08)',strokeStyle:'rgba(210,190,170,0.35)',line1Color:'rgba(240,232,220,0.92)',line2Color:'rgba(210,190,170,0.65)'});return;}
- if(layout==='h2'){drawH2Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
+ if(layout==='h2'){drawH2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,H*0.76,88,null,{x:144,w:W-288,fillStyle:'rgba(255,255,255,0.90)',strokeStyle:'rgba(180,150,210,0.50)',solid:true,lineWidth:2,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
  if(layout==='i1'){drawI1Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,body,th);
   _drawCTA(ctx,W,H*0.74,88,null);return;}
