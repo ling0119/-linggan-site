@@ -1346,8 +1346,8 @@ function drawD1Cover(ctx,W,H,acct,title,sub,th){
  ctx.restore();
  // 帳號
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.38)');
+ {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80);}
  ctx.textAlign='right';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
  // 白色框
  const bx=px,by=Math.round(H*0.34),bw=W-px*2,bh=Math.round(H*0.38);
@@ -1442,8 +1442,7 @@ function drawD1End(ctx,W,H,acct,title,body){
  ctx.restore();
  // 帳號
  ctx.font='300 30px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle='rgba(255,255,255,0.38)';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('END',W-px,80);ctx.textAlign='left';
  // 白色框
  const bx=px,by=Math.round(H*0.28),bw=W-px*2,bh=Math.round(H*0.50);
@@ -1590,8 +1589,7 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  const px=88;const bt=Math.round(H*0.62);
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(28,26,20,0.38)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(28,26,20,0.38)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
  const subSz=elS('sub',40);
  ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
@@ -1619,8 +1617,7 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
  // 頂部：帳號 + 頁碼
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(28,26,20,0.35)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(28,26,20,0.35)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(28,26,20,0.28)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
  // 標題（左對齊，Y=250）
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.27);
@@ -1650,8 +1647,7 @@ function drawD4End(ctx,W,H,acct,title,body){
  ctx.fillStyle=D4_BAND;ctx.fillRect(0,bt,W,H-bt);
  // 帳號 + VLOG
  ctx.font='300 30px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(28,26,20,0.38)';ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle='rgba(28,26,20,0.38)';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
  // 上半：CTA 文字（固定，不從 body 來）
  const ctaText='有些東西放開了，反而會自己回來。\n不是你不在乎，是你學會了給它空間。\n\n想更了解自己嗎？';
@@ -1692,7 +1688,7 @@ function drawC3Cover(ctx,W,H,acct,title,sub,th){
  ctx.fillText('01',W-px,H*0.82);ctx.textAlign='left';
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(20,18,14,0.38)');
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)};
  ctx.textAlign='right';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
  ctx.strokeStyle='rgba(20,18,14,0.12)';ctx.lineWidth=2;
  ctx.beginPath();ctx.moveTo(px,108);ctx.lineTo(W-px,108);ctx.stroke();
@@ -1724,7 +1720,7 @@ function drawC3Page(ctx,W,H,acct,num,title,body,th){
  // 帳號
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(20,18,14,0.35)');
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ {const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)};
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(20,18,14,0.28)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
  // 標題
  const titleSz=elS('title',58);const titleLH=Math.round(titleSz*1.31);
@@ -1754,8 +1750,7 @@ function drawC4Cover(ctx,W,H,acct,title,sub,th){
  ctx.fillStyle='#16203a';ctx.fillRect(0,t2,W,H-t2);
  const px=88;
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,t1/2+12);
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,t1/2+12)}
  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.45)';
  ctx.fillText('COVER',W-px,t1/2+12);ctx.textAlign='left';
  const subSz=elS('sub',40);
@@ -1787,8 +1782,7 @@ function drawC4Page(ctx,W,H,acct,num,title,body,th){
  const px=88;
  // 頂段：帳號 + 頁碼
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.70)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,t1/2+12);
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.70)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,t1/2+12)}
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(255,255,255,0.42)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,t1/2+12);ctx.textAlign='left';}
  // 中段：標題+細線+正文
  const titleSz=elS('title',68);const titleLH=Math.round(titleSz*1.21);
@@ -1825,7 +1819,7 @@ function drawA3Cover(ctx,W,H,acct,title,sub,th){
  }
  const px=88;
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,240,210,0.50)');ctx.textAlign='left';ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(255,240,210,0.50)');ctx.textAlign='left';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)};
  ctx.textAlign='right';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
  const titleSz=elS('title',120);const titleLH=Math.round(titleSz*1.33);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
@@ -1859,7 +1853,7 @@ function drawA3Page(ctx,W,H,acct,num,title,body,th){
  }
  const px=88;
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,240,210,0.45)');ctx.textAlign='left';ctx.fillText(acct||'@靈感救援隊',px,72);
+ ctx.fillStyle=elC('acct','rgba(255,240,210,0.45)');ctx.textAlign='left';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,72)};
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(255,240,210,0.30)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,72);ctx.textAlign='left';}
  // 白磨砂卡片
  ctx.fillStyle='rgba(255,255,255,0.12)';
@@ -1892,8 +1886,7 @@ function drawA6Cover(ctx,W,H,acct,title,sub,th){
  const px=80;
  ctx.fillStyle='#a03828';ctx.fillRect(0,0,24,H);
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(210,190,170,0.40)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(210,190,170,0.40)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
  const titleSz=elS('title',120);const titleLH=Math.round(titleSz*1.33);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
@@ -1922,7 +1915,7 @@ function drawA6Page(ctx,W,H,acct,num,title,body,th){
  const px=80;
  ctx.fillStyle='#a03828';ctx.fillRect(0,0,24,H);
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(210,190,170,0.38)');ctx.textAlign='left';ctx.fillText(acct||'@靈感救援隊',px,72);
+ ctx.fillStyle=elC('acct','rgba(210,190,170,0.38)');ctx.textAlign='left';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,72)};
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(160,56,40,0.55)');const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,72);ctx.textAlign='left';}
  ctx.strokeStyle='rgba(160,56,40,0.25)';ctx.lineWidth=3;
  ctx.beginPath();ctx.moveTo(px,104);ctx.lineTo(W-px,104);ctx.stroke();
@@ -2044,7 +2037,7 @@ function drawI1Cover(ctx,W,H,acct,title,sub,body,th){
  ctx.fillStyle=gl;ctx.fillRect(0,0,W,H);
  const px=88;
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(120,80,140,0.45)');ctx.textAlign='left';ctx.fillText(acct||'@靈感救援隊',px,80);
+ ctx.fillStyle=elC('acct','rgba(120,80,140,0.45)');ctx.textAlign='left';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)};
  ctx.textAlign='right';ctx.fillStyle='rgba(200,140,180,0.38)';ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
  ctx.strokeStyle='rgba(180,120,200,0.18)';ctx.lineWidth=2;
  ctx.beginPath();ctx.moveTo(px,106);ctx.lineTo(W-px,106);ctx.stroke();
