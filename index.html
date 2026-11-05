@@ -1709,19 +1709,6 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  const ctaHh=Math.round(34*1.6)*2+50;
  const ctaAfterY=bt+(bandH-ctaHh)/2-60;
  _drawCTA(ctx,W,ctaAfterY,px,null,{x:px,w:W-px*2,fillStyle:'rgba(255,255,255,0.15)',strokeStyle:'rgba(248,246,242,0.35)',line1Color:'rgba(248,246,242,0.90)',line2Color:'rgba(248,246,242,0.60)'});
- // LINE 膠囊（靠右下）
- const lineId=(A.lineId&&A.lineId.trim())?A.lineId.trim():'';
- if(lineId){
-  const capText='歡迎預約 LINE：'+lineId;
-  ctx.font='500 28px "Noto Sans TC",sans-serif';
-  const capW=ctx.measureText(capText).width+52;const capH=58;
-  const capX=W-px-capW;const capY=bt+bandH-capH-40;
-  ctx.fillStyle='rgba(248,246,242,0.18)';
-  roundRect(ctx,capX,capY,capW,capH,29);ctx.fill();
-  ctx.fillStyle='rgba(248,246,242,0.90)';ctx.textAlign='center';
-  ctx.fillText(capText,capX+capW/2,capY+capH/2+10);
-  ctx.textAlign='left';
- }
 }
 
 // ── C3 超大頁碼底層 ──
