@@ -2150,7 +2150,7 @@ function drawH2Cover(ctx,W,H,acct,title,sub,th){
  const cardY=Math.round(H*0.22),cardH=Math.round(H*0.52);
  roundRect(ctx,px,cardY,W-px*2,cardH,40);
  ctx.fillStyle='rgba(255,255,255,0.88)';ctx.fill();
- ctx.strokeStyle='rgba(200,180,220,0.30)';ctx.lineWidth=2;
+ ctx.strokeStyle='rgba(180,150,210,0.50)';ctx.lineWidth=3;
  roundRect(ctx,px,cardY,W-px*2,cardH,40);ctx.stroke();
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
@@ -2191,10 +2191,10 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');ctx.textAlign='center';
  ctx.fillText(acct||'@靈感救援隊',W/2,1100);ctx.textAlign='left';
- // 頁碼（靠右 Y=80）
+ // 頁碼（靠右 Y=110）
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(180,140,200,0.55)');
  ctx.font=`${elW('num','300')} ${elS('num',36)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
- const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
+ const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,110);ctx.textAlign='left';}
  // 白卡
  // 先算內容總高，再垂直置中
  const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.2);
