@@ -2919,18 +2919,6 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
   });
  });
 
- // slider handlers in layout body
- layoutBody.querySelectorAll('[data-stw]').forEach(el=>{
-  if(el.type==='range'){
-   el.addEventListener('input',()=>{
-    if(!A._slideTweak[slideIdx])A._slideTweak[slideIdx]={};
-    A._slideTweak[slideIdx][el.dataset.stw]=parseFloat(el.value);
-    const lbl=document.getElementById(`stw_lbl_${slideIdx}_${el.dataset.stw}`);
-    if(lbl){const isF=parseFloat(el.getAttribute('step'))<1;lbl.textContent=isF?parseFloat(el.value).toFixed(2):Math.round(el.value);}
-    save();redrawCb();
-   });
-  }
- });
 
  // reset
  const resetEl=panel.querySelector(`[data-stw-reset="${slideIdx}"]`);
