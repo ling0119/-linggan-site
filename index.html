@@ -1886,23 +1886,20 @@ function drawC4Cover(ctx,W,H,acct,title,sub,th){
  ctx.fillStyle='#f5f2ec';ctx.fillRect(0,t1,W,t2-t1);
  ctx.fillStyle='#16203a';ctx.fillRect(0,t2,W,H-t2);
  const px=88;
- ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,t1/2+12)}
+ ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.45)';
- ctx.fillText('COVER',W-px,t1/2+12);ctx.textAlign='left';
+ ctx.fillText('COVER',W-px,80);ctx.textAlign='left';
+ ctx.strokeStyle='rgba(22,32,58,0.15)';ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(px,t1+108);ctx.lineTo(W-px,t1+108);ctx.stroke();
+ const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.20);
+ ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
+ ctx.fillStyle=elC('title','#16203a');
+ let titleEndY=wrapCanvasText(ctx,title||'',px,t1+190,W-px*2,titleLH);
  const subSz=elS('sub',40);
  ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(22,32,58,0.55)');
- ctx.fillText(sub||'',px,t1+80);
- ctx.strokeStyle='rgba(22,32,58,0.15)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(px,t1+108);ctx.lineTo(W-px,t1+108);ctx.stroke();
- const titleSz=elS('title',112);const titleLH=Math.round(titleSz*1.20);
- ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
- ctx.fillStyle=elC('title','#16203a');
- wrapCanvasText(ctx,title||'',px,t1+190,W-px*2,titleLH);
- ctx.font='300 40px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(255,255,255,0.65)';ctx.textAlign='center';
- ctx.fillText('往右滑 →',W/2,t2+(H-t2)/2+14);
+ ctx.fillText(sub||'',px,titleEndY+30);
  ctx.textAlign='left';
 }
 function drawC4Page(ctx,W,H,acct,num,title,body,th){
