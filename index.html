@@ -2155,19 +2155,16 @@ function drawH2Cover(ctx,W,H,acct,title,sub,th){
  ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
  ctx.fillText(acct||'@靈感救援隊',W/2,cardY-24);
- const titleSz=elS('title',104);const titleLH=Math.round(titleSz*1.21);
+ const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.21);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='center';
  const tl=(title||'').split('\n');
- const startY=cardY+cardH/2-((tl.length-1)*titleLH)/2+18;
+ const startY=cardY+cardH/2-((tl.length-1)*titleLH)/2+18-30;
  tl.forEach((line,i)=>ctx.fillText(line,W/2,startY+i*titleLH));
- const sepY=startY+tl.length*titleLH+8;
- ctx.strokeStyle='rgba(180,140,200,0.35)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(W/2-200,sepY);ctx.lineTo(W/2+200,sepY);ctx.stroke();
  const subSz=elS('sub',40);
  ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(80,60,100,0.55)');
- ctx.fillText(sub||'',W/2,sepY+64);
+ ctx.fillText(sub||'',W/2,startY+tl.length*titleLH+30);
  ctx.textAlign='left';
 }
 function drawH2Page(ctx,W,H,acct,num,title,body,th){
@@ -2190,30 +2187,33 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  });
  const px=88;
  // 帳號 + 頁碼
- ctx.font=`${elW('acct','300')} ${elS('acct',36)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80);}
+ // 帳號（下方置中 Y=1100）
+ ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('acct','rgba(80,60,100,0.42)');ctx.textAlign='center';
+ ctx.fillText(acct||'@靈感救援隊',W/2,1100);ctx.textAlign='left';
+ // 頁碼（靠右 Y=80）
  {const nA=elA('num','right');ctx.textAlign=nA;ctx.fillStyle=elC('num','rgba(180,140,200,0.55)');
  ctx.font=`${elW('num','300')} ${elS('num',36)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
  const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,80);ctx.textAlign='left';}
  // 白卡
- const cardY=120,cardH=Math.round(H*0.78);
+ const cardY=100,cardH=Math.round(H*0.1);
  roundRect(ctx,px,cardY,W-px*2,cardH,32);
  ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
  // 標題
- const titleSz=elS('title',80);const titleLH=Math.round(titleSz*1.2);
+ const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.2);
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');
  const titleAlign=elA('title','left');ctx.textAlign=titleAlign;
  const titleX=titleAlign==='right'?px+56+W-px*2-112:titleAlign==='center'?px+56+(W-px*2-112)/2:px+56;
- let ty=wrapCanvasText(ctx,title||'',titleX,cardY+80,W-px*2-112,titleLH);
+ let ty=wrapCanvasText(ctx,title||'',titleX,cardY+100,W-px*2-112,titleLH);
  ctx.textAlign='left';
  // 正文
- const bodySz=elS('body',40);const bodyLH=Math.round(bodySz*1.5);
+ const bodySz=elS('body',35);const bodyLH=Math.round(bodySz*1.5);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(60,40,80,0.72)');
  const bodyAlign=elA('body','left');ctx.textAlign=bodyAlign;
  const bodyX=bodyAlign==='right'?px+56+W-px*2-112:bodyAlign==='center'?px+56+(W-px*2-112)/2:px+56;
- wrapCanvasText(ctx,body||'',bodyX,ty+40,W-px*2-112,bodyLH);
+ wrapCanvasText(ctx,body||'',bodyX,ty+20,W-px*2-112,bodyLH);
  ctx.textAlign='left';
 }
 
