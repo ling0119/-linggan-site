@@ -2199,21 +2199,19 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const cardY=100,cardH=Math.round(H*0.1);
  roundRect(ctx,px,cardY,W-px*2,cardH,32);
  ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
- // 標題
+ // 標題（置中）
  const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.2);
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');
- const titleAlign=elA('title','left');ctx.textAlign=titleAlign;
- const titleX=titleAlign==='right'?px+56+W-px*2-112:titleAlign==='center'?px+56+(W-px*2-112)/2:px+56;
- let ty=wrapCanvasText(ctx,title||'',titleX,cardY+100,W-px*2-112,titleLH);
+ ctx.textAlign='center';
+ let ty=wrapCanvasText(ctx,title||'',W/2,cardY+100,W-px*2-112,titleLH);
  ctx.textAlign='left';
- // 正文
+ // 正文（置中）
  const bodySz=elS('body',35);const bodyLH=Math.round(bodySz*1.5);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(60,40,80,0.72)');
- const bodyAlign=elA('body','left');ctx.textAlign=bodyAlign;
- const bodyX=bodyAlign==='right'?px+56+W-px*2-112:bodyAlign==='center'?px+56+(W-px*2-112)/2:px+56;
- wrapCanvasText(ctx,body||'',bodyX,ty+20,W-px*2-112,bodyLH);
+ ctx.textAlign='center';
+ wrapCanvasText(ctx,body||'',W/2,ty+20,W-px*2-112,bodyLH);
  ctx.textAlign='left';
 }
 
