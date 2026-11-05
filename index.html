@@ -2203,10 +2203,10 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const bodyLines=Math.max(1,Math.ceil(ctx.measureText(body||'').width/(W-px*2-112))||1);
  const totalH=titleLines*titleLH+20+bodyLines*bodyLH;
  const startY=Math.round((H-totalH)/2)+titleLH*0.85;
- // 白卡包住內容（上下 padding 60）
+ // 細邊框卡（無填色）
  const cardY=250,cardH=900;
  roundRect(ctx,px,cardY,W-px*2,cardH,30);
- ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
+ ctx.strokeStyle='rgba(180,150,210,0.45)';ctx.lineWidth=1.5;ctx.stroke();
  // 標題（靠左）
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='left';
