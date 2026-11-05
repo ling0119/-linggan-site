@@ -1672,16 +1672,6 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(28,26,20,0.70)');
  wrapCanvasText(ctx,body||'',px,ty+80,W-px*2,bodyLH);
- // 底部帶：膠囊靠右下貼底
- const capText='往右滑 →';
- ctx.font='500 36px "Noto Sans TC",sans-serif';
- const capW=ctx.measureText(capText).width+60;const capH=68;
- const capX=W-px-capW;const capY=H-48-capH;
- ctx.fillStyle='rgba(248,246,242,0.20)';
- roundRect(ctx,capX,capY,capW,capH,34);ctx.fill();
- ctx.fillStyle='rgba(248,246,242,0.92)';ctx.textAlign='center';
- ctx.fillText(capText,capX+capW/2,capY+capH/2+13);
- ctx.textAlign='left';
 }
 
 function drawD4End(ctx,W,H,acct,title,body,th){
@@ -1929,11 +1919,6 @@ function drawC4Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(22,32,58,0.72)');
  wrapCanvasText(ctx,body||'',px,ty+58,W-px*2,bodyLH);
- // 底段：往右滑
- ctx.font='300 40px "Noto Sans TC",sans-serif';
- ctx.fillStyle='rgba(255,255,255,0.60)';ctx.textAlign='center';
- ctx.fillText('往右滑 →',W/2,t2+(H-t2)/2+14);
- ctx.textAlign='left';
 }
 
 // ── A3 焦糖奶茶 ──
