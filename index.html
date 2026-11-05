@@ -2185,7 +2185,7 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
   rg.addColorStop(0,c1+'50');rg.addColorStop(0.6,c2+'20');rg.addColorStop(1,'transparent');
   ctx.fillStyle=rg;ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.fill();
  });
- const px=88;
+ const px=90;
  // 帳號 + 頁碼
  // 帳號（下方置中 Y=1100）
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
@@ -2204,10 +2204,8 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const totalH=titleLines*titleLH+20+bodyLines*bodyLH;
  const startY=Math.round((H-totalH)/2)+titleLH*0.85;
  // 白卡包住內容（上下 padding 60）
- const pad=60;
- const cardY=Math.round(startY-titleLH*0.85-pad);
- const cardH=totalH+pad*2;
- roundRect(ctx,px,cardY,W-px*2,cardH,32);
+ const cardY=300,cardH=900;
+ roundRect(ctx,px,cardY,W-px*2,cardH,30);
  ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
  // 標題（靠左）
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
