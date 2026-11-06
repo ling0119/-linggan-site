@@ -1673,10 +1673,34 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  wrapCanvasText(ctx,body||'',px,310,W-px*2,bodyLH);
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*2.07);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
- ctx.fillStyle=elC('title','#e8c060');ctx.textAlign='right';
  const bandH=H-bt;
- wrapCanvasTextRight(ctx,title||'',W-40,bt+bandH/2-60-230,W-px*2,titleLH);
- ctx.textAlign='left';
+ const titleStartY=bt+bandH/2-60-230;
+ // 螢光筆效果：逐行量寬後畫色塊再畫字
+ (function(){
+  const text=title||'';const maxW=W-px*2;const rx=W-40;
+  const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  let cy=titleStartY;const pad=10;const hl=8;
+  ctx.textAlign='right';
+  for(const line of lines){
+   if(!line){cy+=titleLH*0.55;continue;}
+   const chars=line.split('');let cur='';const lineArr=[];
+   for(let i=0;i<chars.length;i++){
+    const test=cur+chars[i];
+    if(ctx.measureText(test).width>maxW&&cur){lineArr.push(cur);cur=chars[i];}
+    else cur=test;
+   }
+   if(cur)lineArr.push(cur);
+   for(const seg of lineArr){
+    const tw=ctx.measureText(seg).width;
+    ctx.fillStyle='rgba(107,115,85,0.55)';
+    ctx.fillRect(rx-tw-pad,cy-titleSz+hl,tw+pad*2,titleSz+4);
+    ctx.fillStyle=elC('title','#e8c060');
+    ctx.fillText(seg,rx,cy);
+    cy+=titleLH;
+   }
+  }
+  ctx.textAlign='left';
+ })();
 }
 function drawD4Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle='#f8f6f2';ctx.fillRect(0,0,W,H);
