@@ -1523,7 +1523,7 @@ function drawD1End(ctx,W,H,acct,title,body,th){
  let ty=wrapCanvasTextCenter(ctx,title||'謝謝你滑到最後 ✨',cx,by+170,bw-112,endTitleLH);
  // body（同內頁：40px，行高 sz*1.5，從 ty+60 開始，自動縮字）
  const endBodyMaxY=by+bh-40;
- const endBodyStartY=ty+60;
+ const endBodyStartY=ty+40;
  let fitEndBody=autoFitFontSize(ctx,body||'',bw-112,endBodyStartY,endBodyMaxY,'300 40px "Noto Serif TC",serif',40,20);
  ctx.font=`300 ${fitEndBody.fontSize}px "Noto Serif TC",serif`;
  ctx.fillStyle='rgba(14,14,16,0.72)';
