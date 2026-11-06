@@ -1666,16 +1666,16 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  const subSz=elS('sub',40);
  ctx.font=`${elW('sub','700')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(28,26,20,0.48)');ctx.textAlign='left';
- ctx.fillText(sub||'',px,200);
+ ctx.fillText(sub||'',px,230);
  const bodySz=elS('body',30);const bodyLH=Math.round(bodySz*1.5);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(28,26,20,0.65)');ctx.textAlign='left';
- wrapCanvasText(ctx,body||'',px,280,W-px*2,bodyLH);
+ wrapCanvasText(ctx,body||'',px,310,W-px*2,bodyLH);
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*2.07);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#f8f6f2');ctx.textAlign='right';
  const bandH=H-bt;
- wrapCanvasTextRight(ctx,title||'',W-px,bt+bandH/2-60-80,W-px*2,titleLH);
+ wrapCanvasTextRight(ctx,title||'',W-px,bt+bandH/2-60-120,W-px*2,titleLH);
  ctx.textAlign='left';
 }
 function drawD4Page(ctx,W,H,acct,num,title,body,th){
