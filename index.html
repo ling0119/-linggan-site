@@ -2891,8 +2891,28 @@ function drawStylePreview(styleKey){
        wrap.append(lbl,ta);
        return wrap;
       };
-      lbTextPanel.append(makeCtaField('CTA 第一行','ctaLine1',2));
-      lbTextPanel.append(makeCtaField('CTA 第二行','ctaLine2',2));
+      // CTA 合一框
+      const ctaWrap=document.createElement('div');
+      ctaWrap.style.cssText='display:flex;flex-direction:column;gap:4px';
+      const ctaLbl=document.createElement('div');
+      ctaLbl.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase';
+      ctaLbl.textContent='CTA';
+      const ctaTa=document.createElement('textarea');
+      ctaTa.rows=3;
+      const _cl1=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我：「放手」';
+      const _cl2=(A.ctaLine2&&A.ctaLine2.trim())||'我私訊你，帶你看看該放下的是什麼。';
+      ctaTa.value=_cl1+'\n'+_cl2;
+      ctaTa.style.cssText='font:inherit;font-size:13px;line-height:1.65;padding:8px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;width:100%;box-sizing:border-box;resize:none;outline:none;font-family:inherit';
+      ctaTa.addEventListener('focus',()=>{ctaTa.style.borderColor='rgba(255,255,255,0.5)';});
+      ctaTa.addEventListener('blur',()=>{ctaTa.style.borderColor='rgba(255,255,255,0.15)';});
+      ctaTa.addEventListener('input',()=>{
+       const lines=ctaTa.value.split('\n');
+       A.ctaLine1=lines[0]||'';
+       A.ctaLine2=lines.slice(1).join(' ')||'';
+       save();drawBig();
+      });
+      ctaWrap.append(ctaLbl,ctaTa);
+      lbTextPanel.append(ctaWrap);
      } else {
       lbTextPanel.append(makeField('內文',sl.body,'body',6));
      }
