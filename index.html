@@ -2702,12 +2702,16 @@ function drawStylePreview(styleKey){
     }else{
      ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:stretch;justify-content:center;overflow:hidden';
     }
-    // 左/上：大圖 + 左右箭頭
+    // 左文案欄（桌面專用）
+    const lbTextPanel=document.createElement('div');
+    lbTextPanel.style.cssText='width:260px;flex:0 0 260px;display:flex;flex-direction:column;justify-content:center;padding:24px 20px;gap:10px;overflow-y:auto';
+
+    // 左/上：大圖容器
     const left=document.createElement('div');
     if(isMobile){
      left.style.cssText='display:flex;flex-direction:column;align-items:center;padding:12px 16px 8px;flex-shrink:0;gap:8px';
     }else{
-     left.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;min-width:0;overflow-y:auto;gap:12px';
+     left.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0;overflow:hidden';
     }
     const bigCanvas=document.createElement('canvas');
     bigCanvas.width=1080;bigCanvas.height=1350;
@@ -2718,7 +2722,7 @@ function drawStylePreview(styleKey){
      sc=previewH/1350;
     }else{
      const scaleH=window.innerHeight*0.9/1350;
-     const scaleW=(window.innerWidth*0.6)/1080;
+     const scaleW=(window.innerWidth*0.55)/1080;
      sc=Math.min(scaleH,scaleW);
     }
     bigCanvas.style.cssText=`width:${Math.round(1080*sc)}px;height:${Math.round(1350*sc)}px;border-radius:10px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.6);flex-shrink:0`;
@@ -2803,6 +2807,8 @@ function drawStylePreview(styleKey){
      const existBg2=getBg(lbSlideIdx);
      if(existBg2&&existBg2.src){bgThumb.src=existBg2.src;bgThumb.style.display='block';bgClearBtn.style.display='';}
      else{bgThumb.style.display='none';bgClearBtn.style.display='none';}
+     // 更新左側文案欄
+     if(!isMobile)buildLbTextPanel(lbSlideIdx);
     };
 
     // 左右箭頭 — fixed 在畫面上，不受任何容器 overflow 影響
@@ -2811,9 +2817,10 @@ function drawStylePreview(styleKey){
     const nextBtn=document.createElement('button');nextBtn.type='button';nextBtn.innerHTML='&#8250;';
     // 桌面：箭頭緊貼大圖兩側；手機：固定在螢幕邊緣
     const rightPanelW=isMobile?0:340;
+    const lbTextPanelW=isMobile?0:260;
     const canvasVisW=Math.round(1080*sc);
-    const leftAreaW=window.innerWidth-rightPanelW;
-    const arrowLeft=Math.max(8,Math.floor((leftAreaW-canvasVisW)/2)-48);
+    const leftAreaW=window.innerWidth-rightPanelW-lbTextPanelW;
+    const arrowLeft=lbTextPanelW+Math.max(8,Math.floor((leftAreaW-canvasVisW)/2)-48);
     const arrowRight=rightPanelW+Math.max(8,Math.floor((leftAreaW-canvasVisW)/2)-48);
     prevBtn.style.cssText=arrowBase+`;left:${arrowLeft}px`;
     nextBtn.style.cssText=arrowBase+`;right:${arrowRight}px`;
@@ -2826,44 +2833,46 @@ function drawStylePreview(styleKey){
     prevBtn.onclick=(e)=>{e.stopPropagation();if(lbSlideIdx>0)renderPanel(lbSlideIdx-1);};
     nextBtn.onclick=(e)=>{e.stopPropagation();if(lbSlideIdx<totalSlides-1)renderPanel(lbSlideIdx+1);};
 
-    // 文案貼入框（左側大圖下方）
-    const lbPasteWrap=document.createElement('div');
-    const lbPasteW=Math.round(1080*sc);
-    lbPasteWrap.style.cssText=`width:${lbPasteW}px;display:flex;flex-direction:column;gap:6px`;
-    const lbPasteLabel=document.createElement('div');
-    lbPasteLabel.style.cssText='font-size:11px;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:.08em;text-transform:uppercase';
-    lbPasteLabel.textContent='📋 貼入文字稿（貼上後自動更新預覽）';
-    const lbPasteTA=document.createElement('textarea');
-    lbPasteTA.id='pasteArea';
-    lbPasteTA.rows=isMobile?3:5;
-    lbPasteTA.value=A._paste||'';
-    lbPasteTA.placeholder='把 Claude 給你的文字稿貼在這裡…';
-    lbPasteTA.style.cssText=`width:100%;box-sizing:border-box;border:1.5px dashed rgba(255,255,255,0.25);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.75;color:#fff;background:rgba(255,255,255,0.08);resize:vertical;font-family:inherit;outline:none`;
-    lbPasteTA.addEventListener('focus',()=>{lbPasteTA.style.borderColor='rgba(255,255,255,0.55)';});
-    lbPasteTA.addEventListener('blur',()=>{lbPasteTA.style.borderColor='rgba(255,255,255,0.25)';});
-    // 貼入後觸發全局 input 事件（複用已有的 pasteArea 解析邏輯）
-    lbPasteTA.addEventListener('input',()=>{
-     // 解析後重繪大圖（drawStylePreview 更新縮圖，drawBig 更新 lightbox 大圖）
-     // 全局 listener 會處理 _paste 寫入與 slides 解析，這裡只補 drawBig
-     setTimeout(()=>{
-      // 同步 slides 到 bigCanvas
-      const curSl=slides[lbSlideIdx];
-      if(A._slides&&A._slides[lbSlideIdx]){
-       const s2=A._slides[lbSlideIdx];
-       if(s2.title!==undefined)curSl.title=s2.title;
-       if(s2.body!==undefined)curSl.body=s2.body;
-       if(s2.sub!==undefined)curSl.sub=s2.sub;
-      }
-      updateSlideText(lbSlideIdx);
-      drawBig();
-     },450);
-    });
-    lbPasteWrap.append(lbPasteLabel,lbPasteTA);
+    // ── 左側文案欄內容（桌面）──
+    const buildLbTextPanel=(idx)=>{
+     lbTextPanel.innerHTML='';
+     const sl=slides[idx];
+     const lbNumDiv=document.createElement('div');
+     lbNumDiv.style.cssText='font-size:36px;font-weight:900;color:rgba(255,255,255,0.18);letter-spacing:-.03em;line-height:1;margin-bottom:4px';
+     lbNumDiv.textContent=String(idx+1).padStart(2,'0');
+     const makeField=(label,val,key,rows)=>{
+      const wrap=document.createElement('div');
+      wrap.style.cssText='display:flex;flex-direction:column;gap:4px';
+      const lbl=document.createElement('div');
+      lbl.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase';
+      lbl.textContent=label;
+      const ta=document.createElement('textarea');
+      ta.rows=rows;ta.value=val||'';
+      ta.style.cssText='font:inherit;font-size:13px;line-height:1.65;padding:8px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;width:100%;box-sizing:border-box;resize:none;outline:none;font-family:inherit';
+      ta.addEventListener('focus',()=>{ta.style.borderColor='rgba(255,255,255,0.5)';});
+      ta.addEventListener('blur',()=>{ta.style.borderColor='rgba(255,255,255,0.15)';});
+      ta.addEventListener('keydown',(e)=>{if(e.key==='Enter')e.stopPropagation();});
+      ta.addEventListener('input',()=>{
+       slides[idx][key]=ta.value;
+       drawBig();
+       if(!A._slides)A._slides=[];
+       if(!A._slides[idx])A._slides[idx]={};
+       A._slides[idx][key]=ta.value;
+       save();
+      });
+      wrap.append(lbl,ta);
+      return wrap;
+     };
+     lbTextPanel.append(lbNumDiv);
+     lbTextPanel.append(makeField('標題',sl.title,'title',2));
+     if(sl.type!=='cover')lbTextPanel.append(makeField('內文',sl.body,'body',6));
+     else lbTextPanel.append(makeField('副標',sl.sub,'sub',2));
+    };
+    if(!isMobile)buildLbTextPanel(lbSlideIdx);
 
     // 點擊左側（畫布外暗區）關閉
     left.onclick=(e)=>{if(e.target===left)removeLB();};
     left.appendChild(bigCanvas);
-    if(!isMobile)left.appendChild(lbPasteWrap);
     // 箭頭直接掛在 document.body，fixed 定位，完全不受 ov 影響
     document.body.appendChild(prevBtn);
     document.body.appendChild(nextBtn);
@@ -2961,6 +2970,7 @@ function drawStylePreview(styleKey){
     btnRow2.append(dlBtn2,closeBtn);
     rightInner.append(slideLabel,slideTextWrap,bgSection,tweakHolder,btnRow2);
     right.append(rightInner);
+    if(!isMobile)ov.prepend(lbTextPanel);
     ov.append(left,right);
     document.body.appendChild(ov);
    };
