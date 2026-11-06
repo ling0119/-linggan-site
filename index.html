@@ -1723,7 +1723,7 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle=elC('title','#1c1a14');ctx.textAlign='left';
  let ty=wrapCanvasText(ctx,title||'',px,250,W-px*2,titleLH);
  // 正文（左對齊）
- const bodySz=elS('body',40);const bodyLH=Math.round(bodySz*1.5);
+ const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.6);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(28,26,20,0.70)');
  wrapCanvasText(ctx,body||'',px,ty+20,W-px*2,bodyLH);
