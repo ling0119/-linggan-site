@@ -1398,7 +1398,7 @@ function drawD1Cover(ctx,W,H,acct,title,sub,th){
  ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(255,255,255,0.72)');
  const subAlign=elA('sub','center');ctx.textAlign=subAlign;
- const subY=by+bh+20+Math.round(H*0.10);
+ const subY=by+bh-20+Math.round(H*0.10);
  const subX=subAlign==='left'?px:subAlign==='right'?W-px:cx;
  ctx.fillText(sub||'',subX,subY);
  ctx.textAlign='left';
