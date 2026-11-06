@@ -1479,7 +1479,7 @@ function _drawCTA(ctx,W,afterY,px,elF,opts){
  }
  const _alignLeft=(opts&&opts.alignLeft);
  const _alignRight=(opts&&opts.alignRight);
- const ctaCx=_alignRight?(ctaX+ctaW):_alignLeft?ctaX:ctaX+ctaW/2;
+ const ctaCx=_alignRight?(ctaX):_alignLeft?ctaX:ctaX+ctaW/2;
  const totalTextH=ctaLH*2;
  const textStartY=(opts&&opts.noBox)?ctaY+ctaLH*0.85:ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
  ctx.textAlign=_alignRight?'right':_alignLeft?'left':'center';
