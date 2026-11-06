@@ -2384,7 +2384,7 @@ function drawI1Page(ctx,W,H,acct,num,title,body,th,bgImg){
  ctx.fillStyle=elC('num','rgba(255,255,255,0.50)');ctx.textAlign='right';
  ctx.fillText(num||'02',W-px,88);ctx.textAlign='left';
  // 標題（金色）
- const titleSz=elS('title',64);const titleLH=70;
+ const titleSz=elS('title',64);const titleLH=Math.round(titleSz*1.5);
  const titleY=H*0.52;
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#e8c060');
