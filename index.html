@@ -2285,9 +2285,9 @@ function drawI1Cover(ctx,W,H,acct,title,sub,body,th,bgImg){
  _i1DrawBg(ctx,W,H,bgImg);
  const px=72;
  // 帳號（左上）
- ctx.font=`300 ${elS('acct',32)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.font=`300 ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(255,255,255,0.65)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,68);
+ ctx.fillText(acct||'@靈感救援隊',px,88);
  // 標題（金色，大）
  const titleSz=elS('title',80);const titleLH=70;
  const titleY=H*0.56;
@@ -2311,12 +2311,12 @@ function drawI1Page(ctx,W,H,acct,num,title,body,th,bgImg){
  _i1DrawBg(ctx,W,H,bgImg);
  const px=72;
  // 帳號（左上）＋頁碼（右上）
- ctx.font=`300 ${elS('acct',32)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.font=`300 ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(255,255,255,0.60)');ctx.textAlign='left';
- ctx.fillText(acct||'@靈感救援隊',px,68);
- ctx.font=`300 ${elS('num',32)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
+ ctx.fillText(acct||'@靈感救援隊',px,88);
+ ctx.font=`300 ${elS('num',30)}px ${elF('num','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('num','rgba(255,255,255,0.50)');ctx.textAlign='right';
- ctx.fillText(num||'02',W-px,68);ctx.textAlign='left';
+ ctx.fillText(num||'02',W-px,88);ctx.textAlign='left';
  // 標題（金色）
  const titleSz=elS('title',64);const titleLH=70;
  const titleY=H*0.52;
