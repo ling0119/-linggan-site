@@ -1619,7 +1619,7 @@ function drawD2Page(ctx,W,H,acct,num,title,body,th){
  let ty=wrapCanvasText(ctx,title||'',rx,280,W-rx-px,titleLH);
  // 細線
  ctx.strokeStyle='rgba(28,20,14,0.14)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(rx,ty-10);ctx.lineTo(W-px,ty-10);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(rx,ty+20);ctx.lineTo(W-px,ty+20);ctx.stroke();
  // 正文（自動縮字確保不超出底部安全線）
  const bodyMaxYd2=1240;
  const bodyStartYd2=ty+50;
