@@ -1576,8 +1576,8 @@ function drawD2Cover(ctx,W,H,acct,title,sub,body,th){
  const subSz=elS('sub',38);
  ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(28,20,14,0.48)');
- ctx.fillText(sub||'',rx,ty+16);
- ty=ty+16+(sub?subSz+10:0);
+ ctx.fillText(sub||'',rx,ty+12);
+ ty=ty+12+(sub?subSz+10:0);
  // 正文
  let waveY=ty+50;
  if(body){
