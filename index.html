@@ -2190,7 +2190,7 @@ function drawH2End(ctx,W,H,acct,title,sub,th){
  ctx.fillStyle=elC('acct','rgba(80,60,100,0.45)');ctx.textAlign='center';
  ctx.fillText(acct||'@靈感救援隊',W/2,cardY+cardH+48);
  // 標題＋副標：靠左，垂直置中於卡片
- const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.21);
+ const titleSz=elS('title',50);const titleLH=70;
  const subSz=elS('sub',40);const subLH=Math.round(subSz*1.5);
  const totalH=titleLH+20+subLH;
  const startY=cardY+50+titleLH*0.85;
@@ -2229,7 +2229,7 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const nX=nA==='left'?px:nA==='center'?W/2:W-px;ctx.fillText(num||'02',nX,110);ctx.textAlign='left';}
  // 白卡
  // 先算內容總高，再垂直置中
- const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.2);
+ const titleSz=elS('title',50);const titleLH=70;
  const bodySz=elS('body',35);const bodyLH=Math.round(bodySz*1.5);
  const titleLines=Math.max(1,Math.ceil(ctx.measureText(title||'').width/(W-px*2-112))||1);
  const bodyLines=Math.max(1,Math.ceil(ctx.measureText(body||'').width/(W-px*2-112))||1);
