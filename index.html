@@ -1357,7 +1357,7 @@ function drawD1Cover(ctx,W,H,acct,title,sub,th){
  // 斜向文字牆
  ctx.save();ctx.globalAlpha=0.06;ctx.font='700 52px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#ffffff';ctx.translate(W/2,H/2);ctx.rotate(-Math.PI/8);
- const filler='靈感救援隊 LINGGAN ';
+ const filler=(A.d1BgText&&A.d1BgText.trim())?A.d1BgText.trim()+' ':'靈感救援隊 LINGGAN ';
  for(let row=-8;row<=8;row++){for(let col=-4;col<=4;col++){ctx.fillText(filler,col*520-260,row*80);}}
  ctx.restore();
  // 帳號
@@ -1415,7 +1415,7 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
  // 斜向文字牆（更淡）
  ctx.save();ctx.globalAlpha=0.035;ctx.font='700 52px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#ffffff';ctx.translate(W/2,H/2);ctx.rotate(-Math.PI/8);
- const filler='靈感救援隊 LINGGAN ';
+ const filler=(A.d1BgText&&A.d1BgText.trim())?A.d1BgText.trim()+' ':'靈感救援隊 LINGGAN ';
  for(let row=-8;row<=8;row++){for(let col=-4;col<=4;col++){ctx.fillText(filler,col*520-260,row*80);}}
  ctx.restore();
  // 帳號
@@ -1500,7 +1500,7 @@ function drawD1End(ctx,W,H,acct,title,body,th){
  // 斜向文字牆
  ctx.save();ctx.globalAlpha=0.06;ctx.font='700 52px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#ffffff';ctx.translate(W/2,H/2);ctx.rotate(-Math.PI/8);
- const filler='靈感救援隊 LINGGAN ';
+ const filler=(A.d1BgText&&A.d1BgText.trim())?A.d1BgText.trim()+' ':'靈感救援隊 LINGGAN ';
  for(let row=-8;row<=8;row++){for(let col=-4;col<=4;col++){ctx.fillText(filler,col*520-260,row*80);}}
  ctx.restore();
  // 帳號
@@ -4211,6 +4211,14 @@ function render(){
     <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">← 左右滑動 點圖可放大預覽 →</div>
    </div>
   </div>
+
+  <!-- ── d1 背景文字設定 ── -->
+  ${(A._canvasStyle||'d1')==='d1'?`
+  <div style="margin-bottom:14px;border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--surface)">
+   <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">🔤 背景文字（美式幽默專屬）</div>
+   <input type="text" id="d1BgTextInput" value="${esc(A.d1BgText||'')}" placeholder="例：@yourname YOUR NAME" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg);color:var(--fg);outline:none" oninput="A.d1BgText=this.value;drawStylePreview(A._canvasStyle||'d1')">
+   <div style="font-size:11px;color:var(--muted);margin-top:5px">留空則使用預設文字「靈感救援隊 LINGGAN」，輸入後即時更新預覽</div>
+  </div>`:''}
 
   <!-- ── 出圖按鈕 ── -->
   <button type="button" id="canvasGenBtn" style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:8px;letter-spacing:.04em">
