@@ -1441,29 +1441,31 @@ function _drawCTA(ctx,W,afterY,px,elF,opts){
  const ctaW=(opts&&opts.w!=null)?opts.w:W-px*2;
  const ctaH=ctaLH*2+50;
  const ctaY=afterY+30;
- ctx.save();
- const _r=(opts&&opts.capsule)?ctaH/2:16;
- roundRect(ctx,ctaX,ctaY,ctaW,ctaH,_r);
- ctx.fillStyle=(opts&&opts.fillStyle)||'rgba(255,255,255,0.30)';ctx.fill();
- if(opts&&opts.gradientStroke){
-  // 漸層邊框：上藍→左右淡→下透
-  const _gs=ctx.createLinearGradient(ctaX,ctaY,ctaX,ctaY+ctaH);
-  _gs.addColorStop(0,opts.gradientStroke[0]||'rgba(160,185,225,0.80)');
-  _gs.addColorStop(0.5,opts.gradientStroke[1]||'rgba(160,185,225,0.30)');
-  _gs.addColorStop(1,opts.gradientStroke[2]||'rgba(160,185,225,0.05)');
+ if(!(opts&&opts.noBox)){
+  ctx.save();
+  const _r=(opts&&opts.capsule)?ctaH/2:16;
   roundRect(ctx,ctaX,ctaY,ctaW,ctaH,_r);
-  ctx.strokeStyle=_gs;ctx.lineWidth=(opts.lineWidth||1.5);ctx.stroke();
- } else {
-  ctx.strokeStyle=(opts&&opts.strokeStyle)||'rgba(20,18,14,0.28)';ctx.lineWidth=2;
-  ctx.setLineDash((opts&&opts.solid)?[]:[8,6]);
-  roundRect(ctx,ctaX,ctaY,ctaW,ctaH,_r);ctx.stroke();
-  ctx.setLineDash([]);
+  ctx.fillStyle=(opts&&opts.fillStyle)||'rgba(255,255,255,0.30)';ctx.fill();
+  if(opts&&opts.gradientStroke){
+   const _gs=ctx.createLinearGradient(ctaX,ctaY,ctaX,ctaY+ctaH);
+   _gs.addColorStop(0,opts.gradientStroke[0]||'rgba(160,185,225,0.80)');
+   _gs.addColorStop(0.5,opts.gradientStroke[1]||'rgba(160,185,225,0.30)');
+   _gs.addColorStop(1,opts.gradientStroke[2]||'rgba(160,185,225,0.05)');
+   roundRect(ctx,ctaX,ctaY,ctaW,ctaH,_r);
+   ctx.strokeStyle=_gs;ctx.lineWidth=(opts.lineWidth||1.5);ctx.stroke();
+  } else {
+   ctx.strokeStyle=(opts&&opts.strokeStyle)||'rgba(20,18,14,0.28)';ctx.lineWidth=2;
+   ctx.setLineDash((opts&&opts.solid)?[]:[8,6]);
+   roundRect(ctx,ctaX,ctaY,ctaW,ctaH,_r);ctx.stroke();
+   ctx.setLineDash([]);
+  }
+  ctx.restore();
  }
- ctx.restore();
- const ctaCx=ctaX+ctaW/2;
+ const _alignLeft=(opts&&opts.alignLeft);
+ const ctaCx=_alignLeft?ctaX:ctaX+ctaW/2;
  const totalTextH=ctaLH*2;
- const textStartY=ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
- ctx.textAlign='center';
+ const textStartY=(opts&&opts.noBox)?ctaY+ctaLH*0.85:ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
+ ctx.textAlign=_alignLeft?'left':'center';
  ctx.fillStyle=(opts&&opts.line1Color)||'rgba(20,18,14,0.75)';
  ctx.fillText(ctaLine1,ctaCx,textStartY);
  ctx.fillStyle=(opts&&opts.line2Color)||'rgba(20,18,14,0.52)';
@@ -2374,7 +2376,7 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
  if(layout==='a6'){drawA6Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,H*0.70,80,null,{fillStyle:'rgba(255,255,255,0.08)',strokeStyle:'rgba(210,190,170,0.35)',line1Color:'rgba(240,232,220,0.92)',line2Color:'rgba(210,190,170,0.65)'});return;}
  if(layout==='h2'){const _h2ey=drawH2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
-  _drawCTA(ctx,W,(_h2ey||H*0.76)+30,88,null,{x:144,w:W-288,fillStyle:'rgba(255,255,255,0.90)',strokeStyle:'rgba(180,150,210,0.50)',solid:true,lineWidth:2,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
+  _drawCTA(ctx,W,(_h2ey||H*0.76)+20,88,null,{noBox:true,alignLeft:true,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
  if(layout==='i1'){drawI1Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,body,th);
   _drawCTA(ctx,W,H*0.74,88,null);return;}
 }
