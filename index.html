@@ -1665,7 +1665,7 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
  const subSz=elS('sub',40);
  ctx.font=`${elW('sub','700')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
- ctx.fillStyle=elC('sub','rgba(28,26,20,0.48)');ctx.textAlign='left';
+ ctx.fillStyle=elC('sub','rgba(28,26,20,0.75)');ctx.textAlign='left';
  ctx.fillText(sub||'',px,230);
  const bodySz=elS('body',30);const bodyLH=Math.round(bodySz*1.5);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
