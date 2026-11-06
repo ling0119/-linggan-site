@@ -1578,16 +1578,17 @@ function drawD2Cover(ctx,W,H,acct,title,sub,body,th){
  ctx.fillStyle=elC('sub','rgba(28,20,14,0.48)');
  ctx.fillText(sub||'',rx,ty+16);
  ty=ty+16+(sub?subSz+10:0);
- ctx.font='400 44px "Noto Sans TC",sans-serif';
- ctx.fillStyle='#6a8baa';
- ctx.fillText('〰〰〰',rx,ty+50);
  // 正文
+ let waveY=ty+50;
  if(body){
   const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.5);
   ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
   ctx.fillStyle=elC('body','rgba(28,20,14,0.60)');
-  wrapCanvasText(ctx,body,rx,ty+100,W-rx-px,bodyLH);
+  waveY=wrapCanvasText(ctx,body,rx,ty+50,W-rx-px,bodyLH)+30;
  }
+ ctx.font='400 44px "Noto Sans TC",sans-serif';
+ ctx.fillStyle='#6a8baa';
+ ctx.fillText('〰〰〰',rx,waveY);
  ctx.textAlign='left';
 }
 function drawD2Page(ctx,W,H,acct,num,title,body,th){
