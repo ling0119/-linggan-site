@@ -1284,10 +1284,10 @@ function drawCanvasCover(ctx,W,H,th,acct,title,sub,body,bgImg){
  const layout=th.layout||'d1';
  body=normalizeBodyText(body);
  if(layout==='d1'){drawD1Cover(ctx,W,H,acct,title,sub,th);return;}
- if(layout==='d2'){drawD2Cover(ctx,W,H,acct,title,sub,th);return;}
+ if(layout==='d2'){drawD2Cover(ctx,W,H,acct,title,sub,body,th);return;}
  if(layout==='d4'){drawD4Cover(ctx,W,H,acct,title,sub,body,th);return;}
- if(layout==='c3'){drawC3Cover(ctx,W,H,acct,title,sub,th);return;}
- if(layout==='c4'){drawC4Cover(ctx,W,H,acct,title,sub,th);return;}
+ if(layout==='c3'){drawC3Cover(ctx,W,H,acct,title,sub,body,th);return;}
+ if(layout==='c4'){drawC4Cover(ctx,W,H,acct,title,sub,body,th);return;}
  if(layout==='a3'){drawA3Cover(ctx,W,H,acct,title,sub,th);return;}
  if(layout==='a6'){drawA6Cover(ctx,W,H,acct,title,sub,th);return;}
  if(layout==='h2'){drawH2Cover(ctx,W,H,acct,title,sub,th);return;}
@@ -1545,7 +1545,7 @@ function _d2Band(ctx,W,H,bandW){
  bg.addColorStop(0,'#7a9bb5');bg.addColorStop(1,'#5a7d9a');
  ctx.fillStyle=bg;ctx.fillRect(0,0,bandW,H);
 }
-function drawD2Cover(ctx,W,H,acct,title,sub,th){
+function drawD2Cover(ctx,W,H,acct,title,sub,body,th){
  ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H);
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
@@ -1581,6 +1581,13 @@ function drawD2Cover(ctx,W,H,acct,title,sub,th){
  ctx.font='400 44px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#6a8baa';
  ctx.fillText('〰〰〰',rx,ty+50);
+ // 正文
+ if(body){
+  const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.5);
+  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+  ctx.fillStyle=elC('body','rgba(28,20,14,0.60)');
+  wrapCanvasText(ctx,body,rx,ty+100,W-rx-px,bodyLH);
+ }
  ctx.textAlign='left';
 }
 function drawD2Page(ctx,W,H,acct,num,title,body,th){
@@ -1777,7 +1784,7 @@ function drawD4End(ctx,W,H,acct,title,body,th){
 }
 
 // ── C3 超大頁碼底層 ──
-function drawC3Cover(ctx,W,H,acct,title,sub,th){
+function drawC3Cover(ctx,W,H,acct,title,sub,body,th){
  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
@@ -1826,7 +1833,14 @@ function drawC3Cover(ctx,W,H,acct,title,sub,th){
  const subSz=elS('sub',36);
  ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(20,18,14,0.45)');
- wrapCanvasText(ctx,sub||'',px,titleEndY+50,W-px*2,Math.round(subSz*1.6));
+ const subEndY=wrapCanvasText(ctx,sub||'',px,titleEndY+50,W-px*2,Math.round(subSz*1.6));
+ // 正文
+ if(body){
+  const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.5);
+  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+  ctx.fillStyle=elC('body','rgba(20,18,14,0.60)');
+  wrapCanvasText(ctx,body,px,subEndY+30,W-px*2,bodyLH);
+ }
 }
 function drawC3End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
@@ -1941,7 +1955,7 @@ function drawC3Page(ctx,W,H,acct,num,title,body,th){
 }
 
 // ── C4 橫向三段切 ──
-function drawC4Cover(ctx,W,H,acct,title,sub,th){
+function drawC4Cover(ctx,W,H,acct,title,sub,body,th){
  const _el=(th&&th._el)||{};
  const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
  const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
@@ -1965,6 +1979,14 @@ function drawC4Cover(ctx,W,H,acct,title,sub,th){
  ctx.fillStyle=elC('sub','rgba(22,32,58,0.55)');
  const subEndY=wrapCanvasText(ctx,sub||'',px,titleEndY+30,W-px*2,Math.round(subSz*1.6));
  ctx._c4SubEndY=subEndY;
+ // 正文（白色中段區，t2 以內）
+ if(body){
+  const t2=Math.round(H*0.65);
+  const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.5);
+  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+  ctx.fillStyle=elC('body','rgba(22,32,58,0.60)');
+  wrapCanvasText(ctx,body,px,subEndY+30,W-px*2,bodyLH);
+ }
  ctx.textAlign='left';
 }
 function drawC4Page(ctx,W,H,acct,num,title,body,th){
@@ -2364,7 +2386,14 @@ function drawI1Cover(ctx,W,H,acct,title,sub,body,th,bgImg){
  const subSz=elS('sub',38);const subLH=Math.round(subSz*1.5);
  ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(255,255,255,0.88)');
- wrapCanvasText(ctx,sub||'',px,ty+24,W-px*2,subLH);
+ const subEndY=wrapCanvasText(ctx,sub||'',px,ty+24,W-px*2,subLH);
+ // 正文
+ if(body){
+  const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.5);
+  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Sans TC",sans-serif')}`;
+  ctx.fillStyle=elC('body','rgba(255,255,255,0.72)');
+  wrapCanvasText(ctx,body,px,subEndY+30,W-px*2,bodyLH);
+ }
  ctx.textAlign='left';
 }
 function drawI1Page(ctx,W,H,acct,num,title,body,th,bgImg){
@@ -2779,8 +2808,8 @@ function drawStylePreview(styleKey){
     const updateSlideText=(idx)=>{
      titleInput.value=slides[idx].title||'';
      bodyInput.value=slides[idx].body||'';
-     // 封面隱藏內文欄（D4 簡約小本封面例外：有正文）
-     const coverHasBody=['d4'].includes(style);
+     // 封面隱藏內文欄（部分風格封面有正文）
+     const coverHasBody=['d4','d2','c3','c4','i1'].includes(style);
      bodyInput.style.display=(slides[idx].type==='cover'&&!coverHasBody)?'none':'';
     };
     updateSlideText(lbSlideIdx);
