@@ -1439,13 +1439,17 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
  const titleAlign=elA('title','center');ctx.textAlign=titleAlign;
  const titleX=titleAlign==='left'?bx+56:titleAlign==='right'?bx+bw-56:W/2;
  let ty=wrapCanvasTextCenter(ctx,title||'',titleX,by+170,bw-112,titleLH);
- // 正文
- const bodySz=elS('body',40);const bodyLH=Math.round(bodySz*1.5);
- ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+ // 正文（自動縮字確保不超出白框）
+ const bodyMaxY=by+bh-40;
+ const bodyStartY=ty+60;
+ const bodyMaxSz=elS('body',40);
+ const bodyFontW=elW('body','300');const bodyFontF=elF('body','"Noto Serif TC",serif');
+ let fitBody=autoFitFontSize(ctx,body||'',bw-112,bodyStartY,bodyMaxY,`${bodyFontW} 40px ${bodyFontF}`,bodyMaxSz,20);
+ ctx.font=`${bodyFontW} ${fitBody.fontSize}px ${bodyFontF}`;
  ctx.fillStyle=elC('body','rgba(14,14,16,0.78)');
  const bodyAlign=elA('body','center');ctx.textAlign=bodyAlign;
  const bodyX=bodyAlign==='left'?bx+56:bodyAlign==='right'?bx+bw-56:W/2;
- wrapCanvasTextCenter(ctx,body||'',bodyX,ty+60,bw-112,bodyLH);
+ wrapCanvasTextCenter(ctx,body||'',bodyX,bodyStartY,bw-112,fitBody.lineH);
 }
 // opts: {x, w, fillStyle, strokeStyle}  — 覆寫框的 x/寬/填色/框色
 function _drawCTA(ctx,W,afterY,px,elF,opts){
@@ -1602,11 +1606,15 @@ function drawD2Page(ctx,W,H,acct,num,title,body,th){
  // 細線
  ctx.strokeStyle='rgba(28,20,14,0.14)';ctx.lineWidth=2;
  ctx.beginPath();ctx.moveTo(rx,ty+20);ctx.lineTo(W-px,ty+20);ctx.stroke();
- // 正文
- const bodySz=elS('body',35);const bodyLH=Math.round(bodySz*1.71);
- ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+ // 正文（自動縮字確保不超出底部安全線）
+ const bodyMaxYd2=1240;
+ const bodyStartYd2=ty+80;
+ const bodyMaxSzd2=elS('body',35);
+ const bodyFontWd2=elW('body','300');const bodyFontFd2=elF('body','"Noto Serif TC",serif');
+ let fitBodyd2=autoFitFontSize(ctx,body||'',W-rx-px,bodyStartYd2,bodyMaxYd2,`${bodyFontWd2} 35px ${bodyFontFd2}`,bodyMaxSzd2,18);
+ ctx.font=`${bodyFontWd2} ${fitBodyd2.fontSize}px ${bodyFontFd2}`;
  ctx.fillStyle=elC('body','rgba(28,20,14,0.72)');
- wrapCanvasText(ctx,body||'',rx,ty+80,W-rx-px,bodyLH);
+ wrapCanvasText(ctx,body||'',rx,bodyStartYd2,W-rx-px,fitBodyd2.lineH);
 }
 function drawD2End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H); const _el=(th&&th._el)||{};
@@ -1722,11 +1730,15 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('title','700')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#1c1a14');ctx.textAlign='left';
  let ty=wrapCanvasText(ctx,title||'',px,250,W-px*2,titleLH);
- // 正文（左對齊）
- const bodySz=elS('body',32);const bodyLH=Math.round(bodySz*1.6);
- ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+ // 正文（左對齊，自動縮字確保不超出底帶上緣）
+ const bodyMaxY4=bt-30;
+ const bodyStartY4=ty+20;
+ const bodyMaxSz4=elS('body',32);
+ const bodyFontW4=elW('body','300');const bodyFontF4=elF('body','"Noto Serif TC",serif');
+ let fitBody4=autoFitFontSize(ctx,body||'',W-px*2,bodyStartY4,bodyMaxY4,`${bodyFontW4} 32px ${bodyFontF4}`,bodyMaxSz4,18);
+ ctx.font=`${bodyFontW4} ${fitBody4.fontSize}px ${bodyFontF4}`;
  ctx.fillStyle=elC('body','rgba(28,26,20,0.70)');
- wrapCanvasText(ctx,body||'',px,ty+20,W-px*2,bodyLH);
+ wrapCanvasText(ctx,body||'',px,bodyStartY4,W-px*2,fitBody4.lineH);
 }
 
 function drawD4End(ctx,W,H,acct,title,body,th){
@@ -1911,11 +1923,15 @@ function drawC3Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('title','800')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#1c140e');
  let ty=wrapCanvasText(ctx,title||'',px,310,W-px*2,titleLH);
- // 正文
- const bodySz=elS('body',36);const bodyLH=Math.round(bodySz*1.56);
- ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+ // 正文（自動縮字確保不超出波浪裝飾上緣）
+ const bodyMaxYc3=Math.round(H*0.74);
+ const bodyStartYc3=ty+50;
+ const bodyMaxSzc3=elS('body',36);
+ const bodyFontWc3=elW('body','300');const bodyFontFc3=elF('body','"Noto Serif TC",serif');
+ let fitBodyc3=autoFitFontSize(ctx,body||'',W-px*2,bodyStartYc3,bodyMaxYc3,`${bodyFontWc3} 36px ${bodyFontFc3}`,bodyMaxSzc3,18);
+ ctx.font=`${bodyFontWc3} ${fitBodyc3.fontSize}px ${bodyFontFc3}`;
  ctx.fillStyle=elC('body','rgba(20,18,14,0.72)');
- wrapCanvasText(ctx,body||'',px,ty+50,W-px*2,bodyLH);
+ wrapCanvasText(ctx,body||'',px,bodyStartYc3,W-px*2,fitBodyc3.lineH);
 }
 
 // ── C4 橫向三段切 ──
@@ -1968,10 +1984,15 @@ function drawC4Page(ctx,W,H,acct,num,title,body,th){
  ctx.font=`${elW('title','700')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#16203a');
  let ty=wrapCanvasText(ctx,title||'',px,t1+120,W-px*2,titleLH);
- const bodySz=elS('body',35);const bodyLH=Math.round(bodySz*1.5);
- ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
+ // 正文（自動縮字確保不超出中段白區底部）
+ const bodyMaxYc4=t2-30;
+ const bodyStartYc4=ty+30;
+ const bodyMaxSzc4=elS('body',35);
+ const bodyFontWc4=elW('body','300');const bodyFontFc4=elF('body','"Noto Serif TC",serif');
+ let fitBodyc4=autoFitFontSize(ctx,body||'',W-px*2,bodyStartYc4,bodyMaxYc4,`${bodyFontWc4} 35px ${bodyFontFc4}`,bodyMaxSzc4,18);
+ ctx.font=`${bodyFontWc4} ${fitBodyc4.fontSize}px ${bodyFontFc4}`;
  ctx.fillStyle=elC('body','rgba(22,32,58,0.72)');
- wrapCanvasText(ctx,body||'',px,ty+30,W-px*2,bodyLH);
+ wrapCanvasText(ctx,body||'',px,bodyStartYc4,W-px*2,fitBodyc4.lineH);
 }
 
 // ── A3 焦糖奶茶 ──
