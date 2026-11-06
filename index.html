@@ -1754,7 +1754,7 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  // 色帶：CTA 在標題下方+50
  const bandH=H-bt;
  const ctaAfterY=550;
- _drawCTA(ctx,W,ctaAfterY,px,null,{x:W/2,w:W/2-px,fillStyle:'rgba(255,255,255,0.15)',strokeStyle:'rgba(248,246,242,0.35)',line1Color:'rgba(50,50,50,0.90)',line2Color:'rgba(50,50,50,0.65)'});
+ _drawCTA(ctx,W,ctaAfterY,px,null,{noBox:true,alignLeft:true,x:W/2,line1Color:'rgba(50,50,50,0.90)',line2Color:'rgba(50,50,50,0.65)'});
 }
 
 // ── C3 超大頁碼底層 ──
