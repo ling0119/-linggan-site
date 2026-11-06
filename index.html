@@ -2343,8 +2343,8 @@ function drawI1End(ctx,W,H,acct,title,sub,th,bgImg){
  ctx.fillStyle=elC('acct','rgba(255,255,255,0.65)');ctx.textAlign='left';
  ctx.fillText(acct||'@靈感救援隊',px,88);
  // 標題（金色）：封面 Y=756，結尾往上+80 → 676，行高 100
- const titleSz=elS('title',80);const titleLH=100;
- const titleY=H*0.56-80;
+ const titleSz=elS('title',60);const titleLH=100;
+ const titleY=H*0.56-180;
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#e8c060');
  let ty=wrapCanvasText(ctx,title||'',px,titleY,W-px*2,titleLH);
