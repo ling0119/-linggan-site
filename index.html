@@ -1725,7 +1725,7 @@ function drawD4Page(ctx,W,H,acct,num,title,body,th){
  const bodySz=elS('body',40);const bodyLH=Math.round(bodySz*1.5);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(28,26,20,0.70)');
- wrapCanvasText(ctx,body||'',px,ty+80,W-px*2,bodyLH);
+ wrapCanvasText(ctx,body||'',px,ty+20,W-px*2,bodyLH);
 }
 
 function drawD4End(ctx,W,H,acct,title,body,th){
