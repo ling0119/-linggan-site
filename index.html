@@ -2865,8 +2865,14 @@ function drawStylePreview(styleKey){
      };
      lbTextPanel.append(lbNumDiv);
      lbTextPanel.append(makeField('標題',sl.title,'title',2));
-     if(sl.type!=='cover')lbTextPanel.append(makeField('內文',sl.body,'body',6));
-     else lbTextPanel.append(makeField('副標',sl.sub,'sub',2));
+     if(sl.type==='cover'){
+      // 封面：body 存的是副標
+      lbTextPanel.append(makeField('副標',sl.body,'body',2));
+     } else if(sl.type==='end'){
+      lbTextPanel.append(makeField('內文',sl.body,'body',4));
+     } else {
+      lbTextPanel.append(makeField('內文',sl.body,'body',6));
+     }
     };
     if(!isMobile)buildLbTextPanel(lbSlideIdx);
 
@@ -2968,7 +2974,7 @@ function drawStylePreview(styleKey){
     const btnRow2=document.createElement('div');
     btnRow2.style.cssText='display:flex;gap:8px;align-items:stretch';
     btnRow2.append(dlBtn2,closeBtn);
-    rightInner.append(slideLabel,slideTextWrap,bgSection,tweakHolder,btnRow2);
+    rightInner.append(slideLabel,bgSection,tweakHolder,btnRow2);
     right.append(rightInner);
     if(!isMobile)ov.prepend(lbTextPanel);
     ov.append(left,right);
