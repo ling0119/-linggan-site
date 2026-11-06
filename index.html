@@ -1677,7 +1677,7 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  const titleStartY=bt+bandH/2-60-330;
  // 螢光筆效果：逐行量寬後畫色塊再畫字
  (function(){
-  const text=title||'';const maxW=W-px*2;const lx=px+30;
+  const text=title||'';const maxW=W-px*2;const lx=px;
   const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
   let cy=titleStartY;const pad=10;const hl=8;
   ctx.textAlign='left';
