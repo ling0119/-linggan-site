@@ -2330,6 +2330,31 @@ function drawI1Page(ctx,W,H,acct,num,title,body,th,bgImg){
  wrapCanvasText(ctx,body||'',px,ty+28,W-px*2,bodyLH);
  ctx.textAlign='left';
 }
+function drawI1End(ctx,W,H,acct,title,sub,th,bgImg){
+ const _el=(th&&th._el)||{};
+ const elS=(ek,def)=>(_el[ek]&&_el[ek].size!=null)?_el[ek].size:def;
+ const elW=(ek,def)=>(_el[ek]&&_el[ek].weight)?_el[ek].weight:def;
+ const elF=(ek,def)=>{if(!(_el[ek]&&_el[ek].family))return def;const m={serif:'"Noto Serif TC",serif',sans:'"Noto Sans TC",sans-serif',lxgw:'"LXGW WenKai TC",cursive',huninn:'"Huninn",cursive',iansui:'"Iansui",cursive',zenold:'"Zen Old Mincho",serif',serifsc:'"Noto Serif SC",serif',sanssc:'"Noto Sans SC",sans-serif','ma-shan':'"Ma Shan Zheng",cursive',zcool:'"ZCOOL XiaoWei",serif',shippori:'"Shippori Mincho",serif',kaisei:'"Kaisei Decol",serif'};return m[_el[ek].family]||def;};
+ const elC=(ek,def)=>(_el[ek]&&_el[ek].color)?_el[ek].color:def;
+ _i1DrawBg(ctx,W,H,bgImg);
+ const px=72;
+ // 帳號（左上）
+ ctx.font=`300 ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('acct','rgba(255,255,255,0.65)');ctx.textAlign='left';
+ ctx.fillText(acct||'@靈感救援隊',px,88);
+ // 標題（金色）：封面 Y=756，結尾往上+80 → 676，行高 100
+ const titleSz=elS('title',80);const titleLH=100;
+ const titleY=H*0.56-80;
+ ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
+ ctx.fillStyle=elC('title','#e8c060');
+ let ty=wrapCanvasText(ctx,title||'',px,titleY,W-px*2,titleLH);
+ // 副標（白色）
+ const subSz=elS('sub',38);const subLH=Math.round(subSz*1.5);
+ ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
+ ctx.fillStyle=elC('sub','rgba(255,255,255,0.88)');
+ wrapCanvasText(ctx,sub||'',px,ty+24,W-px*2,subLH);
+ ctx.textAlign='left';
+}
 
 // ── 結尾頁 ──
 function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
@@ -2376,7 +2401,7 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
   _drawCTA(ctx,W,H*0.70,80,null,{fillStyle:'rgba(255,255,255,0.08)',strokeStyle:'rgba(210,190,170,0.35)',line1Color:'rgba(240,232,220,0.92)',line2Color:'rgba(210,190,170,0.65)'});return;}
  if(layout==='h2'){const _h2ey=drawH2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,(_h2ey||H*0.76),88,null,{noBox:true,alignLeft:true,x:144,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
- if(layout==='i1'){drawI1Cover(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,body,th,bgImg);
+ if(layout==='i1'){drawI1End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th,bgImg);
   _drawCTA(ctx,W,H*0.74,88,null);return;}
 }
 
