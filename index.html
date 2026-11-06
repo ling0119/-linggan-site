@@ -1742,14 +1742,15 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(28,26,20,0.38)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
+ // 上半：大標題
+ const titleSz2=60;const titleLH2=Math.round(titleSz2*1.27);
+ ctx.font=`900 ${titleSz2}px "Noto Serif TC",serif`;
+ ctx.fillStyle='#1c1a14';ctx.textAlign='left';
+ const titleEndY=wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',px,250,W-px*2,titleLH2);
  // 上半：body 正文
  ctx.font='300 40px "Noto Serif TC",serif';
  ctx.fillStyle='rgba(28,26,20,0.65)';ctx.textAlign='left';
- wrapCanvasText(ctx,body||'',px,200,W-px*2,62);
- // 上半：大標題
- ctx.font='900 60px "Noto Serif TC",serif';
- ctx.fillStyle='#1c1a14';ctx.textAlign='left';
- const titleEndY=wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',px,Math.round(bt*0.62),W-px*2,84);
+ wrapCanvasText(ctx,body||'',px,titleEndY+50,W-px*2,62);
  // 色帶：CTA 在標題下方+50
  const bandH=H-bt;
  const ctaAfterY=500;
