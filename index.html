@@ -2193,7 +2193,7 @@ function drawH2End(ctx,W,H,acct,title,sub,th){
  const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.21);
  const subSz=elS('sub',40);const subLH=Math.round(subSz*1.5);
  const totalH=titleLH+20+subLH;
- const startY=cardY+Math.round((cardH-totalH)/2)+titleLH*0.85-120;
+ const startY=cardY+Math.round((cardH-totalH)/2)+titleLH*0.85-150;
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='left';
  let ty=wrapCanvasText(ctx,title||'',px+56,startY,W-px*2-112,titleLH);
