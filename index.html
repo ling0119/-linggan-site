@@ -2193,7 +2193,7 @@ function drawH2End(ctx,W,H,acct,title,sub,th){
  const titleSz=elS('title',50);const titleLH=Math.round(titleSz*1.21);
  const subSz=elS('sub',40);const subLH=Math.round(subSz*1.5);
  const totalH=titleLH+20+subLH;
- const startY=cardY+10+titleLH*0.85;
+ const startY=cardY+30+titleLH*0.85;
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#3a2850');ctx.textAlign='left';
  let ty=wrapCanvasText(ctx,title||'',px+56,startY,W-px*2-112,titleLH);
@@ -2236,7 +2236,7 @@ function drawH2Page(ctx,W,H,acct,num,title,body,th){
  const totalH=titleLines*titleLH+20+bodyLines*bodyLH;
  // 白卡＋邊線
  const cardY=250,cardH=820;
- const startY=cardY+10+titleLH*0.85;
+ const startY=cardY+30+titleLH*0.85;
  roundRect(ctx,px,cardY,W-px*2,cardH,30);
  ctx.fillStyle='rgba(255,255,255,0.86)';ctx.fill();
  roundRect(ctx,px,cardY,W-px*2,cardH,30);
