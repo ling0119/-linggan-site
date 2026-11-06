@@ -1677,10 +1677,10 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  const titleStartY=bt+bandH/2-60-330;
  // 螢光筆效果：逐行量寬後畫色塊再畫字
  (function(){
-  const text=title||'';const maxW=W-px*2;const rx=W-40;
+  const text=title||'';const maxW=W-px*2;const lx=px+30;
   const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
   let cy=titleStartY;const pad=10;const hl=8;
-  ctx.textAlign='right';
+  ctx.textAlign='left';
   for(const line of lines){
    if(!line){cy+=titleLH*0.55;continue;}
    const chars=line.split('');let cur='';const lineArr=[];
@@ -1693,9 +1693,9 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
    for(const seg of lineArr){
     const tw=ctx.measureText(seg).width;
     ctx.fillStyle='rgba(107,115,85,0.30)';
-    ctx.fillRect(rx-tw-pad,cy-titleSz+hl,tw+pad*2,titleSz+4);
+    ctx.fillRect(lx-pad,cy-titleSz+hl,tw+pad*2,titleSz+4);
     ctx.fillStyle=elC('title','#1c1a14');
-    ctx.fillText(seg,rx,cy);
+    ctx.fillText(seg,lx,cy);
     cy+=titleLH;
    }
   }
