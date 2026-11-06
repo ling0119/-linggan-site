@@ -1956,8 +1956,6 @@ function drawC4Cover(ctx,W,H,acct,title,sub,th){
  ctx.font=`${elW('acct','300')} ${elS('acct',30)}px ${elF('acct','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('acct','rgba(255,255,255,0.72)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,1200)}
  ctx.textAlign='left';
- ctx.strokeStyle='rgba(22,32,58,0.15)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(px,t1+108);ctx.lineTo(W-px,t1+108);ctx.stroke();
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*1.5);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('title','#16203a');
