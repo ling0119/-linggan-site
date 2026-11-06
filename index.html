@@ -1370,7 +1370,7 @@ function drawD1Cover(ctx,W,H,acct,title,sub,th){
  roundRect(ctx,bx,by,bw,bh,16);
  ctx.fillStyle='rgba(255,255,255,0.95)';ctx.fill();
  // 標題（框內，自動斷行，支援 \n）
- const titleSz=elS('title',104);const titleW=elW('title','900');const titleFont=elF('title','"Noto Serif TC",serif');
+ const titleSz=elS('title',60);const titleW=elW('title','900');const titleFont=elF('title','"Noto Serif TC",serif');
  ctx.font=`${titleW} ${titleSz}px ${titleFont}`;
  ctx.fillStyle=elC('title','#0e0e10');
  const titleAlign=elA('title','center');ctx.textAlign=titleAlign;
@@ -1398,7 +1398,7 @@ function drawD1Cover(ctx,W,H,acct,title,sub,th){
  ctx.font=`${elW('sub','300')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(255,255,255,0.72)');
  const subAlign=elA('sub','center');ctx.textAlign=subAlign;
- const subY=by+bh+60+Math.round(H*0.10);
+ const subY=by+bh+20+Math.round(H*0.10);
  const subX=subAlign==='left'?px:subAlign==='right'?W-px:cx;
  ctx.fillText(sub||'',subX,subY);
  ctx.textAlign='left';
