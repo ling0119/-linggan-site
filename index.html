@@ -2402,7 +2402,7 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
  if(layout==='h2'){const _h2ey=drawH2End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th);
   _drawCTA(ctx,W,(_h2ey||H*0.76),88,null,{noBox:true,alignLeft:true,x:144,line1Color:'rgba(60,30,90,0.90)',line2Color:'rgba(80,50,110,0.65)'});return;}
  if(layout==='i1'){drawI1End(ctx,W,H,acct,title||'謝謝你滑到最後 ✨',body,th,bgImg);
-  _drawCTA(ctx,W,H*0.74,88,null);return;}
+  _drawCTA(ctx,W,H*0.74,88,null,{capsule:true,fillStyle:'#e8c060',strokeStyle:'rgba(0,0,0,0)',solid:true,line1Color:'rgba(30,15,0,0.85)',line2Color:'rgba(30,15,0,0.65)'});return;}
 }
 
 function buildPagesFromSlides(n){
