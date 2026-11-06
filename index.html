@@ -1185,6 +1185,22 @@ function wrapCanvasText(ctx,text,x,y,maxW,lineH){
  }
  return cy;
 }
+function wrapCanvasTextRight(ctx,text,rx,y,maxW,lineH){
+ const prevAlign=ctx.textAlign;ctx.textAlign='right';
+ const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');let cy=y;
+ for(const line of lines){
+  if(!line){cy+=lineH*0.55;continue;}
+  const chars=line.split('');let cur='';
+  for(let i=0;i<chars.length;i++){
+   const test=cur+chars[i];
+   if(ctx.measureText(test).width>maxW&&cur){ctx.fillText(cur,rx,cy);cy+=lineH;cur=chars[i];}
+   else cur=test;
+  }
+  if(cur){ctx.fillText(cur,rx,cy);cy+=lineH;}
+ }
+ ctx.textAlign=prevAlign;
+ return cy;
+}
 function wrapCanvasTextCenter(ctx,text,cx,y,maxW,lineH){
  const prevAlign=ctx.textAlign;ctx.textAlign='center';
  const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');let cy=y;
@@ -1648,18 +1664,18 @@ function drawD4Cover(ctx,W,H,acct,title,sub,body,th){
  ctx.fillStyle=elC('acct','rgba(28,26,20,0.38)');{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('VLOG',W-px,80);ctx.textAlign='left';
  const subSz=elS('sub',40);
- ctx.font=`${elW('sub','400')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
+ ctx.font=`${elW('sub','700')} ${subSz}px ${elF('sub','"Noto Sans TC",sans-serif')}`;
  ctx.fillStyle=elC('sub','rgba(28,26,20,0.48)');ctx.textAlign='left';
  ctx.fillText(sub||'',px,200);
- const bodySz=elS('body',40);const bodyLH=Math.round(bodySz*1.5);
+ const bodySz=elS('body',30);const bodyLH=Math.round(bodySz*1.5);
  ctx.font=`${elW('body','300')} ${bodySz}px ${elF('body','"Noto Serif TC",serif')}`;
  ctx.fillStyle=elC('body','rgba(28,26,20,0.65)');ctx.textAlign='left';
  wrapCanvasText(ctx,body||'',px,280,W-px*2,bodyLH);
  const titleSz=elS('title',60);const titleLH=Math.round(titleSz*2.07);
  ctx.font=`${elW('title','900')} ${titleSz}px ${elF('title','"Noto Serif TC",serif')}`;
- ctx.fillStyle=elC('title','#f8f6f2');ctx.textAlign='center';
+ ctx.fillStyle=elC('title','#f8f6f2');ctx.textAlign='right';
  const bandH=H-bt;
- wrapCanvasTextCenter(ctx,title||'',W/2,bt+bandH/2-60,W-px*2,titleLH);
+ wrapCanvasTextRight(ctx,title||'',W-px,bt+bandH/2-60-80,W-px*2,titleLH);
  ctx.textAlign='left';
 }
 function drawD4Page(ctx,W,H,acct,num,title,body,th){
