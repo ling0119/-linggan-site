@@ -1511,18 +1511,18 @@ function drawD1End(ctx,W,H,acct,title,body,th){
  ctx.font='300 30px "Noto Sans TC",sans-serif';
  ctx.fillStyle='rgba(255,255,255,0.38)';{const aA=elA('acct','left');ctx.textAlign=aA;const aX=aA==='right'?W-px:aA==='center'?W/2:px;ctx.fillText(acct||'@靈感救援隊',aX,80)}
  ctx.textAlign='right';ctx.fillText('END',W-px,80);ctx.textAlign='left';
- // 白色框
- const bx=px,by=Math.round(H*0.28),bw=W-px*2,bh=Math.round(H*0.50);
+ // 白色框（往上移：by=H*0.18）
+ const bx=px,by=Math.round(H*0.18),bw=W-px*2,bh=Math.round(H*0.50);
  roundRect(ctx,bx,by,bw,bh,16);
  ctx.fillStyle='rgba(255,255,255,0.95)';ctx.fill();
- // 標題（框內置中，離框上方20px）
+ // 標題（框內置中）
  const cx=W/2;
  ctx.font='900 50px "Noto Serif TC",serif';
  ctx.fillStyle='#0e0e10';ctx.textAlign='center';
  const endTitleLines=[];
  const etText=title||'謝謝你滑到最後 ✨';
  {let line='';for(const ch of etText){const t=line+ch;if(ctx.measureText(t).width>bw-112&&line){endTitleLines.push(line);line=ch;}else line=t;}if(line)endTitleLines.push(line);}
- let ty=by+120+50; // 離框上方留白
+ let ty=by+90;
  endTitleLines.forEach(ln=>{ctx.fillText(ln,cx,ty);ty+=100;});
  ty+=20;
  // body（框內標題下方，置中）
@@ -1530,7 +1530,9 @@ function drawD1End(ctx,W,H,acct,title,body,th){
  ctx.fillStyle='rgba(14,14,16,0.72)';
  if(body){const bl=[];let bl_='';for(const ch of body){const t=bl_+ch;if(ctx.measureText(t).width>bw-112&&bl_){bl.push(bl_);bl_=ch;}else bl_=t;}if(bl_)bl.push(bl_);bl.forEach(ln=>{ctx.fillText(ln,cx,ty);ty+=70;});}
  ctx.textAlign='left';
- _drawCTA(ctx,W,ty,px,null,{x:168,w:744});
+ // CTA 放在白卡下方 +50
+ const ctaAfterY=by+bh+50;
+ _drawCTA(ctx,W,ctaAfterY,px,null,{x:168,w:744,fillStyle:'rgba(255,255,255,0.18)',strokeStyle:'rgba(255,255,255,0.45)',line1Color:'rgba(255,255,255,0.90)',line2Color:'rgba(255,255,255,0.65)',solid:true});
 }
 
 // ── D2 左側色帶標號 ──
