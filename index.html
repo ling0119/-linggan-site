@@ -1451,8 +1451,8 @@ function drawD1Page(ctx,W,H,acct,num,title,body,th){
 function _drawCTA(ctx,W,afterY,px,elF,opts){
  const ctaSz=34;const ctaLH=Math.round(ctaSz*1.6);
  ctx.font=`400 ${ctaSz}px ${elF?elF('body','"Noto Sans TC",sans-serif'):'"Noto Sans TC",sans-serif'}`;
- const ctaLine1='💬 留言告訴我：「放手」';
- const ctaLine2='我私訊你，帶你看看該放下的是什麼。';
+ const ctaLine1=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我：「放手」';
+ const ctaLine2=(A.ctaLine2&&A.ctaLine2.trim())||'我私訊你，帶你看看該放下的是什麼。';
  const ctaX=(opts&&opts.x!=null)?opts.x:px;
  const ctaW=(opts&&opts.w!=null)?opts.w:W-px*2;
  const ctaH=ctaLH*2+50;
@@ -2870,6 +2870,29 @@ function drawStylePreview(styleKey){
       lbTextPanel.append(makeField('副標',sl.body,'body',2));
      } else if(sl.type==='end'){
       lbTextPanel.append(makeField('內文',sl.body,'body',4));
+      // CTA 兩行（全局 A.ctaLine1/2）
+      const ctaSep=document.createElement('div');
+      ctaSep.style.cssText='height:1px;background:rgba(255,255,255,0.1);margin:4px 0';
+      lbTextPanel.append(ctaSep);
+      const makeCtaField=(label,aKey,rows)=>{
+       const wrap=document.createElement('div');
+       wrap.style.cssText='display:flex;flex-direction:column;gap:4px';
+       const lbl=document.createElement('div');
+       lbl.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase';
+       lbl.textContent=label;
+       const ta=document.createElement('textarea');
+       ta.rows=rows;
+       ta.value=(A[aKey]&&A[aKey].trim())||(aKey==='ctaLine1'?'💬 留言告訴我：「放手」':'我私訊你，帶你看看該放下的是什麼。');
+       ta.style.cssText='font:inherit;font-size:13px;line-height:1.65;padding:8px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;width:100%;box-sizing:border-box;resize:none;outline:none;font-family:inherit';
+       ta.addEventListener('focus',()=>{ta.style.borderColor='rgba(255,255,255,0.5)';});
+       ta.addEventListener('blur',()=>{ta.style.borderColor='rgba(255,255,255,0.15)';});
+       ta.addEventListener('keydown',(e)=>{if(e.key==='Enter')e.stopPropagation();});
+       ta.addEventListener('input',()=>{A[aKey]=ta.value;save();drawBig();});
+       wrap.append(lbl,ta);
+       return wrap;
+      };
+      lbTextPanel.append(makeCtaField('CTA 第一行','ctaLine1',2));
+      lbTextPanel.append(makeCtaField('CTA 第二行','ctaLine2',2));
      } else {
       lbTextPanel.append(makeField('內文',sl.body,'body',6));
      }
