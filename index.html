@@ -2779,8 +2779,9 @@ function drawStylePreview(styleKey){
     const updateSlideText=(idx)=>{
      titleInput.value=slides[idx].title||'';
      bodyInput.value=slides[idx].body||'';
-     // 封面隱藏內文欄
-     bodyInput.style.display=slides[idx].type==='cover'?'none':'';
+     // 封面隱藏內文欄（D4 簡約小本封面例外：有正文）
+     const coverHasBody=['d4'].includes(style);
+     bodyInput.style.display=(slides[idx].type==='cover'&&!coverHasBody)?'none':'';
     };
     updateSlideText(lbSlideIdx);
     // 編輯後即時更新 slides 資料並重繪
