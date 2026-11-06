@@ -1588,8 +1588,8 @@ function drawD2Cover(ctx,W,H,acct,title,sub,body,th){
  }
  ctx.font='400 44px "Noto Sans TC",sans-serif';
  ctx.fillStyle='#6a8baa';
- ctx.fillText('〰〰〰',rx,waveY);
  ctx.textAlign='left';
+ ctx.fillText('〰〰〰',rx,Math.min(waveY,H-80));
 }
 function drawD2Page(ctx,W,H,acct,num,title,body,th){
  ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H);
