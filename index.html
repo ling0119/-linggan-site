@@ -1752,7 +1752,7 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  const titleEndY=wrapCanvasText(ctx,title||'謝謝你滑到最後 ✨',px,Math.round(bt*0.62),W-px*2,84);
  // 色帶：CTA 在標題下方+50
  const bandH=H-bt;
- const ctaAfterY=Math.min(titleEndY+50, bt+40);
+ const ctaAfterY=bt+60;
  _drawCTA(ctx,W,ctaAfterY,px,null,{x:px,w:W-px*2,fillStyle:'rgba(255,255,255,0.15)',strokeStyle:'rgba(248,246,242,0.35)',line1Color:'rgba(248,246,242,0.90)',line2Color:'rgba(248,246,242,0.60)'});
 }
 
