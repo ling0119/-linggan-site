@@ -1478,10 +1478,11 @@ function _drawCTA(ctx,W,afterY,px,elF,opts){
   ctx.restore();
  }
  const _alignLeft=(opts&&opts.alignLeft);
- const ctaCx=_alignLeft?ctaX:ctaX+ctaW/2;
+ const _alignRight=(opts&&opts.alignRight);
+ const ctaCx=_alignRight?(ctaX+ctaW):_alignLeft?ctaX:ctaX+ctaW/2;
  const totalTextH=ctaLH*2;
  const textStartY=(opts&&opts.noBox)?ctaY+ctaLH*0.85:ctaY+(ctaH-totalTextH)/2+ctaLH*0.85;
- ctx.textAlign=_alignLeft?'left':'center';
+ ctx.textAlign=_alignRight?'right':_alignLeft?'left':'center';
  ctx.fillStyle=(opts&&opts.line1Color)||'rgba(20,18,14,0.75)';
  ctx.fillText(ctaLine1,ctaCx,textStartY);
  ctx.fillStyle=(opts&&opts.line2Color)||'rgba(20,18,14,0.52)';
@@ -1754,7 +1755,7 @@ function drawD4End(ctx,W,H,acct,title,body,th){
  // 色帶：CTA 在標題下方+50
  const bandH=H-bt;
  const ctaAfterY=550;
- _drawCTA(ctx,W,ctaAfterY,px,null,{noBox:true,alignLeft:true,x:W/2,line1Color:'rgba(50,50,50,0.90)',line2Color:'rgba(50,50,50,0.65)'});
+ _drawCTA(ctx,W,ctaAfterY,px,null,{noBox:true,alignRight:true,x:W-px,w:W-px*2,line1Color:'rgba(50,50,50,0.90)',line2Color:'rgba(50,50,50,0.65)'});
 }
 
 // ── C3 超大頁碼底層 ──
