@@ -614,6 +614,75 @@ pre{background:var(--code);color:var(--code-ink);border:1.5px solid #7A5AB0;bord
 .film-foot-r{font-size:10px;color:#555}
 </style>
 
+<!-- 密碼鎖畫面 -->
+<style id="pw-lock">main#app,div.scan-modal{visibility:hidden!important}</style>
+<div id="pw-gate" style="
+  position:fixed;inset:0;z-index:99999;
+  display:flex;align-items:center;justify-content:center;
+  background:#F7F4FB;
+  font-family:'Noto Sans TC',sans-serif;
+">
+  <div style="
+    text-align:center;padding:48px 36px;max-width:360px;width:90%;
+    background:#fff;border-radius:20px;
+    box-shadow:0 8px 40px rgba(46,37,64,.12);
+  ">
+    <div style="font-size:36px;margin-bottom:16px">✦</div>
+    <div style="font-size:22px;font-weight:700;color:#2E2540;margin-bottom:6px;font-family:'Noto Serif TC',serif">靈感救援隊</div>
+    <div style="font-size:14px;color:#8278A0;margin-bottom:32px">請輸入密碼以繼續</div>
+    <input id="pw-input" type="password" placeholder="••••••••"
+      style="
+        width:100%;padding:12px 16px;border:2px solid #DDD6EC;border-radius:10px;
+        font-size:16px;text-align:center;letter-spacing:.2em;
+        outline:none;transition:border .2s;
+        color:#2E2540;background:#faf8ff;
+      "
+      onkeydown="if(event.key==='Enter')checkPw()"
+    >
+    <div id="pw-err" style="height:20px;font-size:13px;color:#c0392b;margin-top:8px;opacity:0;transition:opacity .2s"></div>
+    <button onclick="checkPw()" style="
+      margin-top:16px;width:100%;padding:13px;border:none;border-radius:10px;
+      background:#9B7DB5;color:#fff;font-size:15px;font-weight:600;
+      cursor:pointer;letter-spacing:.05em;
+      transition:opacity .15s;
+    " onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">進入</button>
+  </div>
+</div>
+<script>
+(function(){
+  const KEY='linggan_auth';
+  const PW='linggan2024';
+  function unlock(){
+    const lock=document.getElementById('pw-lock');
+    if(lock)lock.remove();
+    const gate=document.getElementById('pw-gate');
+    if(gate)gate.remove();
+  }
+  if(sessionStorage.getItem(KEY)==='1'){
+    unlock();
+  }
+  window.checkPw=function(){
+    const v=document.getElementById('pw-input').value;
+    const err=document.getElementById('pw-err');
+    if(v===PW){
+      sessionStorage.setItem(KEY,'1');
+      const gate=document.getElementById('pw-gate');
+      gate.style.transition='opacity .3s';
+      gate.style.opacity='0';
+      setTimeout(()=>unlock(),320);
+    } else {
+      err.textContent='密碼錯誤，請再試一次';
+      err.style.opacity='1';
+      const inp=document.getElementById('pw-input');
+      inp.style.borderColor='#c0392b';
+      inp.value='';
+      inp.focus();
+      setTimeout(()=>{err.style.opacity='0';inp.style.borderColor='#DDD6EC';},2200);
+    }
+  };
+})();
+</script>
+
 <main id="app"></main>
 <div class="scan-modal" id="scan" hidden>
  <div class="scan-s" id="scanBg"></div>
@@ -3807,72 +3876,6 @@ html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0p
 </style>
 </head>
 <body>
-<!-- 密碼鎖畫面 -->
-<style id="pw-lock">body > .wrap{visibility:hidden}</style>
-<div id="pw-gate" style="
-  position:fixed;inset:0;z-index:99999;
-  display:flex;align-items:center;justify-content:center;
-  background:#F7F4FB;
-  font-family:'Noto Sans TC',sans-serif;
-">
-  <div style="
-    text-align:center;padding:48px 36px;max-width:360px;width:90%;
-    background:#fff;border-radius:20px;
-    box-shadow:0 8px 40px rgba(46,37,64,.12);
-  ">
-    <div style="font-size:36px;margin-bottom:16px">✦</div>
-    <div style="font-size:22px;font-weight:700;color:#2E2540;margin-bottom:6px;font-family:'Noto Serif TC',serif">靈感救援隊</div>
-    <div style="font-size:14px;color:#8278A0;margin-bottom:32px">請輸入密碼以繼續</div>
-    <input id="pw-input" type="password" placeholder="••••••••"
-      style="
-        width:100%;padding:12px 16px;border:2px solid #DDD6EC;border-radius:10px;
-        font-size:16px;text-align:center;letter-spacing:.2em;
-        outline:none;transition:border .2s;
-        color:#2E2540;background:#faf8ff;
-      "
-      onkeydown="if(event.key==='Enter')checkPw()"
-    >
-    <div id="pw-err" style="height:20px;font-size:13px;color:#c0392b;margin-top:8px;opacity:0;transition:opacity .2s"></div>
-    <button onclick="checkPw()" style="
-      margin-top:16px;width:100%;padding:13px;border:none;border-radius:10px;
-      background:#9B7DB5;color:#fff;font-size:15px;font-weight:600;
-      cursor:pointer;letter-spacing:.05em;
-      transition:opacity .15s;
-    " onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">進入</button>
-  </div>
-</div>
-<script>
-(function(){
-  const KEY='linggan_auth';
-  const PW='linggan2024';
-  if(sessionStorage.getItem(KEY)==='1'){
-    document.getElementById('pw-gate').style.display='none';
-    const lock=document.getElementById('pw-lock');
-    if(lock)lock.remove();
-  }
-  window.checkPw=function(){
-    const v=document.getElementById('pw-input').value;
-    const err=document.getElementById('pw-err');
-    if(v===PW){
-      sessionStorage.setItem(KEY,'1');
-      const gate=document.getElementById('pw-gate');
-      const lock=document.getElementById('pw-lock');
-      if(lock)lock.remove();
-      gate.style.transition='opacity .3s';
-      gate.style.opacity='0';
-      setTimeout(()=>gate.remove(),320);
-    } else {
-      err.textContent='密碼錯誤，請再試一次';
-      err.style.opacity='1';
-      const inp=document.getElementById('pw-input');
-      inp.style.borderColor='#c0392b';
-      inp.value='';
-      inp.focus();
-      setTimeout(()=>{err.style.opacity='0';inp.style.borderColor='var(--line)';},2200);
-    }
-  };
-})();
-</script>
 <div class="wrap">
 <p class="note">共 ${n} 張・1080×1350｜封面照片請替換 [照片] 區塊</p>
 
