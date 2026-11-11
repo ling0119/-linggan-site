@@ -3808,11 +3808,12 @@ html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0p
 </head>
 <body>
 <!-- 密碼鎖畫面 -->
+<style id="pw-lock">body > .wrap{visibility:hidden}</style>
 <div id="pw-gate" style="
   position:fixed;inset:0;z-index:99999;
   display:flex;align-items:center;justify-content:center;
-  background:var(--bg);
-  font-family:var(--body);
+  background:#F7F4FB;
+  font-family:'Noto Sans TC',sans-serif;
 ">
   <div style="
     text-align:center;padding:48px 36px;max-width:360px;width:90%;
@@ -3820,22 +3821,22 @@ html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0p
     box-shadow:0 8px 40px rgba(46,37,64,.12);
   ">
     <div style="font-size:36px;margin-bottom:16px">✦</div>
-    <div style="font-size:22px;font-weight:700;color:var(--ink);margin-bottom:6px;font-family:var(--pvt)">靈感救援隊</div>
-    <div style="font-size:14px;color:var(--muted);margin-bottom:32px">請輸入密碼以繼續</div>
+    <div style="font-size:22px;font-weight:700;color:#2E2540;margin-bottom:6px;font-family:'Noto Serif TC',serif">靈感救援隊</div>
+    <div style="font-size:14px;color:#8278A0;margin-bottom:32px">請輸入密碼以繼續</div>
     <input id="pw-input" type="password" placeholder="••••••••"
       style="
-        width:100%;padding:12px 16px;border:2px solid var(--line);border-radius:10px;
+        width:100%;padding:12px 16px;border:2px solid #DDD6EC;border-radius:10px;
         font-size:16px;text-align:center;letter-spacing:.2em;
-        outline:none;transition:border .2s;font-family:var(--body);
-        color:var(--ink);background:#faf8ff;
+        outline:none;transition:border .2s;
+        color:#2E2540;background:#faf8ff;
       "
       onkeydown="if(event.key==='Enter')checkPw()"
     >
     <div id="pw-err" style="height:20px;font-size:13px;color:#c0392b;margin-top:8px;opacity:0;transition:opacity .2s"></div>
     <button onclick="checkPw()" style="
       margin-top:16px;width:100%;padding:13px;border:none;border-radius:10px;
-      background:var(--accent);color:#fff;font-size:15px;font-weight:600;
-      cursor:pointer;font-family:var(--body);letter-spacing:.05em;
+      background:#9B7DB5;color:#fff;font-size:15px;font-weight:600;
+      cursor:pointer;letter-spacing:.05em;
       transition:opacity .15s;
     " onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">進入</button>
   </div>
@@ -3846,6 +3847,8 @@ html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0p
   const PW='linggan2024';
   if(sessionStorage.getItem(KEY)==='1'){
     document.getElementById('pw-gate').style.display='none';
+    const lock=document.getElementById('pw-lock');
+    if(lock)lock.remove();
   }
   window.checkPw=function(){
     const v=document.getElementById('pw-input').value;
@@ -3853,6 +3856,8 @@ html,body{margin:0;background:var(--page);padding-top:env(safe-area-inset-top,0p
     if(v===PW){
       sessionStorage.setItem(KEY,'1');
       const gate=document.getElementById('pw-gate');
+      const lock=document.getElementById('pw-lock');
+      if(lock)lock.remove();
       gate.style.transition='opacity .3s';
       gate.style.opacity='0';
       setTimeout(()=>gate.remove(),320);
