@@ -3159,6 +3159,12 @@ function drawStylePreview(styleKey){
  document.fonts.ready.then(()=>{
   if(!document.getElementById('stylePreviewStrip'))return;
   buildSlides();
+  // 短暫滑到結尾頁再回來，提示用戶有更多張
+  const c=document.getElementById('stylePreviewStrip');
+  if(c&&c.scrollWidth>c.clientWidth){
+   setTimeout(()=>{c.scrollTo({left:c.scrollWidth,behavior:'smooth'});},400);
+   setTimeout(()=>{c.scrollTo({left:0,behavior:'smooth'});},1200);
+  }
  });
 }
 // ── 取得含每頁 override 的主題 ──
