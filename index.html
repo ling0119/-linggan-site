@@ -1206,7 +1206,11 @@ ${v('take','請從故事裡幫我提煉一句，要讓人有共鳴、想截圖�
    [標題] 封面標題（一句話，20 字內；若超過 10 字請在語意斷點用「/」分段，例：那個答案，/她沒讓它出來過。）
    [副標] 副標（必填，10 字內，呼應標題或補充說明）
    [內文] 這張圖的內文（2–4 行短句，每行結尾有標點）
-3. 結尾 CTA（互動邀請）：單獨一行，格式 **互動邀請：** 開頭，不要放進任何 [內文] 裡。`;
+   ⚠️ 最後一張（第 ${n} 張）是結尾互動頁，格式如下：
+   [標題] 金句（讓人想截圖的一句話，20 字內）
+   [副標] 呼應封面或補充說明（10 字內）
+   [內文] （可留空，或寫一句溫柔收尾的話）
+   **互動邀請：** 邀請讀者留言互動的一句話（例：留言告訴我你的感受 💛）`;
 }
 // ════════════════════════════════════════
 // Canvas 直接出圖（v3 — 基於真實 IG 美學）
@@ -2604,6 +2608,13 @@ function buildPagesFromPaste(pasteText,n){
    const l=raw.trim();
    // 跳過裝飾行：✦、#開頭標籤整行、空白
    if(!l||/^✦/.test(l)||/^#[\w一-鿿]/.test(l))continue;
+   // 解析互動邀請 → 存入 A.ctaLine1
+   const ctaM=l.match(/^\*{0,2}互動邀請[：:]\*{0,2}\s*(.*)/);
+   if(ctaM){
+    A.ctaLine1=ctaM[1].trim();A.ctaLine2='';save();
+    const ctaEl=document.getElementById('ctaTextarea');if(ctaEl)ctaEl.value=A.ctaLine1;
+    continue;
+   }
    const tagTitle=l.match(/^\[標題\]\s*(.*)/);
    const tagSub=l.match(/^\[副標\]\s*(.*)/);
    const tagBody=l.match(/^\[內文\]\s*(.*)/);
@@ -2622,7 +2633,8 @@ function buildPagesFromPaste(pasteText,n){
   if(cur)slideBlocks.push(cur);
   for(let i=0;i<n;i++){
    const b=slideBlocks[i]||{};
-   pages.push({title:b.title||'（第 '+(i+1)+' 張）',sub:b.sub||'',body:b.body||''});
+   const isEnd=(i===n-1);
+   pages.push({title:b.title||'（第 '+(i+1)+' 張）',sub:b.sub||'',body:b.body||'',isEnd});
   }
   return pages;
  }
