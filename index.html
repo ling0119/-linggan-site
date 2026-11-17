@@ -1534,7 +1534,7 @@ function _drawCTA(ctx,W,afterY,px,elF,opts){
  const ctaFont=`400 ${ctaSz}px ${elF?elF('body','"Noto Sans TC",sans-serif'):'"Noto Sans TC",sans-serif'}`;
  ctx.font=ctaFont;
  // CTA 文字：支援多行（\n 分行），全文存在 ctaLine1
- const ctaFullText=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我：「放手」\n我私訊你，帶你看看該放下的是什麼。';
+ const ctaFullText=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我你的感受';
  const ctaX=(opts&&opts.x!=null)?opts.x:px;
  const ctaW=(opts&&opts.w!=null)?opts.w:W-px*2;
  // 計算實際行數以動態算高度
@@ -3017,7 +3017,7 @@ function drawStylePreview(styleKey){
        lbl.textContent=label;
        const ta=document.createElement('textarea');
        ta.rows=rows;
-       ta.value=(A[aKey]&&A[aKey].trim())||(aKey==='ctaLine1'?'💬 留言告訴我：「放手」':'我私訊你，帶你看看該放下的是什麼。');
+       ta.value=(A[aKey]&&A[aKey].trim())||(aKey==='ctaLine1'?'💬 留言告訴我你的感受':'');
        ta.style.cssText='font:inherit;font-size:13px;line-height:1.65;padding:8px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;width:100%;box-sizing:border-box;resize:none;outline:none;font-family:inherit';
        ta.addEventListener('focus',()=>{ta.style.borderColor='rgba(255,255,255,0.5)';});
        ta.addEventListener('blur',()=>{ta.style.borderColor='rgba(255,255,255,0.15)';});
@@ -3035,7 +3035,7 @@ function drawStylePreview(styleKey){
       const ctaTa=document.createElement('textarea');
       ctaTa.id='ctaTextarea';
       ctaTa.rows=3;
-      ctaTa.value=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我：「放手」\n我私訊你，帶你看看該放下的是什麼。';
+      ctaTa.value=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我你的感受';
       ctaTa.style.cssText='font:inherit;font-size:13px;line-height:1.65;padding:8px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;width:100%;box-sizing:border-box;resize:none;outline:none;font-family:inherit';
       ctaTa.addEventListener('focus',()=>{ctaTa.style.borderColor='rgba(255,255,255,0.5)';});
       ctaTa.addEventListener('blur',()=>{ctaTa.style.borderColor='rgba(255,255,255,0.15)';});
