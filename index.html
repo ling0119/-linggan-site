@@ -2556,14 +2556,8 @@ function drawCanvasEndPage(ctx,W,H,th,acct,title,body,bgImg){
   ctx.font=`400 ${_subSz}px "Noto Sans TC",sans-serif`;
   ctx.fillStyle='rgba(255,255,255,0.60)';
   const _subEndY=wrapCanvasText(ctx,body||'',_px,_titleEndY+60,W-_px*2,_subLH);
-  // CTA 純文字
-  const ctaSz=32,ctaLH=Math.round(ctaSz*1.6);
-  const ctaY=_subEndY+40;
-  ctx.font=`400 ${ctaSz}px "Noto Sans TC",sans-serif`;
-  ctx.fillStyle='rgba(255,255,255,0.80)';
-  ctx.fillText('💬 留言告訴我：「放手」',_px,ctaY);
-  ctx.fillStyle='rgba(255,255,255,0.55)';
-  ctx.fillText('我私訊你，帶你看看該放下的是什麼。',_px,ctaY+ctaLH);
+  // CTA（讀 A.ctaLine1，與其他版型一致）
+  _drawCTA(ctx,W,_subEndY,_px,null,{noBox:true,alignLeft:true,line1Color:'rgba(255,255,255,0.80)',line2Color:'rgba(255,255,255,0.55)'});
   // QR Code 圖片（左側）
   if(A.c4qr){const qrSz=220;const qrX=W-_px-qrSz;const qrY=1200-qrSz;if(!A._c4qrImg){A._c4qrImg=new Image();A._c4qrImg.onload=()=>render();A._c4qrImg.src=A.c4qr;}if(A._c4qrImg.complete)ctx.drawImage(A._c4qrImg,qrX,qrY,qrSz,qrSz);}
   ctx.textAlign='left';
@@ -3097,7 +3091,7 @@ function drawStylePreview(styleKey){
     bgClearBtn.textContent='移除';
     bgClearBtn.title='恢復預設背景';
     const bgThumb=document.createElement('img');
-    bgThumb.style.cssText='width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:none';
+    bgThumb.style.cssText='width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--line);display:none';
     const redrawAll=()=>{
      drawBig();
      // 同步更新膠捲縮圖（用目前 lbSlideIdx 對應的 slide）
@@ -4468,9 +4462,9 @@ function render(){
 
   <!-- ── d1 背景文字設定 ── -->
   ${(A._canvasStyle||'d1')==='d1'?`
-  <div style="margin-bottom:14px;border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--surface)">
+  <div style="margin-bottom:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface)">
    <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">🔤 背景文字（美式幽默專屬）</div>
-   <input type="text" id="d1BgTextInput" value="${esc(A.d1BgText||'')}" placeholder="例：@yourname YOUR NAME" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg);color:var(--fg);outline:none" oninput="A.d1BgText=this.value;drawStylePreview(A._canvasStyle||'d1')">
+   <input type="text" id="d1BgTextInput" value="${esc(A.d1BgText||'')}" placeholder="例：@yourname YOUR NAME" style="width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg);color:var(--ink);outline:none" oninput="A.d1BgText=this.value;drawStylePreview(A._canvasStyle||'d1')">
    <div style="font-size:11px;color:var(--muted);margin-top:5px">留空則使用預設文字「靈感救援隊 LINGGAN」，輸入後即時更新預覽</div>
   </div>`:''}
 
