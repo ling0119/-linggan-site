@@ -4693,7 +4693,36 @@ app.addEventListener('input',e=>{
     const slideBlocks2=[];
     let cur2=null;
     const hasTagFmt=/\[標題\]|\[內文\]/.test(raw);
-    if(hasTagFmt){
+    const hasBracketFmt=/【第\d+張】/.test(raw);
+    if(hasBracketFmt){
+     // 【第N張】格式：**標題：** / **副標：** / **內文：** / 互動邀請：
+     const blockRe=/【第\d+張】([\s\S]*?)(?=【第\d+張】|$)/g;
+     let bm;
+     while((bm=blockRe.exec(raw))!==null){
+      const chunk=bm[1];
+      const blk={title:'',sub:'',body:''};
+      let bodyLines=[];let inBody=false;
+      for(const rawLn of chunk.split('\n')){
+       const ln=rawLn.trim();
+       if(!ln)continue;
+       // 互動邀請
+       const ctaM=ln.match(/^\*{0,2}互動邀請[：:]\*{0,2}\s*(.*)/);
+       if(ctaM){A.ctaLine1=ctaM[1].trim();A.ctaLine2='';save();const ctaEl=document.getElementById('ctaTextarea');if(ctaEl)ctaEl.value=A.ctaLine1;inBody=false;continue;}
+       // **標題：** 或 標題：
+       const tM=ln.match(/^\*{0,2}標題[：:]\*{0,2}\s*(.*)/);
+       if(tM){blk.title=tM[1].trim().replace(/\s*\/\s*/g,'\n');inBody=false;continue;}
+       // **副標：** 或 副標：
+       const sM=ln.match(/^\*{0,2}副標[：:]\*{0,2}\s*(.*)/);
+       if(sM){blk.sub=sM[1].trim();inBody=false;continue;}
+       // **內文：** 或 內文：（後面可能沒有內容，下一行才是內文）
+       const bM=ln.match(/^\*{0,2}內文[：:]\*{0,2}\s*(.*)/);
+       if(bM){bodyLines=bM[1].trim()?[bM[1].trim()]:[];inBody=true;continue;}
+       if(inBody){bodyLines.push(ln);}
+      }
+      blk.body=bodyLines.join('\n\n').trim();
+      slideBlocks2.push(blk);
+     }
+    } else if(hasTagFmt){
      for(const rawLn of raw.split('\n')){
       const ln=rawLn.trim();
       if(!ln||/^✦/.test(ln)||/^#[\w一-鿿]/.test(ln))continue;
