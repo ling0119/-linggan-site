@@ -4364,7 +4364,6 @@ function render(){
 
   <!-- ── 快速貼入整份文案（自動分張）── -->
   <div style="margin:12px 0 8px">
-   <p style="font-size:13px;color:var(--muted);margin:0 0 6px">💬 把整份文案貼進來，自動分張 + 即時預覽：</p>
    <div style="position:relative">
     <textarea id="pasteArea" rows="6" style="width:100%;box-sizing:border-box;border:1.5px dashed var(--dash);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--surface);resize:vertical;font-family:inherit" placeholder="[標題] 封面標題&#10;[副標] 副標（必填）&#10;[內文] 封面引言…&#10;&#10;[標題] 第二張標題&#10;[內文] 第二張內文…">${esc(A._paste||'')}</textarea>
     <div id="pasteParsingIndicator" style="display:none;position:absolute;right:12px;bottom:12px;font-size:12px;color:var(--accent);font-weight:600;pointer-events:none">⚡ 分張中…</div>
