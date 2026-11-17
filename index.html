@@ -4741,6 +4741,10 @@ app.addEventListener('input',e=>{
     }
     // live update canvas preview
     requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'d1'));
+    // 自動跳到下一步（選風格出圖）
+    setTimeout(()=>{
+      S.i++;render();window.scrollTo(0,0);
+    },600);
    },400);
    return;
   }
