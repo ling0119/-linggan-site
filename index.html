@@ -658,14 +658,16 @@ pre{background:var(--code);color:var(--code-ink);border:1.5px solid #7A5AB0;bord
     const gate=document.getElementById('pw-gate');
     if(gate)gate.remove();
   }
-  if(sessionStorage.getItem(KEY)==='1'){
-    unlock();
+  // localStorage 記憶 30 天
+  const stored=localStorage.getItem(KEY);
+  if(stored){
+    try{const exp=JSON.parse(stored);if(exp.pw===PW&&exp.exp>Date.now()){unlock();}}catch(e){}
   }
   window.checkPw=function(){
     const v=document.getElementById('pw-input').value;
     const err=document.getElementById('pw-err');
     if(v===PW){
-      sessionStorage.setItem(KEY,'1');
+      localStorage.setItem(KEY,JSON.stringify({pw:PW,exp:Date.now()+30*24*60*60*1000}));
       const gate=document.getElementById('pw-gate');
       gate.style.transition='opacity .3s';
       gate.style.opacity='0';
@@ -4409,7 +4411,7 @@ function render(){
      const isCover=i===0;
      const isEnd=(i===n-1);
      const cardLabel=isCover?'📌 封面':(isEnd?'🏁 結尾頁':'第 '+num+' 張');
-     const subField=isEnd?'':`<input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標（會顯示在標題下方）':'副標或小標（可留空）'}" value="${esc(sl.sub||'')}" style="border-radius:10px">`;
+     const subField=`<input type="text" class="slide-field" data-si="${i}" data-fk="sub" placeholder="${isCover?'副標（會顯示在標題下方）':(isEnd?'副標（呼應封面或補充說明，可留空）':'副標或小標（可留空）')}" value="${esc(sl.sub||'')}" style="border-radius:10px">`;
      const bodyPH=isCover?'封面引言或說明（往右滑 →）':(isEnd?'例：留言告訴我你的感受 💛\n或：謝謝你讀到這裡，這份整理是給你的禮物 🎁':'內文');
      out+=`<div style="background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px">
       <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">${cardLabel}</div>
@@ -4458,6 +4460,7 @@ function render(){
    </div>
    <!-- 預覽橫排區：封面 + 2 內頁 -->
    <div style="margin-top:12px">
+    ${!hasPaste?`<div style="margin-bottom:8px;padding:8px 12px;background:rgba(220,160,30,0.09);border-left:3px solid #c8a020;border-radius:0 8px 8px 0;font-size:12px;color:#7a600a;line-height:1.6">👆 以下為示範預覽，請先到上一步貼入文案再回來</div>`:''}
     <div id="stylePreviewStrip" style="display:flex;flex-direction:row;gap:14px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch"></div>
     <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">← 左右滑動 點圖可放大預覽 →</div>
    </div>
