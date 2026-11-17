@@ -3023,6 +3023,7 @@ function drawStylePreview(styleKey){
       ctaLbl.style.cssText='font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase';
       ctaLbl.textContent='CTA';
       const ctaTa=document.createElement('textarea');
+      ctaTa.id='ctaTextarea';
       ctaTa.rows=3;
       ctaTa.value=(A.ctaLine1&&A.ctaLine1.trim())||'💬 留言告訴我：「放手」\n我私訊你，帶你看看該放下的是什麼。';
       ctaTa.style.cssText='font:inherit;font-size:13px;line-height:1.65;padding:8px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;width:100%;box-sizing:border-box;resize:none;outline:none;font-family:inherit';
@@ -4697,7 +4698,15 @@ app.addEventListener('input',e=>{
     if(hasTagFmt){
      for(const rawLn of raw.split('\n')){
       const ln=rawLn.trim();
-      if(!ln||/^✦/.test(ln)||/^#[\w一-鿿]/.test(ln)||/^互動邀請[：:]/.test(ln)||/^\*\*互動邀請/.test(ln))continue;
+      if(!ln||/^✦/.test(ln)||/^#[\w一-鿿]/.test(ln))continue;
+      // 互動邀請行 → 存進 ctaLine1，並更新所有 CTA textarea
+      const ctaM=ln.match(/^\*{0,2}互動邀請[：:]\*{0,2}\s*(.*)/);
+      if(ctaM){
+       A.ctaLine1=ctaM[1].trim();A.ctaLine2='';save();
+       const ctaEl=document.getElementById('ctaTextarea');
+       if(ctaEl)ctaEl.value=A.ctaLine1;
+       continue;
+      }
       const tM=ln.match(/^\[標題\]\s*(.*)/);
       if(tM){if(cur2)slideBlocks2.push(cur2);cur2={title:tM[1].trim().replace(/\s*\/\s*/g,'\n'),sub:'',body:''};}
       else if(cur2){
@@ -4705,7 +4714,7 @@ app.addEventListener('input',e=>{
        const bM=ln.match(/^\[內文\]\s*(.*)/);
        if(sM)cur2.sub=sM[1].trim();
        else if(bM)cur2.body=bM[1].trim();
-       else if(cur2.body!==undefined)cur2.body=cur2.body?(cur2.body+'\n'+ln):ln;
+       else if(cur2.body!==undefined)cur2.body=cur2.body?(cur2.body+'\n\n'+ln):ln;
       }
      }
      if(cur2)slideBlocks2.push(cur2);
