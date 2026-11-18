@@ -3178,9 +3178,11 @@ function drawStylePreview(styleKey){
   });
  };
  buildSlides();
+ const _updateStripCount=()=>{const el=document.getElementById('previewStripCount');if(el)el.textContent=slides.length;};
+ _updateStripCount();
  document.fonts.ready.then(()=>{
   if(!document.getElementById('stylePreviewStrip'))return;
-  buildSlides();
+  buildSlides();_updateStripCount();
   // 短暫滑到結尾頁再回來，只在第一次進頁面時觸發
   const c=document.getElementById('stylePreviewStrip');
   if(c&&c.scrollWidth>c.clientWidth&&!sessionStorage.getItem('_previewScrollDone')){
@@ -4468,16 +4470,16 @@ function render(){
    <div style="margin-top:12px">
     ${!hasPaste?`<div style="margin-bottom:8px;padding:8px 12px;background:rgba(220,160,30,0.09);border-left:3px solid #c8a020;border-radius:0 8px 8px 0;font-size:12px;color:#7a600a;line-height:1.6">👆 以下為示範預覽，請先到上一步貼入文案再回來</div>`:''}
     <div id="stylePreviewStrip" style="display:flex;flex-direction:row;gap:14px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch"></div>
-    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">← 左右滑動 點圖可放大預覽 →</div>
+    <div id="previewStripHint" style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">← 左右滑動，共 <span id="previewStripCount"></span> 張 · 點圖可放大預覽 →</div>
    </div>
   </div>
 
   <!-- ── d1 背景文字設定 ── -->
   ${(A._canvasStyle||'d1')==='d1'?`
   <div style="margin-bottom:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface)">
-   <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">🔤 背景文字（美式幽默專屬）</div>
-   <input type="text" id="d1BgTextInput" value="${esc(A.d1BgText||'')}" placeholder="例：@yourname YOUR NAME" style="width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg);color:var(--ink);outline:none" oninput="A.d1BgText=this.value;drawStylePreview(A._canvasStyle||'d1')">
-   <div style="font-size:11px;color:var(--muted);margin-top:5px">留空則使用預設文字「靈感救援隊 LINGGAN」，輸入後即時更新預覽</div>
+   <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">🔤 背景浮水印文字（美式幽默風格專屬）</div>
+   <input type="text" id="d1BgTextInput" value="${esc(A.d1BgText||'')}" placeholder="例：@veritytarot VERITY TAROT" style="width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg);color:var(--ink);outline:none" oninput="A.d1BgText=this.value;drawStylePreview(A._canvasStyle||'d1')">
+   <div style="font-size:11px;color:var(--muted);margin-top:5px">這是圖片背景重複出現的浮水印文字，建議填你的帳號名。留空則顯示「靈感救援隊 LINGGAN」。</div>
   </div>`:''}
 
   <!-- ── 出圖按鈕 ── -->
@@ -4612,7 +4614,7 @@ function render(){
     覺得這套工具好用嗎？<br>
     <span style="background:linear-gradient(transparent 40%,rgba(197,180,216,.55) 40%);font-weight:700">把這支影片分享給也在經營 IG 的朋友吧！</span>
    </div>
-   <a href="YOUR_REELS_URL" target="_blank" rel="noopener" id="shareReelsBtn" style="display:block;padding:14px;border-radius:12px;background:#9B7DB5;color:#fff;font-size:13px;letter-spacing:2px;text-decoration:none;font-family:'Noto Serif TC',serif;position:relative">▶ 分享這支影片給朋友</a>
+   <button type="button" id="shareReelsBtn" onclick="const url='YOUR_REELS_URL';if(url&&url!=='YOUR_REELS_URL'){window.open(url,'_blank','noopener')}else{const txt='推薦這個 IG 文案工具，塔羅師、身心靈創作者都在用：靈感救援隊 👉 @veritytarot';if(navigator.share){navigator.share({text:txt}).catch(()=>{})}else{navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>toast('已複製推薦文字，貼給朋友吧 💜')).catch(()=>toast('複製推薦文字成功'))}}" style="display:block;width:100%;padding:14px;border-radius:12px;background:#9B7DB5;color:#fff;font-size:13px;letter-spacing:2px;border:none;cursor:pointer;font-family:'Noto Serif TC',serif;position:relative">▶ 分享這支影片給朋友</button>
   </div>
   <div id="fbSection" style="margin:0 0 20px;background:linear-gradient(135deg,rgba(138,108,196,.08),rgba(176,148,224,.06));border:1.5px solid var(--line);border-radius:20px;padding:22px 20px">
    <div id="fbDone" style="display:none;text-align:center;padding:24px 16px">
@@ -4819,9 +4821,10 @@ app.addEventListener('input',e=>{
     // live update canvas preview
     requestAnimationFrame(()=>drawStylePreview(A._canvasStyle||'d1'));
     // 自動跳到下一步（選風格出圖）
+    toast('✅ 文案已分張完成，帶你去出圖！');
     setTimeout(()=>{
       S.i++;render();window.scrollTo(0,0);
-    },600);
+    },900);
    },400);
    return;
   }
@@ -5416,7 +5419,7 @@ document.getElementById('next').onclick=()=>{
  if(Q[S.i].txt){S.i++;render();window.scrollTo(0,0);return}
  if(Q[S.i].guide){S.i++;render();window.scrollTo(0,0);return}
  if(Q[S.i].out){S.i++;render();window.scrollTo(0,0);return}
- if(S.i===0){toast('✅ 身份設定完成！下面開始說說那次的故事')}
+ if(S.i===0){setTimeout(()=>toast('✅ 身份設定完成！下面開始說說那次的故事'),600)}
  S.i++;render();window.scrollTo(0,0);
 };
 document.getElementById('back').onclick=()=>{
