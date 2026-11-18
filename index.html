@@ -2601,15 +2601,23 @@ function buildPagesFromPaste(pasteText,n){
  if(hasTagFormat){
   // 以 [標題] 為分張依據，跳過 ✦ 開頭的裝飾行、hashtag 行
   const slideBlocks=[];
-  let cur=null;
+  let cur=null,afterCta=false;
   for(const raw of pasteText.split('\n')){
    const l=raw.trim();
    // 跳過裝飾行：✦、#開頭標籤整行、空白
    if(!l||/^✦/.test(l)||/^#[\w一-鿿]/.test(l))continue;
-   // 解析互動邀請 → 存入 A.ctaLine1
+   // 解析互動邀請 → 存入 A.ctaLine1；後面緊接的無標籤行也屬於 CTA
    const ctaM=l.match(/^\*{0,2}互動邀請[：:]\*{0,2}\s*(.*)/);
    if(ctaM){
     A.ctaLine1=ctaM[1].trim();A.ctaLine2='';save();
+    const ctaEl=document.getElementById('ctaTextarea');if(ctaEl)ctaEl.value=A.ctaLine1;
+    afterCta=true;continue;
+   }
+   // 有任何標籤行出現，結束 CTA 追加模式
+   if(/^\[/.test(l))afterCta=false;
+   // 緊接在「互動邀請：」後的無標籤行 → 接到 CTA，不進 body
+   if(afterCta&&!/^\[/.test(l)){
+    A.ctaLine1=(A.ctaLine1?A.ctaLine1+'\n':'')+l;save();
     const ctaEl=document.getElementById('ctaTextarea');if(ctaEl)ctaEl.value=A.ctaLine1;
     continue;
    }
