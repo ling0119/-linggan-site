@@ -4756,13 +4756,23 @@ app.addEventListener('input',e=>{
       slideBlocks2.push(blk);
      }
     } else if(hasTagFmt){
+     let afterCta2=false;
      for(const rawLn of raw.split('\n')){
       const ln=rawLn.trim();
       if(!ln||/^✦/.test(ln)||/^#[\w一-鿿]/.test(ln))continue;
-      // 互動邀請行 → 存進 ctaLine1，並更新所有 CTA textarea
+      // 互動邀請行 → 存進 ctaLine1，並更新所有 CTA textarea；後續無 [標籤] 行也屬於 CTA
       const ctaM=ln.match(/^\*{0,2}互動邀請[：:]\*{0,2}\s*(.*)/);
       if(ctaM){
        A.ctaLine1=ctaM[1].trim();A.ctaLine2='';save();
+       const ctaEl=document.getElementById('ctaTextarea');
+       if(ctaEl)ctaEl.value=A.ctaLine1;
+       afterCta2=true;continue;
+      }
+      // 遇到 [標籤] 行結束 CTA 延續
+      if(/^\[/.test(ln))afterCta2=false;
+      // CTA 延續行（緊接在互動邀請後、非 [標籤] 行）
+      if(afterCta2&&!/^\[/.test(ln)){
+       A.ctaLine1=(A.ctaLine1?A.ctaLine1+'\n':'')+ln;save();
        const ctaEl=document.getElementById('ctaTextarea');
        if(ctaEl)ctaEl.value=A.ctaLine1;
        continue;
