@@ -2587,10 +2587,14 @@ function buildPagesFromSlides(n){
  return pages;
 }
 function buildPagesFromPaste(pasteText,n){
- // 如果有手動填欄位就優先用欄位資料
- const slides=A._slides||[];
- const hasSlideData=slides.some(s=>s&&(s.title||s.body));
- if(hasSlideData)return buildPagesFromSlides(n);
+ // 如果有貼上格式化文案（含 [標題]/[內文]），文案優先於手動欄位
+ const hasPasteTagFormat=pasteText&&/\[標題\]|\[內文\]/.test(pasteText);
+ // 如果沒有 paste 格式化文案，才改用手動欄位
+ if(!hasPasteTagFormat){
+  const slides=A._slides||[];
+  const hasSlideData=slides.some(s=>s&&(s.title||s.body));
+  if(hasSlideData)return buildPagesFromSlides(n);
+ }
  const pages=[];
  if(!pasteText||!pasteText.trim()){
   for(let i=1;i<=n;i++)pages.push({title:'第 '+i+' 頁',body:'在上方填入每張的標題和內容'});
