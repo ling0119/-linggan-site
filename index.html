@@ -45,6 +45,8 @@ h1{font-family:var(--title);font-weight:700;font-size:clamp(21px,5.6vw,26px);lin
 .ans{margin-left:72px}
 @media (max-width:420px){.ans{margin-left:0}}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.smode-btn{display:block;width:100%;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:12px;cursor:pointer;font:inherit;transition:border-color .15s,box-shadow .15s}
+.smode-btn:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(155,125,181,.18)}
 .field label{font-weight:700;font-size:14px;color:var(--muted)}
 input[type=text],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1.5px dashed var(--dash);border-radius:16px;padding:13px 16px;resize:vertical}
 textarea{min-height:90px}
@@ -919,7 +921,7 @@ const Q=[
   f:[['role','你是什麼類型的創作者？','例如：塔羅師、占星師、靈氣療癒師',1],['aud','你的受眾跟讀者是？','例如：在感情裡反覆內耗的女生',1],['acct','IG 帳號','例如：@yourname（會放在輪播圖上）',1],['lineId','LINE ID（選填）','填了會出現在最後一頁的預約按鈕，例如：@682gslsg',1]],
   picks:{
    aud:['在感情裡反覆內耗的女生','剛分手、還放不下的人','對工作方向迷惘的上班族','總是討好別人、忘了自己的人','想重新認識自己的 30 歲女生','常常焦慮、睡不好的人','想開始靈性成長的新手']}},
- {q:'用這個架構，說你的故事',hint:'👇 下面是 AI 幫你整理的方向，<span style="color:var(--accent);font-weight:700">請用你自己的話改寫</span>，越具體越好——直接寫當時的場景、對話原文、細節，文案才有真實感。',
+ {q:'你手上有什麼素材？',hint:'',
 
   f:[['what','發生了什麼？（這裡先把事情寫下來）','多寫一點細節，文案才會像你說的話——可以寫當時的場景、對話、氣氛，甚至她坐在哪裡都可以。',0],['turn','過程中有沒有一句話、一個瞬間讓你印象很深？','直接貼對話原文最好，例：她說「我其實知道，只是我不想承認。」牌是寶劍三。越接近當時的原話，文案越有味道。',0],['take','最後，對方（或你自己）有什麼不一樣了？','可以留空，AI 會幫你提煉——或直接寫你當下的感受：「我突然意識到她其實早就知道答案了」這樣就夠。',0]],exg:[['🃏 占卜師／塔羅','① 她把三張牌排開，盯著中間那張很久，說「這張我不喜歡」，我說「那正是我們要說的」。她說「我知道，但我不想看它」，我說「我知道，但它已經在那裡了」。那張牌是寶劍三。\n② 她說她只是想問工作的事，結果牌一翻，全是感情的牌。她說「牌是不是搞錯了」，我說「牌不會搞錯」，她沉默了很久，說「我其實知道它在說什麼，只是我不想承認那件事跟工作有關係」。\n③ 凱爾特十字一攤開，覆蓋牌是星幣國王，她一看到就說「是他嗎」，那個問法，讓我知道她心裡早有答案，她問的不是牌說什麼，是她想不想讓牌說那個。\n④ 她說她上週夢到寶劍三，特地來問那個夢是什麼意思。那張牌她沒有抽，是在夢裡主動來找她的，她說「我知道那個牌是什麼意思，但我不知道為什麼它進夢裡了」。\n⑤ 她把前任的名字寫在紙上，放在牌下面問。我問她「你想問什麼」，她說「我不知道，就想讓牌看看他」，我說「那你現在看到這些牌，有什麼感覺」，她說「我感覺他不在了」，然後沉默了很久。'],['🔮 占星師','① 她發來出生資料，說「你幫我看一下，我最近發生了一件大事，想知道是不是星盤說的」。我一看，冥王星正好行運到她的上升，我說「不只說，它說了很久了，你只是剛剛感覺到」。\n② 她說她和前任的合盤是她看過最美的，問我「那我們為什麼還是分開了？」我指給她看 Saturn 的位置，說「美，和能不能在一起，是兩件事，兩件都是真的」。\n③ 她把她媽媽的星盤也帶來了，說「我想知道我們為什麼一直有衝突」，那兩張圖並排放，很多東西一眼就清楚了，難的是要怎麼說、從哪裡說起。\n④ 她第一次看自己的星盤，指著一個位置說「這個是什麼，我從小就覺得自己這裡不對勁」，那個位置，和她說的，完全吻合。她說「所以我從小就這樣，不是後來出了什麼問題」，我說「對，這是你，不是問題」。\n⑤ 她的太陽在第十二宮，她說「所以我天生就是要隱形的嗎」，我說「不是隱形，是深水。深水不是不存在，是你看不到底」，她說「這個說法我第一次聽，但對，就是這個感覺」。'],['✨ 靈氣／療癒師','① 她進門前說「我不相信這些，但我媽叫我來試試」，我說沒關係，只要躺著就好。快結束的時候，她說「剛才那個感覺，是我自己想的還是你做的？」我說「都有，也都是你的」，她說「那我身體裡原來有這個？」\n② 她剛躺下就開始哭，我什麼都還沒做。她說「對不起，我也不知道為什麼，我進來就這樣了」，我說「你的身體在這裡很安全，它知道的比你快」，後來她說「我已經很久沒有讓自己在陌生的地方哭了」。\n③ 那次我手停在她的心輪，她的呼吸突然很不規則，然後長長地吐了一口，說「有什麼東西出去了」，我說「你感覺到了就好，不需要知道是什麼」，她說「好，我就讓它出去」。\n④ 她問我「你感覺得到什麼嗎」，我把手放在她的右側肩膀，她說「怎麼就是那裡，我也一直覺得那裡很緊，但我以為是我姿勢不好」，我說「不是姿勢，是有什麼還沒放下的東西在那裡」。\n⑤ 結束之後她不想起來，就躺著說「我上一次這樣放鬆是什麼時候，我不記得了」，然後說「這不是睡著的那種放鬆，是另一種，我沒有詞可以說，就是很在」，她說「我剛才很在」。'],['🌿 花精師','① 她來的時候帶了一張清單，列了她覺得自己有問題的地方，說「你看，我應該需要哪幾瓶」。我說「我們先聊聊，清單等等再說」，最後她選的三瓶，跟清單上一瓶都不一樣，她說「這樣對嗎」，我說「你身體選的，比清單準」。\n② 我把二十幾瓶排在桌上，說「你用感覺，哪幾瓶你會想要？」她說「這樣選可以嗎」，我說「這樣選才對」，她選了三瓶，每一瓶說到的，都是她還沒說出口的事，她選完自己也嚇了一跳。\n③ 她說她喝了第一週什麼感覺都沒有，問是不是選錯了。第三週，她傳訊說「我上週做了一個從來不會做的決定，不知道和花精有沒有關係」，我說「有關係，只是它不說話，它讓你慢慢變得能做那個決定」。\n④ 那瓶馬鞭草，她一拿起來說「這個名字好可愛」，沒多想就選了它。喝了三週後她說「我最近講話講慢了，以前我講話很快，是朋友說的，我自己沒發現」，那個慢，不是她刻意的。\n⑤ 她說她以前很抗拒情緒，覺得有情緒就是軟弱。後來她說「那瓶花精讓我第一次允許自己難過，不是因為我懂它，是因為喝了之後，有哪裡安全了，我才可以難過」，那個「安全了」，是她自己說的。'],['🌱 身心靈教練','① 她說她有一個人生問題，很大，問我「你能幫我解決嗎」，我說「解決不了，但我們可以把它看清楚一點」，她說「這樣也好，至少先看清楚」，那是她第一次願意把「搞清楚」當作一個目標。\n② 她說她不知道要不要換工作，說了很多理由，說完說「所以你覺得我應該換嗎」，我說「你說的那些裡面，哪一句是你真正在意的？」她想了很久，說了一句，那句跟她說的所有理由都不一樣。\n③ 她列出她的目標，我說「這些目標是你要的，還是你覺得你應該要的？」她說「什麼差別」，我說「前者讓你興奮，後者讓你焦慮」，她沉默了，說「那我列的這些，好像都讓我焦慮，我以為那是因為我還沒達到」。\n④ 她說「我有一個夢想，但我覺得我不值得有它」，我說「說說看那個夢想」，她說了，說完說「聽起來很蠢對不對」，我說「我沒有聽到任何蠢的地方，那個夢想很具體」，她說「你是客氣」，我說「我不客氣，具體的夢想才能實現」。\n⑤ 她說「我試著做了你說的那個練習，但我覺得我做錯了」，我說「說來聽聽」，她說了，我說「你沒做錯，你做的那個版本才是你的版本」，她說「原來可以不用跟你說的一樣？」我說「從來沒有說要一樣」。'],['🧘 冥想引導師','① 那次課有個新來的人，坐下說「我以前試過，靜不下來，這次是朋友硬拉來的」。帶完之後她說「你中間說的那句話，我就進去了」，那句話是「你不需要把它放下，只要讓它在那裡就好」，她說「我以前一直以為靜心就是清空」。\n② 我說「吸氣四拍，吐氣六拍」，有人說「我吐不了那麼長」，我說「那就吐你能吐的」，她說「這樣也可以？」我說「你的呼吸就是你的答案，不用跟別人一樣」，她後來說那句話讓她放鬆下來了。\n③ 那次課上到一半，有人的手機響了，她慌忙去關，說「對不起」，我說「沒關係，我們繼續」，奇怪的是，那個打斷之後，整個場反而更靜了。那個靜是真的靜下來了，不是表演的靜。\n④ 她說「我每次靜心都在想事情，停不下來」，我說「想就想吧，你只需要注意你在想」，她說「這個說法好奇怪，但我試試看」，後來她說「我發現我一直在想同一件事，原來那件事那麼重要，我一直沒有好好看它」。\n⑤ 帶到最後一個呼吸，有人輕聲說「我可以在嗎？」那是她第一次允許自己只是待在那裡，不需要去做什麼、有用什麼、往前什麼，就只是在。那句話我之後想了很久。'],['🪐 自身經歷','① 那天她進來坐下，什麼都沒說，只是把包包放在旁邊，然後就坐在那裡。我也沒說話，就這樣陪著。後來她才開口：「我不知道為什麼，就是想來這裡。」有些時候不需要理由，只是需要一個地方可以坐下來。\n② 她說她最近一直夢到同一個場景，醒來之後心跳很快，但說不清楚那個夢是什麼意思。我問她夢裡的感受是什麼。她想了很久說：「是一種被困住的感覺。」然後停了一下，說：「好像跟我現在的狀態一樣。」\n③ 她傳訊息說「我覺得我很廢」，然後補了一句「不好意思突然說這個」。我說沒關係，問她怎麼了。她說「就是覺得每件事都做不好，但說不出來是哪件事，就是整個人不對勁」。那種感覺很難解釋，但我完全懂。\n④ 那天是朋友的婚禮，她說她一整天都在笑，笑到臉很僵。回家之後一個人坐在床上，眼淚就掉下來了，自己也不知道為什麼。她說：「我明明很替她開心的。但我不知道那些眼淚是什麼。」\n⑤ 她說她在超市，走到一半突然不知道自己在買什麼，要去哪裡，為什麼站在那裡。就在走道裡愣了很久，然後直接回家了，東西沒買。那是她第一次意識到，自己快撐不住了。']]},
  {q:'領取文案指令📝',hint:'把 Claude 給你的整份文案貼進來，系統自動分張 + 即時預覽，完成後點「下一步」出圖。',txt:1},
@@ -1176,16 +1178,21 @@ ${st.photo?`照片：我會上傳 1–3 張照片當底圖，照上傳順序放�
 }
 
 function buildStoryMaterial(){
- // 優先用條列式欄位（_s0~_s3），沒有才 fallback 到 what/turn
- if(A._aiStructure&&A._aiStructure.length){
-  const lines=A._aiStructure.map((item,i)=>{
-   const val=(A['_s'+i]||'').trim();
-   return val?`【${item.title||'段落'+(i+1)}】\n${val}`:'';
-  }).filter(Boolean);
-  return lines.length?lines.join('\n\n'):'（尚未填寫）';
+ // 主題模式：沒有真實案例，讓 AI 自由發揮
+ if(A._storyMode==='theme'){
+  const extra=A.what&&A.what.trim()?`\n補充感覺：${A.what.trim()}`:'';
+  return`（主題模式：請根據規劃的主題和架構直接創作，不需要真實故事）${extra}`;
  }
+ // 有案例模式：用 what/turn/take
  const v=(k,f)=>A[k]&&A[k].trim()?A[k].trim():f;
- return`發生了什麼：\n${v('what','（請先問我）')}\n\n關鍵的那一瞬間：\n${v('turn','（請先問我）')}`;
+ const what=v('what','');
+ const turn=v('turn','');
+ const take=v('take','');
+ const lines=[];
+ if(what)lines.push(`發生了什麼：\n${what}`);
+ if(turn)lines.push(`印象深刻的瞬間：\n${turn}`);
+ if(take)lines.push(`最後的轉變：\n${take}`);
+ return lines.length?lines.join('\n\n'):'（尚未填寫）';
 }
 function buildTextDraftPrompt(){
  const v=(k,f)=>A[k]&&A[k].trim()?A[k].trim():f;
@@ -4369,6 +4376,17 @@ function applyPlan(){
   window.scrollTo(0,0);
 }
 
+function setStoryMode(mode){
+  A._storyMode=mode;
+  if(!mode){
+    // 重設，讓使用者重選
+    A._sampleStory='';
+  }
+  save();
+  render();
+  window.scrollTo(0,0);
+}
+
 
 function render(){
  if(!S.started){renderWelcome();return}
@@ -4377,18 +4395,69 @@ function render(){
  setFontVars();setFCVars();setQrVar();setPaVar();
  {const r={setProperty(){}},ft=0,fb=0;r.setProperty('--pvt',ft?ft.css:'"Noto Serif TC","Songti TC",serif');r.setProperty('--pvb',fb?fb.css:'"Noto Sans TC","PingFang TC",sans-serif')}
  const s=Q[S.i], acct=esc(A.acct&&A.acct.trim()?A.acct.trim():'@yourname');
+ // Q[1] 動態標題
+ let _q=s.q;
+ if(S.i===1&&A._storyMode==='case')_q='說說你的故事';
+ else if(S.i===1&&A._storyMode==='theme')_q='補充你的感覺（選填）';
  let h=`<div class="prog"><i style="width:${(S.i+1)/Q.length*100}%"></i></div><div class="step"><b>${STEPN[S.i]||''}</b><span>${S.i+1} / ${Q.length}</span></div>
-  
-  <div class="chat"><img class="ava" src="${AVA}" alt=""><div class="bub"><h1>${s.q}</h1>${s.hint?`<p class="hint" id="hint-slot">${s.hint}</p>`:''}</div></div><div class="ans">`;
- // 條列式填寫：Q[1] 且有 AI 骨架時，每個段落各自一個小 textarea
- if(s.f&&S.i===1&&A._aiStructure&&A._aiStructure.length){
-  // 加一行 hook 參考（if any）
-  const hookRef=A._aiTurn?`<div class="ai-hint" style="margin-bottom:16px"><span class="ai-hint-label">✨ 開頭 Hook 參考（用你自己的話改寫）：</span><div class="ai-hint-body">${esc(A._aiTurn)}</div></div>`:'';
-  const storyItems=A._aiStructure.map((item,i)=>`<div class="field"><label for="f__s${i}" style="font-weight:700;color:var(--ink)">${esc(item.title||('段落 '+(i+1)))}</label><div class="ai-hint" style="margin:4px 0 6px"><span class="ai-hint-label">✨ 參考方向：</span><div class="ai-hint-body">${esc(item.desc||'')}</div></div><textarea id="f__s${i}" data-k="_s${i}" placeholder="用你自己的話寫這個段落的素材——越具體越好" rows="3" style="min-height:70px">${esc(A['_s'+i]||'')}</textarea></div>`).join('');
-  // 保留 take 欄位（帶走的一句話）
-  const takeField=s.f.find(([k])=>k==='take');
-  const takeHtml=takeField?`<div class="field"><label for="f_take">${esc(takeField[1]||'帶走的一句話')}</label><textarea id="f_take" data-k="take" placeholder="${esc(takeField[2]||'')}" rows="2">${esc(A.take||'')}</textarea></div>`:'';
-  h+=hookRef+storyItems+takeHtml;
+
+  <div class="chat"><img class="ava" src="${AVA}" alt=""><div class="bub"><h1>${_q}</h1>${s.hint?`<p class="hint" id="hint-slot">${s.hint}</p>`:''}</div></div><div class="ans">`;
+ // Q[1] 兩路徑設計：選擇有案例 or 有主題
+ if(s.f&&S.i===1){
+  if(!A._storyMode){
+   // 選擇畫面
+   h+=`<div style="margin:8px 0 4px">
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7">你手上有什麼素材？根據你的情況，幫你用最快的方式整理出故事。</p>
+    <button type="button" class="smode-btn" onclick="setStoryMode('case')">
+     <div style="font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px">🗂️ 我有一個真實案例</div>
+     <div style="font-size:13px;color:var(--muted);line-height:1.6">你幫過某個人，或你自己經歷過某件事——你有故事，只是不知道怎麼說出來。</div>
+    </button>
+    <button type="button" class="smode-btn" onclick="setStoryMode('theme')" style="margin-bottom:0">
+     <div style="font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px">💡 我只有一個主題或感覺</div>
+     <div style="font-size:13px;color:var(--muted);line-height:1.6">你想聊某個主題，但還沒有特定的真實故事——沒關係，AI 幫你生一個示範故事。</div>
+    </button>
+   </div>`;
+  } else if(A._storyMode==='case'){
+   // 有案例路徑：三個聊天式問題
+   h+=`<div style="margin-bottom:8px">
+    <button type="button" onclick="setStoryMode('')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 12px">← 重新選擇</button>
+    <div style="background:var(--accent-light);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.65">
+     🗂️ <b style="color:var(--ink)">有案例模式</b>｜用你自己的話回答這三個問題，越具體越好
+    </div>
+   </div>
+   <div class="field">
+    <label for="f_what" style="font-weight:700;color:var(--ink)">① 這次發生了什麼事？</label>
+    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">對方來找你的原因、當時的場景是什麼</div>
+    <textarea id="f_what" data-k="what" placeholder="例：一個朋友來找我，說她跟媽媽吵架了，不知道怎麼辦……" rows="3">${esc(A.what||'')}</textarea>
+   </div>
+   <div class="field">
+    <label for="f_turn" style="font-weight:700;color:var(--ink)">② 過程中有沒有一句話、一個瞬間讓你印象很深？</label>
+    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">可以貼對話原文，越真實越好</div>
+    <textarea id="f_turn" data-k="turn" placeholder="例：她說「我只是不想讓她失望」，然後眼眶紅了……" rows="3">${esc(A.turn||'')}</textarea>
+   </div>
+   <div class="field">
+    <label for="f_take" style="font-weight:700;color:var(--ink)">③ 最後對方有什麼不一樣了？</label>
+    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">或你自己有什麼感受——可以留空，AI 幫你提煉</div>
+    <textarea id="f_take" data-k="take" placeholder="例：她說感覺輕鬆很多，好像終於有人懂她了……" rows="2">${esc(A.take||'')}</textarea>
+   </div>`;
+  } else if(A._storyMode==='theme'){
+   // 有主題路徑：直接跳過，讓使用者選填或留空
+   h+=`<div style="margin-bottom:8px">
+    <button type="button" onclick="setStoryMode('')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 12px">← 重新選擇</button>
+    <div style="background:var(--accent-light);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:1.75">
+     💡 <b style="color:var(--ink)">主題模式</b>｜AI 會直接用你規劃的主題和架構來生成文案，不需要真實案例。<br>
+     <span style="margin-top:4px;display:block">你可以補充一點感覺或想法（選填），讓文案更有你的味道。</span>
+    </div>
+   </div>
+   <div class="field">
+    <label for="f_what" style="font-weight:700;color:var(--ink)">有什麼想補充的感覺或想法嗎？（選填）</label>
+    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">可以是你想傳達的情緒、一句想說的話，或任何靈感——沒有也可以直接跳過</div>
+    <textarea id="f_what" data-k="what" placeholder="例：我想讓大家感受到一種被理解的輕盈感…" rows="3">${esc(A.what||'')}</textarea>
+   </div>
+   <div style="background:rgba(155,125,181,0.07);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.65">
+    ✅ AI 已有你的主題（${esc(S.plan&&S.plan._idea||'你的主題')}）和架構，直接點「繼續」就可以生成文案
+   </div>`;
+  }
  } else if(s.f){h+=s.f.map(([k,l,ph,one])=>{const aiKey=k==='what'?'_aiWhat':k==='turn'?'_aiTurn':'';const aiHint=aiKey&&A[aiKey]?`<div class="ai-hint"><span class="ai-hint-label">✨ 參考這個方向，用你自己的話填：</span><div class="ai-hint-body">${esc(A[aiKey])}</div></div>`:'';return`<div class="field">${l?`<label for="f_${k}">${l}</label>`:''}${aiHint}${one
    ?`<input type="text" id="f_${k}" data-k="${k}" placeholder="${esc(ph)}" value="${esc(A[k]||'')}">`
    :`<textarea id="f_${k}" data-k="${k}" aria-label="${esc(s.q)}" placeholder="${esc(ph)}">${esc(A[k]||'')}</textarea>`}${s.chips&&s.chips.length?`<div class="chip-label">快速選一個開頭：</div><div class="chip-row">${s.chips.map(c=>`<button type="button" class="chip" onclick="pickChip(this)" data-fk="${esc(k)}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>`:''}${s.digHint?`<p class="dig-hint">${esc(s.digHint)}</p>`:''}${s.picks&&s.picks[k]?`<div class="exh">參考例子</div><div class="exbox"><p class="exi">${s.picks[k].map(x=>`<span class="exw">${esc(x)}</span>`).join('<span class="sep">／</span>')}</p></div>`:''}</div>`;}).join('');}
@@ -5450,17 +5519,19 @@ document.getElementById('next').onclick=()=>{
    // paste area not yet revealed: guide user
    toast('先複製指令，去 Claude.ai 貼上取得結果，再貼回來');return;
  }
- if(Q[S.i].end){confirmRewrite(()=>{['what','turn','take','_angle','_aud'].forEach(k=>delete A[k]);S.planned=false;S.plan=null;S.i=1;render();toast('故事已清空，身份和風格保留');window.scrollTo(0,0)});return}
+ if(Q[S.i].end){confirmRewrite(()=>{['what','turn','take','_angle','_aud','_storyMode','_sampleStory'].forEach(k=>delete A[k]);S.planned=false;S.plan=null;S.i=1;render();toast('故事已清空，身份和風格保留');window.scrollTo(0,0)});return}
  if(Q[S.i].canvas){S.i++;render();window.scrollTo(0,0);return}
  if(Q[S.i].txt){S.i++;render();window.scrollTo(0,0);return}
  if(Q[S.i].guide){S.i++;render();window.scrollTo(0,0);return}
  if(Q[S.i].out){S.i++;render();window.scrollTo(0,0);return}
+ if(S.i===1&&!A._storyMode){toast('請先選擇你手上的素材類型');return}
  if(S.i===0){setTimeout(()=>toast('✅ 身份設定完成！下面開始說說那次的故事'),600)}
  S.i++;render();window.scrollTo(0,0);
 };
 document.getElementById('back').onclick=()=>{
  if(S.i===0){S.started=false;render();window.scrollTo(0,0);return}
  if(S.i===1&&!S.planned){S.started=false;render();window.scrollTo(0,0);return}
+ if(S.i===1&&S.planned&&A._storyMode){A._storyMode='';A._sampleStory='';save();render();window.scrollTo(0,0);return}
  if(S.i===1&&S.planned){S.planned=false;render();window.scrollTo(0,0);return}
  if(Q[S.i].end){S.i--;render();window.scrollTo(0,0);return}
  if(Q[S.i].guide){S.i--;render();window.scrollTo(0,0);return}
