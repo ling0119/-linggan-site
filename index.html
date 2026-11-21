@@ -16,7 +16,7 @@
   --acc1:#C5B4D8; --acc2:#AE97C8; --acc3:#9B7DB5; --acc4:#2E2540;
   --pvt:"Noto Serif TC",serif; --pvb:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   --bg:#F7F4FB; --surface:#FFFFFF; --ink:#2E2540; --muted:#8278A0; --line:#DDD6EC; --dash:#CEC6E2;
-  --accent:#9B7DB5; --accent-ink:#FFFFFF; --code:#1E1530; --code-ink:#EDE6FF; color-scheme:light;
+  --accent:#9B7DB5; --accent-ink:#FFFFFF; --accent-light:#f0eaf7; --accent-dash:#c4aedd; --code:#1E1530; --code-ink:#EDE6FF; color-scheme:light;
   --display:"Noto Serif TC",serif; --title:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
 }
 *{box-sizing:border-box}
@@ -33,6 +33,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
  body .nav{background:linear-gradient(to top,#F2EDF8 72%,rgba(242,237,248,0));padding-top:30px}
 }
 @keyframes fbPulse{0%,100%{transform:translateY(0);box-shadow:0 4px 20px rgba(123,94,167,.4)}50%{transform:translateY(-5px);box-shadow:0 10px 28px rgba(123,94,167,.5)}}
+@keyframes storySlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.story-cards-animate>.story-cards-gap>.story-card:nth-child(1){animation:storySlideIn .45s .08s cubic-bezier(.22,.7,0,1.1) both}
+.story-cards-animate>.story-cards-gap>.story-card:nth-child(2){animation:storySlideIn .45s .26s cubic-bezier(.22,.7,0,1.1) both}
+.story-cards-animate>.story-cards-gap>.story-card:nth-child(3){animation:storySlideIn .45s .44s cubic-bezier(.22,.7,0,1.1) both}
+.story-theme-animate>.story-card{animation:storySlideIn .45s .12s cubic-bezier(.22,.7,0,1.1) both}
 .prog{height:4px;border-radius:4px;background:var(--line);overflow:hidden}
 .prog i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .35s ease}
 .step{font-size:13px;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;align-items:center}
@@ -4397,11 +4402,12 @@ function render(){
  const s=Q[S.i], acct=esc(A.acct&&A.acct.trim()?A.acct.trim():'@yourname');
  // Q[1] 動態標題
  let _q=s.q;
- if(S.i===1&&A._storyMode==='case')_q='說說你的故事';
+ if(S.i===1&&A._storyMode==='case')_q='把故事說給我聽';
  else if(S.i===1&&A._storyMode==='theme')_q='補充你的感覺（選填）';
  let h=`<div class="prog"><i style="width:${(S.i+1)/Q.length*100}%"></i></div><div class="step"><b>${STEPN[S.i]||''}</b><span>${S.i+1} / ${Q.length}</span></div>
 
-  <div class="chat"><img class="ava" src="${AVA}" alt=""><div class="bub"><h1>${_q}</h1>${s.hint?`<p class="hint" id="hint-slot">${s.hint}</p>`:''}</div></div><div class="ans">`;
+  <div class="chat"><img class="ava" src="${AVA}" alt=""><div class="bub"><h1>${_q}</h1>${s.hint?`<p class="hint" id="hint-slot">${s.hint}</p>`:''}${S.i===1&&A._storyMode==='case'?`<div style="display:block;margin-top:6px;font-size:15px;color:var(--ink);line-height:1.6">記得多少說多少，AI 幫你整理。</div>`:''}${S.i===1&&A._storyMode==='theme'?`<div style="display:block;margin-top:6px;font-size:15px;color:var(--ink);line-height:1.6">可自行補充，AI 幫你生示範故事。</div>`:''}
+</div></div><div class="ans">`;
  // Q[1] 兩路徑設計：選擇有案例 or 有主題
  if(s.f&&S.i===1){
   if(!A._storyMode){
@@ -4419,43 +4425,44 @@ function render(){
    </div>`;
   } else if(A._storyMode==='case'){
    // 有案例路徑：三個聊天式問題
-   h+=`<div style="margin-bottom:8px">
-    <button type="button" onclick="setStoryMode('')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 12px">← 重新選擇</button>
-    <div style="background:var(--accent-light);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.65">
-     🗂️ <b style="color:var(--ink)">有案例模式</b>｜用你自己的話回答這三個問題，越具體越好
+   h+=`<div class="story-cards-animate">
+    <div class="story-cards-gap" style="display:flex;flex-direction:column;gap:10px">
+   <div class="story-card" style="border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);transition:border-color .15s">
+    <div style="display:flex;align-items:center;margin-bottom:8px">
+     <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0">1</span>
+     <label for="f_what" style="font-weight:700;color:var(--ink);font-size:13px;margin:0">這次發生了什麼事？</label>
     </div>
+    <textarea id="f_what" data-k="what" placeholder="例：一個朋友來找我，說她跟媽媽吵架了……" rows="2" style="background:var(--bg)">${esc(A.what||'')}</textarea>
    </div>
-   <div class="field">
-    <label for="f_what" style="font-weight:700;color:var(--ink)">① 這次發生了什麼事？</label>
-    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">對方來找你的原因、當時的場景是什麼</div>
-    <textarea id="f_what" data-k="what" placeholder="例：一個朋友來找我，說她跟媽媽吵架了，不知道怎麼辦……" rows="3">${esc(A.what||'')}</textarea>
+   <div class="story-card" style="border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);transition:border-color .15s">
+    <div style="display:flex;align-items:center;margin-bottom:8px">
+     <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent-dash);color:#fff;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0">2</span>
+     <label for="f_turn" style="font-weight:700;color:var(--ink);font-size:13px;margin:0">有沒有一句話讓你印象很深？</label>
+    </div>
+    <textarea id="f_turn" data-k="turn" placeholder="例：她說「我只是不想讓她失望」……" rows="2" style="background:var(--bg)">${esc(A.turn||'')}</textarea>
    </div>
-   <div class="field">
-    <label for="f_turn" style="font-weight:700;color:var(--ink)">② 過程中有沒有一句話、一個瞬間讓你印象很深？</label>
-    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">可以貼對話原文，越真實越好</div>
-    <textarea id="f_turn" data-k="turn" placeholder="例：她說「我只是不想讓她失望」，然後眼眶紅了……" rows="3">${esc(A.turn||'')}</textarea>
+   <div class="story-card" style="border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);transition:border-color .15s">
+    <div style="display:flex;align-items:center;margin-bottom:8px">
+     <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--muted);font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0">3</span>
+     <label for="f_take" style="font-weight:700;color:var(--ink);font-size:13px;margin:0">最後對方有什麼不一樣了？<span style="font-weight:400;color:var(--muted);font-size:12px;margin-left:5px">（選填）</span></label>
+    </div>
+    <textarea id="f_take" data-k="take" placeholder="例：她說感覺輕鬆很多……" rows="2" style="background:var(--bg)">${esc(A.take||'')}</textarea>
    </div>
-   <div class="field">
-    <label for="f_take" style="font-weight:700;color:var(--ink)">③ 最後對方有什麼不一樣了？</label>
-    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">或你自己有什麼感受——可以留空，AI 幫你提煉</div>
-    <textarea id="f_take" data-k="take" placeholder="例：她說感覺輕鬆很多，好像終於有人懂她了……" rows="2">${esc(A.take||'')}</textarea>
+   </div>
    </div>`;
   } else if(A._storyMode==='theme'){
    // 有主題路徑：直接跳過，讓使用者選填或留空
-   h+=`<div style="margin-bottom:8px">
-    <button type="button" onclick="setStoryMode('')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 12px">← 重新選擇</button>
-    <div style="background:var(--accent-light);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:1.75">
-     💡 <b style="color:var(--ink)">主題模式</b>｜AI 會直接用你規劃的主題和架構來生成文案，不需要真實案例。<br>
-     <span style="margin-top:4px;display:block">你可以補充一點感覺或想法（選填），讓文案更有你的味道。</span>
+   h+=`<div class="story-theme-animate">
+   <div class="story-card" style="border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);margin-bottom:10px">
+    <div style="display:flex;align-items:center;margin-bottom:8px">
+     <label for="f_what" style="font-weight:700;color:var(--ink);font-size:13px;margin:0">有什麼想補充的感覺或想法嗎？<span style="font-weight:400;color:var(--muted);font-size:12px;margin-left:5px">（選填）</span></label>
     </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">可以是你想傳達的情緒、一句話，或任何靈感——沒有也可以直接跳過</div>
+    <textarea id="f_what" data-k="what" placeholder="例：我想讓大家感受到一種被理解的輕盈感…" rows="3" style="background:var(--bg)">${esc(A.what||'')}</textarea>
    </div>
-   <div class="field">
-    <label for="f_what" style="font-weight:700;color:var(--ink)">有什麼想補充的感覺或想法嗎？（選填）</label>
-    <div style="font-size:12px;color:var(--muted);margin:3px 0 8px;line-height:1.5">可以是你想傳達的情緒、一句想說的話，或任何靈感——沒有也可以直接跳過</div>
-    <textarea id="f_what" data-k="what" placeholder="例：我想讓大家感受到一種被理解的輕盈感…" rows="3">${esc(A.what||'')}</textarea>
-   </div>
-   <div style="background:rgba(155,125,181,0.07);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.65">
+   <div style="background:rgba(155,125,181,0.07);border-radius:12px;padding:11px 14px;font-size:12px;color:var(--muted);line-height:1.65">
     ✅ AI 已有你的主題（${esc(S.plan&&S.plan._idea||'你的主題')}）和架構，直接點「繼續」就可以生成文案
+   </div>
    </div>`;
   }
  } else if(s.f){h+=s.f.map(([k,l,ph,one])=>{const aiKey=k==='what'?'_aiWhat':k==='turn'?'_aiTurn':'';const aiHint=aiKey&&A[aiKey]?`<div class="ai-hint"><span class="ai-hint-label">✨ 參考這個方向，用你自己的話填：</span><div class="ai-hint-body">${esc(A[aiKey])}</div></div>`:'';return`<div class="field">${l?`<label for="f_${k}">${l}</label>`:''}${aiHint}${one
