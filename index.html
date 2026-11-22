@@ -3552,6 +3552,40 @@ function buildSlideTweakPanel(slideIdx,styleKey,redrawCb,slideType){
  }
  panel.appendChild(head);
 
+ // ── i1 版型快選（只在 i1 風格顯示）──
+ if(styleKey==='i1'){
+  const curPreset=(A._themeOverride&&A._themeOverride['i1']&&A._themeOverride['i1'].layoutPreset)||'';
+  const lpBox=document.createElement('div');lpBox.className='stw-layout-box';
+  const lpTitle=document.createElement('div');lpTitle.style.cssText='font-size:12px;color:#8a7860;margin-bottom:6px';lpTitle.textContent='版型快選';
+  const lpBtns=document.createElement('div');lpBtns.style.cssText='display:flex;flex-wrap:wrap;gap:6px';
+  [...Object.keys(I1_LAYOUT_PRESETS),''].forEach(name=>{
+   const isActive=(name===curPreset);
+   const btn=document.createElement('button');btn.type='button';btn.dataset.lpPreset=name;
+   btn.style.cssText=`font-size:11px;font-family:inherit;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid ${isActive?'#9060c8':'rgba(100,70,30,.2)'};background:${isActive?'rgba(144,96,200,.12)':'transparent'};color:${isActive?'#9060c8':'#8a7860'};font-weight:${isActive?'700':'400'}`;
+   btn.textContent=name||'原版';
+   btn.addEventListener('click',()=>{
+    if(!A._themeOverride)A._themeOverride={};
+    if(!A._themeOverride['i1'])A._themeOverride['i1']={};
+    if(name===''){delete A._themeOverride['i1'].layoutPreset;}
+    else{A._themeOverride['i1'].layoutPreset=name;}
+    save();
+    redrawCb();
+    // 更新按鈕高亮
+    lpBtns.querySelectorAll('[data-lp-preset]').forEach(b=>{
+     const active=b.dataset.lpPreset===(A._themeOverride&&A._themeOverride['i1']&&A._themeOverride['i1'].layoutPreset)||'';
+     const on=b.dataset.lpPreset===(name);
+     b.style.border=`1.5px solid ${on?'#9060c8':'rgba(100,70,30,.2)'}`;
+     b.style.background=on?'rgba(144,96,200,.12)':'transparent';
+     b.style.color=on?'#9060c8':'#8a7860';
+     b.style.fontWeight=on?'700':'400';
+    });
+   });
+   lpBtns.appendChild(btn);
+  });
+  lpBox.append(lpTitle,lpBtns);
+  panel.appendChild(lpBox);
+ }
+
  // ── 元素列 ──
  const PRESET_COLORS=['#ffffff','#f0c060','#e8829a','#9060c8'];
  const dotColors={title:'linear-gradient(135deg,#9060c8,#c880e8)',sub:'#5890c0',body:'#60a870',acct:'#c07858',num:'#c8a060'};
