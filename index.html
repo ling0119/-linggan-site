@@ -3067,6 +3067,63 @@ function drawStylePreview(styleKey){
        badge.textContent=`${curDX>0?'+':''}${Math.round(curDX)},${curDY>0?'+':''}${Math.round(curDY)}`;
        handle.appendChild(badge);
       }
+      // 鉛筆編輯（title / body / sub 才可編輯）
+      const editableEks=['title','body','sub'];
+      if(editableEks.includes(ek)){
+       const pencilBtn=document.createElement('span');
+       pencilBtn.textContent='✏️';
+       pencilBtn.style.cssText='font-size:11px;cursor:pointer;margin-left:2px;line-height:1;flex-shrink:0';
+       pencilBtn.title='點擊編輯文字';
+       pencilBtn.addEventListener('mousedown',(e)=>{e.stopPropagation();e.preventDefault();});
+       pencilBtn.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        // 若已有 popover 就關掉
+        const existing=dragOverlay.querySelector('.el-edit-pop');
+        if(existing&&existing.dataset.ek===ek){existing.remove();return;}
+        if(existing)existing.remove();
+        // 建立 popover
+        const pop=document.createElement('div');
+        pop.className='el-edit-pop';
+        pop.dataset.ek=ek;
+        const hLeft=Math.round((anchor.x+curDX)*sc);
+        const hTop=Math.round((anchor.y+curDY)*sc);
+        pop.style.cssText=`position:absolute;left:${hLeft}px;top:${hTop+28}px;z-index:10;background:rgba(20,24,40,0.97);border:1.5px solid rgba(100,150,255,0.7);border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;gap:4px;min-width:180px;max-width:260px;box-shadow:0 4px 16px rgba(0,0,0,0.5)`;
+        pop.addEventListener('mousedown',(e)=>e.stopPropagation());
+        const curVal=slides[lbSlideIdx][ek]||'';
+        const isMultiline=(ek==='body');
+        let inp;
+        if(isMultiline){
+         inp=document.createElement('textarea');
+         inp.style.cssText='width:100%;box-sizing:border-box;background:rgba(255,255,255,0.08);border:1px solid rgba(100,150,255,0.5);color:#fff;border-radius:5px;padding:4px 6px;font-size:12px;resize:vertical;min-height:60px;outline:none';
+        }else{
+         inp=document.createElement('input');
+         inp.type='text';
+         inp.style.cssText='width:100%;box-sizing:border-box;background:rgba(255,255,255,0.08);border:1px solid rgba(100,150,255,0.5);color:#fff;border-radius:5px;padding:4px 6px;font-size:12px;outline:none';
+        }
+        inp.value=curVal;
+        inp.addEventListener('input',()=>{
+         slides[lbSlideIdx][ek]=inp.value;
+         // 同步更新大面板的 input（若顯示中）
+         if(ek==='title'&&titleInput)titleInput.value=inp.value;
+         if(ek==='body'&&bodyInput)bodyInput.value=inp.value;
+         drawBig();
+        });
+        inp.addEventListener('keydown',(e)=>{
+         if(!isMultiline&&e.key==='Enter'){pop.remove();e.preventDefault();}
+         if(e.key==='Escape'){pop.remove();}
+         e.stopPropagation();
+        });
+        const closeBtn=document.createElement('span');
+        closeBtn.textContent='✕';
+        closeBtn.style.cssText='position:absolute;top:4px;right:7px;color:rgba(255,255,255,0.4);cursor:pointer;font-size:11px';
+        closeBtn.addEventListener('click',()=>pop.remove());
+        pop.appendChild(inp);
+        pop.appendChild(closeBtn);
+        dragOverlay.appendChild(pop);
+        setTimeout(()=>inp.focus(),30);
+       });
+       handle.appendChild(pencilBtn);
+      }
       // 雙擊重置
       handle.title='拖曳移動文字 · 雙擊重置位置';
       handle.addEventListener('dblclick',(e)=>{e.stopPropagation();
