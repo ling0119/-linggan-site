@@ -3181,21 +3181,69 @@ function drawStylePreview(styleKey){
       dragOverlay.appendChild(handle);
      });
     };
+    // 吸附參考線層
+    const snapLineLayer=document.createElement('div');
+    snapLineLayer.style.cssText=`position:absolute;top:0;left:0;width:${Math.round(1080*sc)}px;height:${Math.round(1350*sc)}px;pointer-events:none;z-index:3`;
     // 全局 mouse/touch move & up
+    const SNAP_THRESHOLD=10; // px（畫布座標）
+    const drawSnapLines=(lines)=>{
+     snapLineLayer.innerHTML='';
+     lines.forEach(({type,val})=>{
+      const line=document.createElement('div');
+      if(type==='x'){
+       // 垂直線（左邊對齊）
+       line.style.cssText=`position:absolute;left:${Math.round(val*sc)}px;top:0;width:1.5px;height:100%;background:rgba(255,80,80,.7);pointer-events:none`;
+      }else{
+       // 水平線（頂部對齊）
+       line.style.cssText=`position:absolute;top:${Math.round(val*sc)}px;left:0;height:1.5px;width:100%;background:rgba(255,80,80,.7);pointer-events:none`;
+      }
+      snapLineLayer.appendChild(line);
+     });
+    };
     const onDragMove=(clientX,clientY)=>{
      if(!_dragEl)return;
      const ek=_dragEl;
-     const ddx=Math.round((clientX-_dragStartX)/sc);
-     const ddy=Math.round((clientY-_dragStartY)/sc);
+     let ddx=Math.round((clientX-_dragStartX)/sc);
+     let ddy=Math.round((clientY-_dragStartY)/sc);
+     const rawX=_dragBaseDX+ddx;
+     const rawY=_dragBaseDY+ddy;
+     const anchor=EL_ANCHORS[ek]||{x:72,y:400};
+     const myX=anchor.x+rawX; // 我的左邊 x（畫布座標）
+     const myY=anchor.y+rawY; // 我的頂部 y（畫布座標）
+     // 收集其他元素的 x / y 錨點
+     const snapLines=[];
+     let snapDX=null,snapDY=null;
+     const tw=(A._slideTweak&&A._slideTweak[lbSlideIdx])||{};
+     ['title','body','acct','sub'].forEach(oek=>{
+      if(oek===ek)return;
+      const oAnchor=EL_ANCHORS[oek]||{x:72,y:400};
+      const oDX=tw[`el_${oek}_dx`]||0,oDY=tw[`el_${oek}_dy`]||0;
+      const oX=oAnchor.x+oDX;
+      const oY=oAnchor.y+oDY;
+      // 左邊吸附
+      if(snapDX===null&&Math.abs(myX-oX)<=SNAP_THRESHOLD){
+       snapDX=oX-anchor.x; // 讓 anchor.x + snapDX = oX
+       snapLines.push({type:'x',val:oX});
+      }
+      // 頂部吸附
+      if(snapDY===null&&Math.abs(myY-oY)<=SNAP_THRESHOLD){
+       snapDY=oY-anchor.y;
+       snapLines.push({type:'y',val:oY});
+      }
+     });
+     const finalDX=snapDX!==null?snapDX:rawX;
+     const finalDY=snapDY!==null?snapDY:rawY;
      if(!A._slideTweak)A._slideTweak={};
      if(!A._slideTweak[lbSlideIdx])A._slideTweak[lbSlideIdx]={};
-     A._slideTweak[lbSlideIdx][`el_${ek}_dx`]=_dragBaseDX+ddx;
-     A._slideTweak[lbSlideIdx][`el_${ek}_dy`]=_dragBaseDY+ddy;
+     A._slideTweak[lbSlideIdx][`el_${ek}_dx`]=finalDX;
+     A._slideTweak[lbSlideIdx][`el_${ek}_dy`]=finalDY;
+     drawSnapLines(snapLines);
      drawBig();updateDragHandles();
     };
     const onDragEnd=()=>{
      if(!_dragEl)return;
      _dragEl=null;
+     snapLineLayer.innerHTML=''; // 清除參考線
      updateDragHandles();
     };
     const _onDragMoveGlobal=(e)=>onDragMove(e.clientX,e.clientY);
@@ -3367,6 +3415,7 @@ function drawStylePreview(styleKey){
     canvasWrap.style.cssText=`position:relative;display:inline-block;flex-shrink:0`;
     canvasWrap.appendChild(bigCanvas);
     canvasWrap.appendChild(dragOverlay);
+    canvasWrap.appendChild(snapLineLayer);
     left.appendChild(canvasWrap);
     // 箭頭直接掛在 document.body，fixed 定位，完全不受 ov 影響
     document.body.appendChild(prevBtn);
