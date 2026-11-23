@@ -3070,28 +3070,6 @@ function drawStylePreview(styleKey){
       // 編輯功能
       if(isEditable){
        handle.contentEditable='false';
-       // 單擊進入編輯
-       let _clickTimer=null;
-       handle.addEventListener('click',(e)=>{
-        if(handle.contentEditable==='true')return; // 已在編輯中
-        e.stopPropagation();
-        handle.contentEditable='true';
-        handle.style.cursor='text';
-        handle.style.background='rgba(20,40,120,0.95)';
-        handle.style.border='1.5px solid rgba(120,180,255,1)';
-        handle.style.outline='none';
-        handle.style.userSelect='text';
-        handle.style.webkitUserSelect='text';
-        // 把佔位文字清掉
-        if(handle.textContent===`（${EL_LABELS[ek]||ek}）`)handle.textContent='';
-        // 游標移到末尾
-        const range=document.createRange();
-        const sel=window.getSelection();
-        range.selectNodeContents(handle);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
-       });
        // 即時更新
        handle.addEventListener('input',()=>{
         const val=handle.textContent;
@@ -3116,10 +3094,10 @@ function drawStylePreview(styleKey){
         e.stopPropagation();
        });
       }
-      // 雙擊重置位置
-      handle.title=isEditable?'點擊編輯 · 長按拖曳 · 雙擊重置位置':'拖曳移動 · 雙擊重置位置';
+      // 雙擊重置位置（編輯中不觸發）
+      handle.title=isEditable?'拖曳移動 · 點擊編輯 · 雙擊重置':'拖曳移動 · 雙擊重置';
       handle.addEventListener('dblclick',(e)=>{
-       if(handle.contentEditable==='true')return; // 編輯中不重置
+       if(handle.contentEditable==='true')return;
        e.stopPropagation();
        if(!A._slideTweak)A._slideTweak={};
        if(!A._slideTweak[lbSlideIdx])A._slideTweak[lbSlideIdx]={};
@@ -3127,29 +3105,79 @@ function drawStylePreview(styleKey){
        delete A._slideTweak[lbSlideIdx][`el_${ek}_dy`];
        drawBig();updateDragHandles();
       });
-      // 拖曳：長按 280ms 才觸發（避免與編輯衝突）
-      let _pressTimer=null;
+      // 拖曳 + 點擊判斷：mousedown 記錄起點，mouseup 判斷移動距離
+      // 移動 < 5px → 點擊（進入編輯）；移動 >= 5px → 拖移
+      let _mdX=0,_mdY=0,_dragging=false;
       const startDrag=(clientX,clientY)=>{
        _dragEl=ek;
        _dragStartX=clientX;_dragStartY=clientY;
        _dragBaseDX=curDX;_dragBaseDY=curDY;
+       _dragging=true;
        handle.style.background='rgba(60,100,220,0.92)';
        handle.style.boxShadow='0 0 0 2px rgba(100,150,255,0.6)';
       };
+      const enterEdit=()=>{
+       if(!isEditable||handle.contentEditable==='true')return;
+       handle.contentEditable='true';
+       handle.style.cursor='text';
+       handle.style.background='rgba(20,40,120,0.95)';
+       handle.style.border='1.5px solid rgba(120,180,255,1)';
+       handle.style.outline='none';
+       handle.style.userSelect='text';
+       handle.style.webkitUserSelect='text';
+       if(handle.textContent===`（${EL_LABELS[ek]||ek}）`)handle.textContent='';
+       const range=document.createRange();
+       const sel=window.getSelection();
+       range.selectNodeContents(handle);
+       range.collapse(false);
+       sel.removeAllRanges();
+       sel.addRange(range);
+      };
       handle.addEventListener('mousedown',(e)=>{
-       if(handle.contentEditable==='true')return; // 編輯中不拖
+       if(handle.contentEditable==='true')return; // 編輯中讓瀏覽器自己處理游標
        e.preventDefault();e.stopPropagation();
-       _pressTimer=setTimeout(()=>startDrag(e.clientX,e.clientY),280);
+       _mdX=e.clientX;_mdY=e.clientY;_dragging=false;
+       // 開始追蹤可能的拖移
+       const onMove=(ev)=>{
+        const dx=ev.clientX-_mdX,dy=ev.clientY-_mdY;
+        if(!_dragging&&Math.sqrt(dx*dx+dy*dy)>=5){
+         startDrag(_mdX,_mdY);
+        }
+       };
+       const onUp=(ev)=>{
+        document.removeEventListener('mousemove',onMove);
+        document.removeEventListener('mouseup',onUp);
+        const dx=ev.clientX-_mdX,dy=ev.clientY-_mdY;
+        if(Math.sqrt(dx*dx+dy*dy)<5){
+         // 點擊：進入編輯
+         enterEdit();
+        }
+        // 拖移結束由全局 onDragEnd 處理
+       };
+       document.addEventListener('mousemove',onMove);
+       document.addEventListener('mouseup',onUp);
       });
-      handle.addEventListener('mouseup',()=>{clearTimeout(_pressTimer);_pressTimer=null;});
       handle.addEventListener('touchstart',(e)=>{
+       if(handle.contentEditable==='true')return;
        e.preventDefault();e.stopPropagation();
-       if(e.touches[0]){
-        const tx=e.touches[0].clientX,ty=e.touches[0].clientY;
-        _pressTimer=setTimeout(()=>startDrag(tx,ty),280);
-       }
+       if(!e.touches[0])return;
+       _mdX=e.touches[0].clientX;_mdY=e.touches[0].clientY;_dragging=false;
+       const onTMove=(ev)=>{
+        if(!ev.touches[0])return;
+        const dx=ev.touches[0].clientX-_mdX,dy=ev.touches[0].clientY-_mdY;
+        if(!_dragging&&Math.sqrt(dx*dx+dy*dy)>=5)startDrag(_mdX,_mdY);
+       };
+       const onTEnd=(ev)=>{
+        handle.removeEventListener('touchmove',onTMove);
+        handle.removeEventListener('touchend',onTEnd);
+        const t=ev.changedTouches[0];
+        if(!t)return;
+        const dx=t.clientX-_mdX,dy=t.clientY-_mdY;
+        if(Math.sqrt(dx*dx+dy*dy)<5)enterEdit();
+       };
+       handle.addEventListener('touchmove',onTMove,{passive:true});
+       handle.addEventListener('touchend',onTEnd);
       },{passive:false});
-      handle.addEventListener('touchend',()=>{clearTimeout(_pressTimer);_pressTimer=null;});
       dragOverlay.appendChild(handle);
      });
     };
