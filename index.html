@@ -3045,6 +3045,145 @@ function drawStylePreview(styleKey){
     const EL_LABELS={title:'標題',body:'內文',acct:'帳號',sub:'副標',num:'頁碼'};
     // 各元素在 1080×1350 畫布上的典型錨點（左上角）
     const EL_ANCHORS={acct:{x:72,y:60},sub:{x:72,y:180},title:{x:72,y:380},body:{x:72,y:680}};
+
+    // ── 底部操作列 ──
+    let _selectedEk=null; // 目前選取的元素 key
+    const bbBar=document.createElement('div');
+    bbBar.style.cssText=`display:flex;align-items:center;gap:8px;padding:10px 14px 12px;background:rgba(14,17,36,0.97);border-top:1.5px solid rgba(255,255,255,0.1);flex-wrap:wrap;min-height:52px;`;
+    const bbLabel=document.createElement('span');
+    bbLabel.style.cssText='font-size:12px;font-weight:700;color:rgba(255,255,255,0.4);white-space:nowrap';
+    bbLabel.textContent='點文字元素選取';
+    const bbSep=()=>{const d=document.createElement('div');d.style.cssText='width:1px;height:20px;background:rgba(255,255,255,0.12);flex-shrink:0';return d;};
+    const makebbBtn=(label,onclick)=>{
+     const b=document.createElement('button');b.type='button';
+     b.style.cssText='background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .12s';
+     b.textContent=label;b.onclick=onclick;
+     b.onmouseenter=()=>{b.style.background='rgba(79,140,255,0.5)';b.style.borderColor='rgba(79,140,255,0.8)';};
+     b.onmouseleave=()=>{b.style.background='rgba(255,255,255,0.1)';b.style.borderColor='rgba(255,255,255,0.15)';};
+     return b;
+    };
+    const bbEditBtn=makebbBtn('✏️ 編輯',()=>bbEnterEdit());
+    const bbResetBtn=makebbBtn('↺ 重置',()=>bbResetPos());
+    const bbDeselBtn=makebbBtn('✕',()=>bbDeselect());
+    bbBar.appendChild(bbLabel);
+    [bbEditBtn,bbResetBtn,bbDeselBtn].forEach(b=>b.style.display='none');
+    bbBar.appendChild(bbSep());
+    bbBar.appendChild(bbEditBtn);
+    bbBar.appendChild(bbResetBtn);
+    bbBar.appendChild(bbDeselBtn);
+
+    // ── 浮動對齊工具列 ──
+    const alignBar=document.createElement('div');
+    alignBar.style.cssText=`position:absolute;background:rgba(16,20,42,0.97);border:1.5px solid rgba(79,140,255,0.5);border-radius:9px;padding:5px 8px;display:flex;gap:5px;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:20;transform:translateX(-50%);white-space:nowrap;pointer-events:auto;opacity:0;transition:opacity .15s;`;
+    const makeAtBtn=(label,onclick)=>{
+     const b=document.createElement('button');b.type='button';
+     b.style.cssText='background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);border-radius:5px;padding:5px 9px;font-size:11px;cursor:pointer;font-weight:600';
+     b.textContent=label;b.onclick=onclick;
+     b.onmouseenter=()=>{b.style.background='rgba(79,140,255,0.4)';b.style.color='#fff';};
+     b.onmouseleave=()=>{b.style.background='rgba(255,255,255,0.08)';b.style.color='rgba(255,255,255,0.7)';};
+     return b;
+    };
+    const atSepEl=document.createElement('div');atSepEl.style.cssText='width:1px;height:16px;background:rgba(255,255,255,0.12)';
+    const atLbl=document.createElement('span');atLbl.style.cssText='font-size:10px;color:rgba(255,255,255,0.4);font-weight:700';atLbl.textContent='對齊';
+    alignBar.appendChild(atLbl);alignBar.appendChild(atSepEl);
+    alignBar.appendChild(makeAtBtn('⬟ 靠左',()=>bbSnapAlign('left')));
+    alignBar.appendChild(makeAtBtn('⬛ 置中',()=>bbSnapAlign('center')));
+    alignBar.appendChild(makeAtBtn('▲ 靠上',()=>bbSnapAlign('top')));
+
+    const bbShowAlignBar=(ek)=>{
+     const handle=dragOverlay.querySelector(`[data-ek="${ek}"]`);
+     if(!handle){alignBar.style.opacity='0';alignBar.style.pointerEvents='none';return;}
+     const cr=dragOverlay.getBoundingClientRect();
+     const hr=handle.getBoundingClientRect();
+     const leftPct=((hr.left-cr.left+hr.width/2)/dragOverlay.offsetWidth*100).toFixed(1);
+     const topPx=Math.max(2,(hr.top-cr.top-38));
+     alignBar.style.left=leftPct+'%';
+     alignBar.style.top=topPx+'px';
+     alignBar.style.opacity='1';
+     alignBar.style.pointerEvents='auto';
+    };
+    const bbHideAlignBar=()=>{alignBar.style.opacity='0';alignBar.style.pointerEvents='none';};
+
+    const bbSelect=(ek)=>{
+     _selectedEk=ek;
+     dragOverlay.querySelectorAll('[data-ek]').forEach(h=>{
+      const sel=h.dataset.ek===ek;
+      h.style.outline=sel?'2px solid rgba(79,140,255,0.9)':'none';
+      h.style.outlineOffset=sel?'3px':'0';
+     });
+     bbLabel.textContent=EL_LABELS[ek]||ek;
+     const isEditable=['title','body','sub'].includes(ek);
+     bbEditBtn.style.display=isEditable?'':'none';
+     bbResetBtn.style.display='';bbDeselBtn.style.display='';
+     bbShowAlignBar(ek);
+    };
+    const bbDeselect=()=>{
+     _selectedEk=null;
+     dragOverlay.querySelectorAll('[data-ek]').forEach(h=>{
+      h.style.outline='none';
+      if(h.contentEditable==='true'){
+       h.contentEditable='false';
+       h.style.cursor='move';
+       h.style.background='rgba(80,120,200,0.75)';
+       h.style.border='1.5px solid rgba(100,150,255,0.8)';
+       h.style.userSelect='none';h.style.webkitUserSelect='none';
+       if(!h.textContent.trim())h.textContent=`（${EL_LABELS[h.dataset.ek]||h.dataset.ek}）`;
+      }
+     });
+     bbLabel.textContent='點文字元素選取';
+     bbEditBtn.style.display='none';bbResetBtn.style.display='none';bbDeselBtn.style.display='none';
+     bbHideAlignBar();
+    };
+    const bbEnterEdit=()=>{
+     if(!_selectedEk)return;
+     const ek=_selectedEk;
+     if(!['title','body','sub'].includes(ek))return;
+     const handle=dragOverlay.querySelector(`[data-ek="${ek}"]`);
+     if(!handle)return;
+     handle.contentEditable='true';
+     handle.style.cursor='text';
+     handle.style.background='rgba(20,40,120,0.95)';
+     handle.style.border='1.5px solid rgba(120,180,255,1)';
+     handle.style.outline='none';
+     handle.style.userSelect='text';
+     handle.style.webkitUserSelect='text';
+     if(handle.textContent===`（${EL_LABELS[ek]||ek}）`)handle.textContent='';
+     const range=document.createRange();const sel=window.getSelection();
+     range.selectNodeContents(handle);range.collapse(false);
+     sel.removeAllRanges();sel.addRange(range);
+     handle.focus();
+     bbLabel.textContent=`編輯中：${EL_LABELS[ek]}`;
+    };
+    const bbResetPos=()=>{
+     if(!_selectedEk)return;
+     const ek=_selectedEk;
+     if(!A._slideTweak)A._slideTweak={};
+     if(!A._slideTweak[lbSlideIdx])A._slideTweak[lbSlideIdx]={};
+     delete A._slideTweak[lbSlideIdx][`el_${ek}_dx`];
+     delete A._slideTweak[lbSlideIdx][`el_${ek}_dy`];
+     drawBig();updateDragHandles();
+     bbSelect(ek);
+    };
+    const bbSnapAlign=(dir)=>{
+     if(!_selectedEk)return;
+     const ek=_selectedEk;
+     const anchor=EL_ANCHORS[ek]||{x:72,y:400};
+     const tw=(A._slideTweak&&A._slideTweak[lbSlideIdx])||{};
+     if(!A._slideTweak)A._slideTweak={};
+     if(!A._slideTweak[lbSlideIdx])A._slideTweak[lbSlideIdx]={};
+     if(dir==='left'){
+      A._slideTweak[lbSlideIdx][`el_${ek}_dx`]=0;
+     } else if(dir==='center'){
+      // 置中：讓元素左邊在 (1080/2 - estimatedW/2)，估算寬度約 400px
+      A._slideTweak[lbSlideIdx][`el_${ek}_dx`]=Math.round(1080/2-200-anchor.x);
+     } else if(dir==='top'){
+      // 靠上：距頂 60px
+      A._slideTweak[lbSlideIdx][`el_${ek}_dy`]=Math.round(60-anchor.y);
+     }
+     drawBig();updateDragHandles();
+     bbSelect(ek);
+    };
+
     // 建立 / 更新拖曳把手
     const updateDragHandles=()=>{
      dragOverlay.innerHTML='';
@@ -3055,22 +3194,20 @@ function drawStylePreview(styleKey){
       const dxKey=`el_${ek}_dx`,dyKey=`el_${ek}_dy`;
       const curDX=tw[dxKey]||0,curDY=tw[dyKey]||0;
       const anchor=EL_ANCHORS[ek]||{x:72,y:400};
-      // 把手：半透明標籤，可拖曳
       const editableEks=['title','body','sub'];
       const isEditable=editableEks.includes(ek);
       const handle=document.createElement('div');
       handle.dataset.ek=ek;
-      // 顯示內容：可編輯的顯示文字，不可編輯的顯示標籤
       const curText=isEditable?(slides[lbSlideIdx][ek]||''):null;
       const displayText=isEditable
        ?(curText||`（${EL_LABELS[ek]||ek}）`)
        :(EL_LABELS[ek]||ek);
-      handle.style.cssText=`position:absolute;left:${Math.round((anchor.x+curDX)*sc)}px;top:${Math.round((anchor.y+curDY)*sc)}px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#fff;background:rgba(80,120,200,0.75);border:1.5px solid rgba(100,150,255,0.8);cursor:${isEditable?'text':'move'};pointer-events:auto;backdrop-filter:blur(2px);max-width:${Math.round(1080*sc)-Math.round((anchor.x+curDX)*sc)-8}px;word-break:break-all;white-space:pre-wrap;line-height:1.4;touch-action:none;min-width:40px`;
+      const isSel=_selectedEk===ek;
+      handle.style.cssText=`position:absolute;left:${Math.round((anchor.x+curDX)*sc)}px;top:${Math.round((anchor.y+curDY)*sc)}px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#fff;background:rgba(80,120,200,0.75);border:1.5px solid rgba(100,150,255,0.8);cursor:move;pointer-events:auto;backdrop-filter:blur(2px);max-width:${Math.round(1080*sc)-Math.round((anchor.x+curDX)*sc)-8}px;word-break:break-all;white-space:pre-wrap;line-height:1.4;touch-action:none;min-width:40px;outline:${isSel?'2px solid rgba(79,140,255,0.9)':'none'};outline-offset:${isSel?'3px':'0'}`;
       handle.textContent=displayText;
-      // 編輯功能
+      // 編輯功能（由底部列按鈕觸發）
       if(isEditable){
        handle.contentEditable='false';
-       // 即時更新
        handle.addEventListener('input',()=>{
         const val=handle.textContent;
         slides[lbSlideIdx][ek]=val;
@@ -3078,15 +3215,14 @@ function drawStylePreview(styleKey){
         if(ek==='body'&&bodyInput)bodyInput.value=val;
         drawBig();
        });
-       // 結束編輯
        const endEdit=()=>{
         handle.contentEditable='false';
         handle.style.cursor='move';
         handle.style.background='rgba(80,120,200,0.75)';
         handle.style.border='1.5px solid rgba(100,150,255,0.8)';
-        handle.style.userSelect='none';
-        handle.style.webkitUserSelect='none';
+        handle.style.userSelect='none';handle.style.webkitUserSelect='none';
         if(!handle.textContent.trim())handle.textContent=`（${EL_LABELS[ek]||ek}）`;
+        if(_selectedEk===ek)bbLabel.textContent=EL_LABELS[ek]||ek;
        };
        handle.addEventListener('blur',endEdit);
        handle.addEventListener('keydown',(e)=>{
@@ -3094,65 +3230,32 @@ function drawStylePreview(styleKey){
         e.stopPropagation();
        });
       }
-      // 雙擊重置位置（編輯中不觸發）
-      handle.title=isEditable?'拖曳移動 · 點擊編輯 · 雙擊重置':'拖曳移動 · 雙擊重置';
-      handle.addEventListener('dblclick',(e)=>{
-       if(handle.contentEditable==='true')return;
-       e.stopPropagation();
-       if(!A._slideTweak)A._slideTweak={};
-       if(!A._slideTweak[lbSlideIdx])A._slideTweak[lbSlideIdx]={};
-       delete A._slideTweak[lbSlideIdx][`el_${ek}_dx`];
-       delete A._slideTweak[lbSlideIdx][`el_${ek}_dy`];
-       drawBig();updateDragHandles();
-      });
-      // 拖曳 + 點擊判斷：mousedown 記錄起點，mouseup 判斷移動距離
-      // 移動 < 5px → 點擊（進入編輯）；移動 >= 5px → 拖移
-      let _mdX=0,_mdY=0,_dragging=false;
+      // 點擊：選取該元素（拖移由全局處理）
+      let _mdX=0,_mdY=0,_hasDragged=false;
       const startDrag=(clientX,clientY)=>{
        _dragEl=ek;
        _dragStartX=clientX;_dragStartY=clientY;
        _dragBaseDX=curDX;_dragBaseDY=curDY;
-       _dragging=true;
+       _hasDragged=true;
        handle.style.background='rgba(60,100,220,0.92)';
        handle.style.boxShadow='0 0 0 2px rgba(100,150,255,0.6)';
       };
-      const enterEdit=()=>{
-       if(!isEditable||handle.contentEditable==='true')return;
-       handle.contentEditable='true';
-       handle.style.cursor='text';
-       handle.style.background='rgba(20,40,120,0.95)';
-       handle.style.border='1.5px solid rgba(120,180,255,1)';
-       handle.style.outline='none';
-       handle.style.userSelect='text';
-       handle.style.webkitUserSelect='text';
-       if(handle.textContent===`（${EL_LABELS[ek]||ek}）`)handle.textContent='';
-       const range=document.createRange();
-       const sel=window.getSelection();
-       range.selectNodeContents(handle);
-       range.collapse(false);
-       sel.removeAllRanges();
-       sel.addRange(range);
-      };
       handle.addEventListener('mousedown',(e)=>{
-       if(handle.contentEditable==='true')return; // 編輯中讓瀏覽器自己處理游標
+       if(handle.contentEditable==='true')return;
        e.preventDefault();e.stopPropagation();
-       _mdX=e.clientX;_mdY=e.clientY;_dragging=false;
-       // 開始追蹤可能的拖移
+       _mdX=e.clientX;_mdY=e.clientY;_hasDragged=false;
        const onMove=(ev)=>{
         const dx=ev.clientX-_mdX,dy=ev.clientY-_mdY;
-        if(!_dragging&&Math.sqrt(dx*dx+dy*dy)>=5){
-         startDrag(_mdX,_mdY);
-        }
+        if(!_hasDragged&&Math.sqrt(dx*dx+dy*dy)>=5)startDrag(_mdX,_mdY);
        };
        const onUp=(ev)=>{
         document.removeEventListener('mousemove',onMove);
         document.removeEventListener('mouseup',onUp);
         const dx=ev.clientX-_mdX,dy=ev.clientY-_mdY;
         if(Math.sqrt(dx*dx+dy*dy)<5){
-         // 點擊：進入編輯
-         enterEdit();
+         // 點擊：選取（非拖移）
+         bbSelect(ek);
         }
-        // 拖移結束由全局 onDragEnd 處理
        };
        document.addEventListener('mousemove',onMove);
        document.addEventListener('mouseup',onUp);
@@ -3161,25 +3264,28 @@ function drawStylePreview(styleKey){
        if(handle.contentEditable==='true')return;
        e.preventDefault();e.stopPropagation();
        if(!e.touches[0])return;
-       _mdX=e.touches[0].clientX;_mdY=e.touches[0].clientY;_dragging=false;
+       _mdX=e.touches[0].clientX;_mdY=e.touches[0].clientY;_hasDragged=false;
        const onTMove=(ev)=>{
         if(!ev.touches[0])return;
         const dx=ev.touches[0].clientX-_mdX,dy=ev.touches[0].clientY-_mdY;
-        if(!_dragging&&Math.sqrt(dx*dx+dy*dy)>=5)startDrag(_mdX,_mdY);
+        if(!_hasDragged&&Math.sqrt(dx*dx+dy*dy)>=5)startDrag(_mdX,_mdY);
        };
        const onTEnd=(ev)=>{
         handle.removeEventListener('touchmove',onTMove);
         handle.removeEventListener('touchend',onTEnd);
-        const t=ev.changedTouches[0];
-        if(!t)return;
+        const t=ev.changedTouches[0];if(!t)return;
         const dx=t.clientX-_mdX,dy=t.clientY-_mdY;
-        if(Math.sqrt(dx*dx+dy*dy)<5)enterEdit();
+        if(Math.sqrt(dx*dx+dy*dy)<5)bbSelect(ek);
        };
        handle.addEventListener('touchmove',onTMove,{passive:true});
        handle.addEventListener('touchend',onTEnd);
       },{passive:false});
       dragOverlay.appendChild(handle);
      });
+     // 重新掛上對齊工具列（innerHTML 清掉後要重加）
+     dragOverlay.appendChild(alignBar);
+     // 若有選取中的元素，恢復選取視覺
+     if(_selectedEk)bbShowAlignBar(_selectedEk);
     };
     // 吸附參考線層
     const snapLineLayer=document.createElement('div');
@@ -3416,7 +3522,12 @@ function drawStylePreview(styleKey){
     canvasWrap.appendChild(bigCanvas);
     canvasWrap.appendChild(dragOverlay);
     canvasWrap.appendChild(snapLineLayer);
-    left.appendChild(canvasWrap);
+    // 底部操作列掛在 canvasWrap 外、left 裡
+    const canvasBlock=document.createElement('div');
+    canvasBlock.style.cssText='display:flex;flex-direction:column;align-items:flex-start;flex-shrink:0';
+    canvasBlock.appendChild(canvasWrap);
+    canvasBlock.appendChild(bbBar);
+    left.appendChild(canvasBlock);
     // 箭頭直接掛在 document.body，fixed 定位，完全不受 ov 影響
     document.body.appendChild(prevBtn);
     document.body.appendChild(nextBtn);
