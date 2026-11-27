@@ -3072,9 +3072,9 @@ function drawStylePreview(styleKey){
     bbBar.appendChild(bbLabel);bbBar.appendChild(bbSepEl);
     bbBar.appendChild(bbEditBtn);bbBar.appendChild(bbResetBtn);bbBar.appendChild(bbDeselBtn);
 
-    // ── 浮動對齊工具列（文字對齊） ──
+    // ── 浮動對齊工具列（文字對齊）── fixed 定位，掛 body，不受 dragOverlay 座標影響
     const alignBar=document.createElement('div');
-    alignBar.style.cssText=`position:absolute;background:rgba(16,20,42,0.97);border:1.5px solid rgba(79,140,255,0.5);border-radius:9px;padding:5px 8px;display:flex;gap:4px;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:20;pointer-events:auto;opacity:0;transition:opacity .15s;`;
+    alignBar.style.cssText=`position:fixed;background:rgba(16,20,42,0.97);border:1.5px solid rgba(79,140,255,0.5);border-radius:9px;padding:5px 8px;display:flex;gap:4px;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:99999;pointer-events:auto;opacity:0;transition:opacity .15s;`;
     const atLbl=document.createElement('span');
     atLbl.style.cssText='font-size:10px;color:rgba(255,255,255,0.4);font-weight:700;padding-right:4px';
     atLbl.textContent='文字';
@@ -3106,10 +3106,10 @@ function drawStylePreview(styleKey){
     const bbShowAlignBar=(ek)=>{
      const handle=dragOverlay.querySelector(`[data-ek="${ek}"]`);
      if(!handle){alignBar.style.opacity='0';alignBar.style.pointerEvents='none';return;}
-     const cr=dragOverlay.getBoundingClientRect();
      const hr=handle.getBoundingClientRect();
-     const leftPx=hr.left-cr.left+hr.width/2;
-     const topPx=Math.max(2,hr.top-cr.top-alignBar.offsetHeight-6);
+     const abH=alignBar.offsetHeight||36;
+     const leftPx=hr.left+hr.width/2;
+     const topPx=Math.max(4,hr.top-abH-8);
      alignBar.style.left=leftPx+'px';
      alignBar.style.top=topPx+'px';
      alignBar.style.transform='translateX(-50%)';
@@ -3289,8 +3289,7 @@ function drawStylePreview(styleKey){
       },{passive:false});
       dragOverlay.appendChild(handle);
      });
-     // 對齊工具列掛回（innerHTML 清空後需重掛）
-     dragOverlay.appendChild(alignBar);
+     // alignBar 掛在 body（fixed 定位），不需要重掛
      // 若有選取中的元素，重繪選取框並更新工具列
      if(_selectedEk){
       const h=dragOverlay.querySelector(`[data-ek="${_selectedEk}"]`);
@@ -3539,6 +3538,7 @@ function drawStylePreview(styleKey){
     canvasWrap.appendChild(snapLineLayer);
     left.appendChild(canvasWrap);
     left.appendChild(bbBar);
+    document.body.appendChild(alignBar);
     // 箭頭直接掛在 document.body，fixed 定位，完全不受 ov 影響
     document.body.appendChild(prevBtn);
     document.body.appendChild(nextBtn);
@@ -3551,7 +3551,7 @@ function drawStylePreview(styleKey){
      document.removeEventListener('mouseup',_onDragEndGlobal);
      document.removeEventListener('touchmove',_onTouchMoveGlobal);
      document.removeEventListener('touchend',_onDragEndGlobal);
-     prevBtn.remove();nextBtn.remove();ov.remove();
+     prevBtn.remove();nextBtn.remove();ov.remove();alignBar.remove();
     };
     // 鍵盤左右鍵（焦點在輸入框時不觸發切換）
     const keyHandler=(e)=>{
